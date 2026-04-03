@@ -552,6 +552,10 @@ PrefabInstance:
       propertyPath: controller
       value: 
       objectReference: {fileID: 701602737}
+    - target: {fileID: 1409166932843523913, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
+      propertyPath: attackPoint
+      value: 
+      objectReference: {fileID: 1094415446}
     - target: {fileID: 7661791187571755905, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

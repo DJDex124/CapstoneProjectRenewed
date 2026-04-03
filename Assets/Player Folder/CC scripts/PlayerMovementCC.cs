@@ -124,7 +124,6 @@ public class PlayerMovementCC : MonoBehaviour
 
     public void PerformAttackHit()
     {
-        Debug.Log("Animation hit triggered");
 
         RaycastHit[] hits = Physics.SphereCastAll(
             attackPoint.position,
