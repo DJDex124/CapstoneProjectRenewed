@@ -8,8 +8,7 @@ public class MazeGeneration : MonoBehaviour
     [SerializeField]
     private MazeCell _mazeCellPrefab;
 
-    [SerializeField]
-    private float _cellSize = 4f;
+    public float _cellSize = 4f;
 
     [SerializeField]
     private int _mazeWidth;
@@ -22,6 +21,7 @@ public class MazeGeneration : MonoBehaviour
     public Transform mazePos;
 
     private MazeCell[,] _mazeGrid;
+    public List<MazeCell> _mazeCells = new List<MazeCell>();
 
     IEnumerator Start()
     {
@@ -31,7 +31,8 @@ public class MazeGeneration : MonoBehaviour
         {
             for (int z = 0; z < _mazeDepth; z++)
             {
-                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x * _cellSize, 0, z * _cellSize), Quaternion.identity);
+                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x * _cellSize, 0, z * _cellSize), Quaternion.identity, mazePos);
+                _mazeCells.Add(_mazeGrid[x, z]);
             }
         }
 
@@ -160,4 +161,6 @@ public class MazeGeneration : MonoBehaviour
         //set player spawn to the start cell
         //Instantiate(_playerPrefab, startCell.transform.position + Vector3.up, Quaternion.identity);
     }
+
+    
 }

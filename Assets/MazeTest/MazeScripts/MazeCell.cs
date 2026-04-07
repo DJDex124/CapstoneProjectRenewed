@@ -17,6 +17,7 @@ public class MazeCell : MonoBehaviour
     [SerializeField]
     private GameObject _unvisitedBlock;
 
+
     public bool IsVisited { get; private set; }
 
     public void Visit()
@@ -47,6 +48,13 @@ public class MazeCell : MonoBehaviour
     }
 
 
-
+    // loot spawn area code
+    public Vector3 GetRandomPosition(float cellSize, float yOffset =0.1f)
+    {
+        float halfSize = cellSize / 2f;
+        float randomX = Random.Range(-halfSize + 0.5f, halfSize - 0.5f);
+        float randomZ = Random.Range(-halfSize + 0.5f, halfSize - 0.5f);
+        return transform.position + new Vector3(randomX, yOffset, randomZ);
+    }
 
 }
