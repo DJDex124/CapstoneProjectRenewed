@@ -6,6 +6,8 @@ public class ItemPrefab : MonoBehaviour
     public OldItemType itemType;
     public OldItemData itemData;
 
+    [Range(0f, 1f)]
+    public float spawnChance = 0.3f;
     private void Update()
     {
         if (PlayerInteractions.current == null) { Debug.LogError("PlayerInteractions.current is null!"); return; }

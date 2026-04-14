@@ -199,6 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1fab77ef92976e4791687b9dcaed18e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootManager
+  LootSpawner: {fileID: 1712477710}
   _lootPrefab:
   - {fileID: 5048619002020271559, guid: 318901d7a37aad444add7e2efbc90f3a, type: 3}
   _mazeGeneration: {fileID: 63317740}
@@ -211,7 +212,7 @@ Transform:
   m_GameObject: {fileID: 1712477708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 133.92503, y: 0.00001, z: 100.45759}
+  m_LocalPosition: {x: 0, y: 7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
