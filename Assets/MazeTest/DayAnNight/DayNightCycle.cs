@@ -6,6 +6,7 @@ public class DayNightCycle : MonoBehaviour
     public Light Light;
 
     public TextMeshProUGUI clockText;
+    public TextMeshProUGUI dayCountText;
 
     [Range(0, 24)]
     public float timeofDay = 12f;
@@ -18,12 +19,24 @@ public class DayNightCycle : MonoBehaviour
 
     public float dayAtmosphere = 1.0f;
     public float nightAtmosphere = 0.3f;
+
+    public int dayCount = 1;
+
+    void Start()
+    {
+
+        if (dayCountText != null)
+        {
+            dayCountText.text = "Day " + dayCount;
+        }
+    }
     private void Update()
     {
         UpdateTime();
         UpdateSunRotation();
         UpdateClockUI();
         UpdateSkybox();
+
     }
     void UpdateTime()
     {
@@ -32,18 +45,21 @@ public class DayNightCycle : MonoBehaviour
 
         // Keep time in 0–24 range
         if (timeofDay >= 24f)
+        {
             timeofDay -= 24f;
+            dayCount++;
+            updayDayCountUI();
+        }
     }
-
     void UpdateSunRotation()
-    {     
+    {
         float angle = (timeofDay / 24f) * 360f;
         // Rotate sun
         Light.transform.rotation = Quaternion.Euler(angle - 90f, 0f, 0f);
 
         float dot = Vector3.Dot(Light.transform.forward, Vector3.down);
         float intensity = Mathf.Clamp01(dot);
-            Light.intensity = intensity;
+        Light.intensity = intensity;
     }
 
     void UpdateClockUI()
@@ -69,7 +85,15 @@ public class DayNightCycle : MonoBehaviour
         RenderSettings.skybox.SetFloat("_Exposure", exposure);
         RenderSettings.skybox.SetFloat("_AtmosphereThickness", atmosphere);
 
-       
+
         DynamicGI.UpdateEnvironment();
+    }
+    void updayDayCountUI()
+    {
+        if (dayCountText != null)
+        {
+            dayCountText.text = "Day " + dayCount;
+        }
+
     }
 }
