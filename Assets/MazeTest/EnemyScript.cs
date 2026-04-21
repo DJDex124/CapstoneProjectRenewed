@@ -8,6 +8,7 @@ public class EnemyScript : MonoBehaviour
     private NavMeshAgent agent;
     private Transform player;
     public Animator animator;
+    public EnemyState currentState;
 
     [Header("Damage Settings")]
     public float attackRange = 2.1f;
@@ -21,9 +22,9 @@ public class EnemyScript : MonoBehaviour
     [Range(0, 360)]
     public float visionAngle = 120f;
     public LayerMask obstacleMask;
-    public bool canSeePlayer = false;
     public float memoryTime = 3f;
     private float lastSeen;
+    private bool canSeePlayer;
 
     private void Start()
     {
@@ -37,12 +38,13 @@ public class EnemyScript : MonoBehaviour
         }
 
         lastSeen = -Mathf.Infinity;
+        ChangeState(EnemyState.Idle);
     }
 
 
     void Update()
     {
-        if (player == null) return;
+        if (currentState == EnemyState.Dead || player == null) return;
 
 
         canSeePlayer = CheckPlayerInSight();
@@ -51,44 +53,106 @@ public class EnemyScript : MonoBehaviour
         {
             lastSeen = Time.time;
         }
-        if (Time.time > lastSeen + memoryTime)
-        {
-            agent.isStopped = true;
-            return;
-        }
-        
 
-            Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0;
-        if (direction != Vector3.zero)
+        switch (currentState)
         {
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            case EnemyState.Idle:
+                UpdateIdle();
+                break;
 
-            
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                lookRotation,
-                Time.deltaTime * 5f
-            );
-        }
-        float distance = Vector3.Distance(transform.position, player.position);
-        if (distance > attackRange)
-        {
-            agent.isStopped = false;
-            agent.SetDestination(player.position);
-        }
-        else
-        {
-            agent.isStopped = true;
+            case EnemyState.Chase:
+                UpdateChase();
+                break;
 
-            if (Time.time >= lastAttackTime + attackCooldown)
-            {
-                TriggerAttack();
-                lastAttackTime = Time.time;
-            }
+            case EnemyState.Attack:
+                UpdateAttack();
+                break;
         }
     }
 
+    public enum EnemyState
+    {
+        Idle,
+        Chase,
+        Attack,
+        Dead
+    }
+
+    void ChangeState(EnemyState newState)
+    {
+        currentState = newState;
+    }
+
+    void UpdateIdle()
+    {
+        agent.isStopped = true;
+        animator.SetBool("IsMoving", false);
+
+        if (Time.time <= lastSeen + memoryTime)
+        {
+            ChangeState(EnemyState.Chase);
+        }
+    }
+
+    void RotateTowardsPlayer()
+    {
+        Vector3 dir = (player.position - transform.position).normalized;
+        dir.y = 0;
+
+        if (dir != Vector3.zero)
+        {
+            Quaternion rot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 5f);
+        }
+    }
+
+
+    void UpdateChase()
+    {
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        RotateTowardsPlayer();
+
+        if (Time.time > lastSeen + memoryTime)
+        {
+            ChangeState(EnemyState.Idle);
+            return;
+        }
+
+        if (distance <= attackRange)
+        {
+            ChangeState(EnemyState.Attack);
+            return;
+        }
+
+        agent.isStopped = false;
+        agent.SetDestination(player.position);
+        animator.SetBool("IsMoving", true);
+    }
+
+    void UpdateAttack()
+    {
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        RotateTowardsPlayer();
+
+        agent.isStopped = true;
+        animator.SetBool("IsMoving", false);
+
+        if (distance > attackRange)
+        {
+            ChangeState(EnemyState.Chase);
+            return;
+        }
+
+        if (Time.time >= lastAttackTime + attackCooldown)
+        {
+            animator.SetTrigger("Attack");
+            lastAttackTime = Time.time;
+        }
+    }
+
+    
     bool CheckPlayerInSight()
     {
         if (player == null) return false;
@@ -127,13 +191,13 @@ public class EnemyScript : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + right * visionRange);
     }
 
-    void TriggerAttack()
-    {
-        if (animator != null)
-        {
-            animator.SetTrigger("Attack");
-        }
-    }
+    //void TriggerAttack()                              
+    //{
+        //if (animator != null)
+        //{
+            //animator.SetTrigger("Attack");
+        //}
+    //}
 
     public void TakeDamage(float damage)
     {
