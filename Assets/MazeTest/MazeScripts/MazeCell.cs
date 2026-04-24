@@ -49,10 +49,10 @@ public class MazeCell : MonoBehaviour
 
 
     // loot spawn area code
-    public Vector3 GetRandomPosition(float cellSize, float yOffset =0.0f)
+    public Vector3 GetRandomPosition(float cellSize, float yOffset =0.1f)
     {
         float halfSize = cellSize / 2f;
-        float randomX = Random.Range(-halfSize + 0.5f, halfSize - 0.5f);
+        float randomX = Random.Range(-halfSize + 0.5f, halfSize - 0.5f);                                     
         float randomZ = Random.Range(-halfSize + 0.5f, halfSize - 0.5f);
         return new Vector3(transform.position.x + randomX, yOffset, transform.position.z + randomZ);
     }
