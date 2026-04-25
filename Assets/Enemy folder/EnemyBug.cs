@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyBug : MonoBehaviour
@@ -75,12 +76,12 @@ public class EnemyBug : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.AddForce(leapVelocity, ForceMode.Impulse);
 
-        lastAttackTime = Time.time;
+        
         isLeaping = true;
 
         Debug.Log("Leaping towards player!");
     }
-    void attachedToPlayer(GameObject Player)
+    void attachedToPlayer()
     {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -91,7 +92,8 @@ public class EnemyBug : MonoBehaviour
         this.enabled = false; // disables this script's Update loop
 
         transform.SetParent(Player.transform);
-        // deal damage to player over time as its attached.
+        StartCoroutine(DealDamage(1.5f));
+        Debug.Log("Attached to player, will deal damage after delay.");
     }
 
     void disAttachFromPlayer()
@@ -99,8 +101,20 @@ public class EnemyBug : MonoBehaviour
         transform.SetParent(null);
         agent.enabled = true;
         GetComponent<Collider>().enabled = true;
-        this.enabled = true; 
+        this.enabled = true;
+        ResetToNavMesh();
+        lastAttackTime = Time.time;
+        Debug.Log("Detached from player, resuming normal behavior.");
     }
+
+    IEnumerator DealDamage(float delay)
+    { 
+        yield return new WaitForSeconds(delay);
+        GameManager.current.TakeDamage(damage);
+        Debug.Log("Dealing damage to player: " + damage);
+        disAttachFromPlayer();
+    }
+
     void OnCollisionEnter(Collision col)
     {
         if (!isLeaping) return;
@@ -109,15 +123,15 @@ public class EnemyBug : MonoBehaviour
         {
             Debug.Log("Hit player!");
             isLeaping = false;
-            ResetToNavMesh();
-            attachedToPlayer(Player);
+            
+            attachedToPlayer();
         }
         else if (col.gameObject.CompareTag("Ground"))
         {
             Debug.Log("Missed, hit ground.");
             isLeaping = false;
             ResetToNavMesh();
-            attackCooldown += 1f;
+            lastAttackTime = Time.time;
         }
     }
 

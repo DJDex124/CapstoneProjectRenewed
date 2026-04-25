@@ -203,6 +203,8 @@ MonoBehaviour:
   _lootPrefab:
   - {fileID: 5048619002020271559, guid: 318901d7a37aad444add7e2efbc90f3a, type: 3}
   _mazeGeneration: {fileID: 63317740}
+  enemySpawnerPrefab:
+  - {fileID: 7715858048182687398, guid: be32c2c37154b3c4888d7b4329617aea, type: 3}
 --- !u!4 &1712477710
 Transform:
   m_ObjectHideFlags: 0

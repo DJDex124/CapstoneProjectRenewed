@@ -12,6 +12,10 @@ public class LootManager : MonoBehaviour
     [SerializeField]
     private MazeGeneration _mazeGeneration;
 
+    [Header("Spawn Settings")]
+    
+    public List<GameObject> enemySpawnerPrefab;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,6 +26,7 @@ public class LootManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         SpawnLoot();
+        spawnEnemy();
     }
 
     public void SpawnLoot()
@@ -35,5 +40,28 @@ public class LootManager : MonoBehaviour
             }
         }
     }
-    
+    public void ClearLoot()
+    {
+        foreach (Transform child in LootSpawner)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    public void RespawnLoot()
+    {
+        ClearLoot();
+        SpawnLoot();
+    }
+    public void spawnEnemy()
+    {
+        foreach (var cell in _mazeGeneration._mazeCells)
+        {
+            Vector3 lootPosition = cell.GetRandomPosition(_mazeGeneration._cellSize);
+            if (Random.value > spawnChance)
+            {
+                Instantiate(enemySpawnerPrefab[Random.Range(0, enemySpawnerPrefab.Count)], lootPosition, Quaternion.identity, LootSpawner);
+            }
+        }
+    }
+
 }
