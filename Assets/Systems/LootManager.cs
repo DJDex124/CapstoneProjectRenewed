@@ -34,7 +34,7 @@ public class LootManager : MonoBehaviour
         foreach (var cell in _mazeGeneration._mazeCells)
         {
             Vector3 lootPosition = cell.GetRandomPosition(_mazeGeneration._cellSize);
-            if (Random.value > spawnChance)
+            if (Random.value < spawnChance)
             {
                 Instantiate(_lootPrefab[Random.Range(0, _lootPrefab.Count)], lootPosition, Quaternion.identity, LootSpawner);
             }
@@ -57,7 +57,7 @@ public class LootManager : MonoBehaviour
         foreach (var cell in _mazeGeneration._mazeCells)
         {
             Vector3 lootPosition = cell.GetRandomPosition(_mazeGeneration._cellSize);
-            if (Random.value > spawnChance)
+            if (Random.value < spawnChance)
             {
                 Instantiate(enemySpawnerPrefab[Random.Range(0, enemySpawnerPrefab.Count)], lootPosition, Quaternion.identity, LootSpawner);
             }

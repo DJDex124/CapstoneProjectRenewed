@@ -7,6 +7,8 @@ public class PlayerMovementCC : MonoBehaviour
     public float gravity = -9.81f; 
     public float jumpHeight = 1.5f;
     public float sprintSpeed = 8f;
+    public float crouchSpeed = 3f;
+    public bool isCrouching = false;
 
     [Header("Ground Check Settings")]
     public float groundCheckDistance = 0.1f;
@@ -15,7 +17,6 @@ public class PlayerMovementCC : MonoBehaviour
     public CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
-
     
     public static PlayerMovementCC current;
 
@@ -46,8 +47,9 @@ public class PlayerMovementCC : MonoBehaviour
     {
         groundcheck();
         jump();
-        sprint();
+        handleSpeed();
         attack();
+        
 
         if (isGrounded && velocity.y < 0)
         {
@@ -90,22 +92,33 @@ public class PlayerMovementCC : MonoBehaviour
             GameManager.current.currentStamina -= 10f;
         }
     }
-    void sprint()
+    void handleSpeed()
     {
         if (GameManager.current == null)
             return;
 
         if (Input.GetKey(KeyCode.LeftShift) && GameManager.current.canSprint && isGrounded)
         {
+            isCrouching = false;
             speed = sprintSpeed;
             GameManager.current.currentStamina -= 20f * Time.deltaTime;
         }
+        else if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
+        {
+            speed = crouchSpeed;
+            GameManager.current.canJump = false;
+            GameManager.current.RegenerateStamina(10f * Time.deltaTime);
+            isCrouching = true;
+        }
         else
         {
+            isCrouching = false;
+            GameManager.current.canJump = true;
             speed = 5f;
-            GameManager.current.RegenerateStamina(5f * Time.deltaTime);
+            GameManager.current.RegenerateStamina(10f * Time.deltaTime);
         }
     }
+    
 
     void attack()
     {

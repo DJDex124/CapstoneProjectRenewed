@@ -18,11 +18,14 @@ public class EnemyBug : MonoBehaviour
 
     [Header("Player Check")]
     public float Range = 10f;
-    public bool canSeePlayer;
+    public bool canHearPlayer = false;
+    public bool playerInRange = false;
 
     [Header("Jump Attack")]
     public float jumpForce = 5f;
     public bool isLeaping = false;
+
+    public EnemyState enemyState;
 
 
     void Start()
@@ -43,16 +46,40 @@ public class EnemyBug : MonoBehaviour
         if (player == null) return;
         if (isLeaping) return; 
 
+        handleState();
+        updateState();
+    }
+
+    void handleState()
+    {
+        switch (enemyState)
+        {
+            case EnemyState.Idle:
+                agent.ResetPath();
+                break;
+            case EnemyState.Chase:
+                ChasePlayer();
+                break;
+            case EnemyState.Attack:
+                AttackPlayer();
+                break;
+        }
+    }
+     void updateState()
+    {
         bool inAttackRange = !agent.pathPending
                           && agent.hasPath
                           && agent.remainingDistance <= agent.stoppingDistance;
-
         if (inAttackRange)
-            AttackPlayer();
+            enemyState = EnemyState.Attack;
+        else if
+            (canHearPlayer && PlayerMovementCC.current.isCrouching || playerInRange)
+            enemyState = EnemyState.Chase;
         else
-            ChasePlayer();
-    }
+            enemyState = EnemyState.Idle;
 
+
+    }
     void ChasePlayer()
     {
         if (!agent.enabled) return; 
@@ -134,6 +161,20 @@ public class EnemyBug : MonoBehaviour
             lastAttackTime = Time.time;
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = true;
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = false;
+        }
+    }
 
     void ResetToNavMesh()
     {
@@ -156,3 +197,9 @@ public class EnemyBug : MonoBehaviour
 
 }
 
+public enum EnemyState
+{
+    Idle,
+    Chase,
+    Attack
+}
