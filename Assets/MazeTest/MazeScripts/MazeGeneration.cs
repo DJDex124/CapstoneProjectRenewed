@@ -23,20 +23,45 @@ public class MazeGeneration : MonoBehaviour
     private MazeCell[,] _mazeGrid;
     public List<MazeCell> _mazeCells = new List<MazeCell>();
 
+    [SerializeField] private int safeZone = 4;
+    private HashSet<Vector2Int> blockedCells = new HashSet<Vector2Int>();
+
     IEnumerator Start()
     {
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
+
+        int centerX = _mazeWidth / 2;
+        int centerZ = _mazeDepth / 2;
+
+        int halfSize = safeZone / 2;
+
+        for (int x = centerX - halfSize; x < centerX + halfSize; x++)
+        {
+            for (int z = centerZ - halfSize; z < centerZ + halfSize; z++)
+            {
+                blockedCells.Add(new Vector2Int(x, z));
+            }
+        }
 
         for (int x = 0; x < _mazeWidth; x++)
         {
             for (int z = 0; z < _mazeDepth; z++)
             {
-                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x * _cellSize, 0, z * _cellSize), Quaternion.identity, mazePos);
+                Vector2Int pos = new Vector2Int(x, z);
+
+                if (blockedCells.Contains(pos))
+                    continue;
+
+                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab,
+                    new Vector3(x * _cellSize, 0, z * _cellSize),
+                    Quaternion.identity, mazePos);
+
                 _mazeCells.Add(_mazeGrid[x, z]);
             }
         }
 
-        yield return GenerateMaze(null, _mazeGrid[0, 0]);
+        MazeCell startCell = _mazeCells[Random.Range(0, _mazeCells.Count)];
+        yield return GenerateMaze(null, startCell);
 
         CreateEntranceAndExit();
     }
@@ -46,7 +71,7 @@ public class MazeGeneration : MonoBehaviour
         currentCell.Visit();
         ClearWalls(previousCell, currentCell);
 
-        yield return new WaitForSeconds(0.04f);
+        //yield return new WaitForSeconds(0.04f);
 
         MazeCell nextCell;
 
@@ -73,45 +98,41 @@ public class MazeGeneration : MonoBehaviour
         int x = Mathf.RoundToInt(currentCell.transform.position.x / _cellSize);
         int z = Mathf.RoundToInt(currentCell.transform.position.z / _cellSize);
 
-        if (x + 1 < _mazeWidth)
-        {
-            var cellToRight = _mazeGrid[x + 1, z];
+        Vector2Int checkPos;
 
-            if (cellToRight.IsVisited == false)
-            {
-                yield return cellToRight;
-            }
+        // right
+        checkPos = new Vector2Int(x + 1, z);
+        if (x + 1 < _mazeWidth && !blockedCells.Contains(checkPos))
+        {
+            var cell = _mazeGrid[x + 1, z];
+            if (cell != null && !cell.IsVisited)
+                yield return cell;
+        }
+        // left
+        checkPos = new Vector2Int(x - 1, z);
+        if (x - 1 >= 0 && !blockedCells.Contains(checkPos))
+        {
+            var cell = _mazeGrid[x - 1, z];
+            if (cell != null && !cell.IsVisited)
+                yield return cell;
         }
 
-        if (x - 1 >= 0)
+        // front
+        checkPos = new Vector2Int(x, z + 1);
+        if (z + 1 < _mazeDepth && !blockedCells.Contains(checkPos))
         {
-            var cellToLeft = _mazeGrid[x - 1, z];   
-
-            if (cellToLeft.IsVisited == false)
-            {
-                yield return cellToLeft;
-            }
-
+            var cell = _mazeGrid[x, z + 1];
+            if (cell != null && !cell.IsVisited)
+                yield return cell;
         }
 
-        if (z + 1 < _mazeDepth)
+        // bcak
+        checkPos = new Vector2Int(x, z - 1);
+        if (z - 1 >= 0 && !blockedCells.Contains(checkPos))
         {
-            var cellToFront = _mazeGrid[x, z + 1];
-
-            if(cellToFront.IsVisited == false)
-            {
-                yield return cellToFront;
-            }
-        }
-
-        if (z - 1 >= 0)
-        {
-            var cellToBack = _mazeGrid[x, z - 1];
-
-            if(cellToBack.IsVisited == false)
-            {
-                yield return cellToBack;    
-            }
+            var cell = _mazeGrid[x, z - 1];
+            if (cell != null && !cell.IsVisited)
+                yield return cell;
         }
     }
     private void ClearWalls(MazeCell previousCell, MazeCell currentCell)
@@ -150,16 +171,58 @@ public class MazeGeneration : MonoBehaviour
 
     private void CreateEntranceAndExit()
     {
-        //create exit
-        MazeCell endCell = _mazeGrid[0, 0];
-        endCell.ClearBackWall();
+        int centerX = _mazeWidth / 2;
+        int centerZ = _mazeDepth / 2;
+        int halfSize = safeZone / 2;
 
-        //create start
-        MazeCell startCell = _mazeGrid[_mazeWidth - 1, _mazeDepth - 1];
-        startCell.ClearFrontWall();
+        //safe zone enter maze 
+        Vector2Int entrancePos = new Vector2Int(centerX, centerZ - halfSize - 1);
+        MazeCell entranceCell = _mazeGrid[entrancePos.x, entrancePos.y];
 
-        //set player spawn to the start cell
-        //Instantiate(_playerPrefab, startCell.transform.position + Vector3.up, Quaternion.identity);
+        if (entranceCell != null)
+        {
+            entranceCell.ClearFrontWall(); 
+        }
+
+        List<Vector2Int> edgeCells = new List<Vector2Int>();
+
+        for (int x = 0; x < _mazeWidth; x++)
+        {
+            for (int z = 0; z < _mazeDepth; z++)
+            {
+                // skip null / safe zone
+                if (_mazeGrid[x, z] == null)
+                    continue;
+
+                bool isEdge = x == 0 || x == _mazeWidth - 1 || z == 0 || z == _mazeDepth - 1;
+
+                if (isEdge)
+                {
+                    edgeCells.Add(new Vector2Int(x, z));
+                }
+            }
+        }
+
+        Vector2Int exitPos = edgeCells[Random.Range(0, edgeCells.Count)];
+        MazeCell exitCell = _mazeGrid[exitPos.x, exitPos.y];
+
+        if (exitPos.x == 0)
+        {
+            exitCell.ClearLeftWall();
+        }
+        else if (exitPos.x == _mazeWidth - 1)
+        {
+            exitCell.ClearRightWall();
+        }
+        else if (exitPos.y == 0)
+        {
+            exitCell.ClearBackWall();
+        }
+        else if (exitPos.y == _mazeDepth - 1)
+        {
+            exitCell.ClearFrontWall();
+        }
+
     }
 
     

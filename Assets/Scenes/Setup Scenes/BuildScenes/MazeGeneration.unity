@@ -149,12 +149,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _mazeCellPrefab: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
-  _cellSize: 14
-  _mazeWidth: 6
-  _mazeDepth: 6
+  _cellSize: 12
+  _mazeWidth: 15
+  _mazeDepth: 15
   _spawnPosition: {x: 0, y: 0}
   mazePos: {fileID: 1949526067}
   _mazeCells: []
+  safeZone: 4
 --- !u!4 &63317741
 Transform:
   m_ObjectHideFlags: 0

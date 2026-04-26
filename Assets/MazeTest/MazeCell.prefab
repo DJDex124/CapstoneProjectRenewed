@@ -656,7 +656,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 844.6786, y: 0, z: -185.773}
-  m_LocalScale: {x: 14, y: 20, z: 14}
+  m_LocalScale: {x: 12, y: 16, z: 12}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3300041245621839394}
@@ -684,7 +684,6 @@ MonoBehaviour:
   _frontWall: {fileID: 722517297453167335}
   _backWall: {fileID: 515197049358329010}
   _unvisitedBlock: {fileID: 7570941401861642253}
-  lootSpawnArea: {fileID: 9022471124659974764}
 --- !u!1 &7570941401861642253
 GameObject:
   m_ObjectHideFlags: 0
