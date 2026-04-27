@@ -9,6 +9,7 @@ public class PlayerMovementCC : MonoBehaviour
     public float sprintSpeed = 8f;
     public float crouchSpeed = 3f;
     public bool isCrouching = false;
+    public bool isMoving = false;
 
     [Header("Ground Check Settings")]
     public float groundCheckDistance = 0.1f;
@@ -116,6 +117,14 @@ public class PlayerMovementCC : MonoBehaviour
             GameManager.current.canJump = true;
             speed = 5f;
             GameManager.current.RegenerateStamina(10f * Time.deltaTime);
+        }
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        {
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
         }
     }
     

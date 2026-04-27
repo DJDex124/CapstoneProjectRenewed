@@ -23,8 +23,50 @@ public class MazeGeneration : MonoBehaviour
     private MazeCell[,] _mazeGrid;
     public List<MazeCell> _mazeCells = new List<MazeCell>();
 
+
     [SerializeField] private int safeZone = 4;
     private HashSet<Vector2Int> blockedCells = new HashSet<Vector2Int>();
+
+    public List<MazeCell> enemySpawnCell = new List<MazeCell>();
+    public List<MazeCell> lootSpawnCell = new List<MazeCell>();
+    [SerializeField] private int enemySpawnAmount = 5;
+    [SerializeField] private int lootSpawnAmount = 5;
+
+    public void pickSpawnableCells(List<MazeCell> cells)
+    {
+        //clears all the copied cells from these lists.
+        enemySpawnCell.Clear();
+        lootSpawnCell.Clear();
+
+        //makes sure the spawnable cells are not in the safe zone or blocked cells. can expand later to make things spawn further out
+        //can make more methods so that different things spawn further out in the maze, depending on rarity if we add that in
+        int centreX = _mazeWidth / 2;
+        int centreZ = _mazeDepth / 2;
+
+        //creates a list pf available cells that are not in the safe zone.
+        //means we can block cells within this list
+        List<MazeCell> available = cells.Where(cell=>
+        {
+            int x = Mathf.RoundToInt(cell.transform.position.x / _cellSize);
+            int z = Mathf.RoundToInt(cell.transform.position.z / _cellSize);
+            return !blockedCells.Contains(new Vector2Int(x, z));
+        }).ToList();
+
+        //randomly picks from available list and adds to spawn list, removing from the available list.
+        for (int i = 0; i < enemySpawnAmount && available.Count > 0; i++)
+        {
+            int index = Random.Range(0, available.Count);
+            enemySpawnCell.Add(available[index]);
+            available.RemoveAt(index);
+        }
+
+        for (int i = 0; i < lootSpawnAmount && available.Count > 0; i++)
+        {
+            int index = Random.Range(0, available.Count);
+            lootSpawnCell.Add(available[index]);
+            available.RemoveAt(index);
+        }
+    }
 
     IEnumerator Start()
     {
@@ -64,6 +106,7 @@ public class MazeGeneration : MonoBehaviour
         yield return GenerateMaze(null, startCell);
 
         CreateEntranceAndExit();
+        pickSpawnableCells(_mazeCells);
     }
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell)

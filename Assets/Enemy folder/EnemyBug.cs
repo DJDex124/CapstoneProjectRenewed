@@ -39,12 +39,22 @@ public class EnemyBug : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             player = playerObj.transform;
+        enemyState = EnemyState.Idle;
     }
 
     void Update()
     {
         if (player == null) return;
-        if (isLeaping) return; 
+        if (isLeaping) return;
+
+        if (PlayerMovementCC.current.isCrouching)
+        { 
+            canHearPlayer = false;
+        }
+        else if (PlayerMovementCC.current.isMoving)
+        {
+            canHearPlayer = true;
+        }
 
         handleState();
         updateState();
@@ -73,7 +83,7 @@ public class EnemyBug : MonoBehaviour
         if (inAttackRange)
             enemyState = EnemyState.Attack;
         else if
-            (canHearPlayer && PlayerMovementCC.current.isCrouching || playerInRange)
+            (canHearPlayer && playerInRange)
             enemyState = EnemyState.Chase;
         else
             enemyState = EnemyState.Idle;

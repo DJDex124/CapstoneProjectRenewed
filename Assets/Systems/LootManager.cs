@@ -8,9 +8,9 @@ public class LootManager : MonoBehaviour
     public List<GameObject> _lootPrefab;
     [Range(0, 1)]
     float spawnChance = 0.3f;
+    public int spawnAmount = 10;
 
-    [SerializeField]
-    private MazeGeneration _mazeGeneration;
+    [SerializeField] private MazeGeneration _mazeGeneration;   
 
     [Header("Spawn Settings")]
     
@@ -19,27 +19,17 @@ public class LootManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(SpawnLootWithDelay(2f)); // Adjust the delay as needed
+        StartCoroutine(Spawn(2f)); // Adjust the delay as needed
     }
 
-    IEnumerator SpawnLootWithDelay(float delay)
+    IEnumerator Spawn(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SpawnLoot();
-        spawnEnemy();
+        spawnLoot();
+        spawnEnemy();   
     }
 
-    public void SpawnLoot()
-    {
-        foreach (var cell in _mazeGeneration._mazeCells)
-        {
-            Vector3 lootPosition = cell.GetRandomPosition(_mazeGeneration._cellSize);
-            if (Random.value < spawnChance)
-            {
-                Instantiate(_lootPrefab[Random.Range(0, _lootPrefab.Count)], lootPosition, Quaternion.identity, LootSpawner);
-            }
-        }
-    }
+    
     public void ClearLoot()
     {
         foreach (Transform child in LootSpawner)
@@ -50,17 +40,22 @@ public class LootManager : MonoBehaviour
     public void RespawnLoot()
     {
         ClearLoot();
-        SpawnLoot();
+        spawnLoot();
     }
     public void spawnEnemy()
     {
-        foreach (var cell in _mazeGeneration._mazeCells)
+        foreach (var cell in _mazeGeneration.enemySpawnCell)
         {
             Vector3 lootPosition = cell.GetRandomPosition(_mazeGeneration._cellSize);
-            if (Random.value < spawnChance)
-            {
-                Instantiate(enemySpawnerPrefab[Random.Range(0, enemySpawnerPrefab.Count)], lootPosition, Quaternion.identity, LootSpawner);
-            }
+            Instantiate(enemySpawnerPrefab[Random.Range(0, enemySpawnerPrefab.Count)], lootPosition, Quaternion.identity, LootSpawner);
+        }
+    }
+    public void spawnLoot()
+    {
+        foreach (var cell in _mazeGeneration.lootSpawnCell)
+        {
+            Vector3 lootPosition = cell.GetRandomPosition(_mazeGeneration._cellSize);
+            Instantiate(_lootPrefab[Random.Range(0, _lootPrefab.Count)], lootPosition, Quaternion.identity, LootSpawner);
         }
     }
 
