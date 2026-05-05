@@ -4,6 +4,7 @@ public class AnimEventScript : MonoBehaviour
 {
     public PlayerMovementCC player;
     public EnemyScript enemy;
+    
 
     public void PerformAttackHit()
     {
