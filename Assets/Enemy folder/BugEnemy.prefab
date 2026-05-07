@@ -155,7 +155,8 @@ MonoBehaviour:
   damage: 10
   attackCooldown: 1
   Range: 10
-  canSeePlayer: 0
+  canHearPlayer: 0
+  playerInRange: 0
   jumpForce: 5
   isLeaping: 0
   enemyState: 0

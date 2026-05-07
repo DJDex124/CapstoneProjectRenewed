@@ -13,7 +13,7 @@ public class EnemyBug : MonoBehaviour
     [Header("Damage Settings")]
     public float attackRange = 2.1f;
     public float damage = 10f;
-    public float attackCooldown = 1f;
+    public float attackCooldown = 2f;
     private float lastAttackTime;
 
     [Header("Player Check")]
@@ -24,6 +24,7 @@ public class EnemyBug : MonoBehaviour
     [Header("Jump Attack")]
     public float jumpForce = 5f;
     public bool isLeaping = false;
+    public float knockbackForce = 2f;
 
     public EnemyState enemyState;
 
@@ -58,8 +59,14 @@ public class EnemyBug : MonoBehaviour
 
         handleState();
         updateState();
+        if (Input.GetKey(KeyCode.T)&& playerInRange)
+        {
+            Knockback();
+        }    
     }
 
+
+    //--------------------------- ENEMY STATES LOGIC------------------------------
     void handleState()
     {
         switch (enemyState)
@@ -97,7 +104,10 @@ public class EnemyBug : MonoBehaviour
         RotateTowardsPlayer();
 
     }
+    //--------------------------- ENEMY STATES LOGIC------------------------------
 
+
+    // ---------------------------- ATTACK LOGIC ------------------ ----------
     void AttackPlayer()
     {
         if (Time.time < lastAttackTime + attackCooldown) return;
@@ -117,6 +127,7 @@ public class EnemyBug : MonoBehaviour
         isLeaping = true;
 
         Debug.Log("Leaping towards player!");
+        lastAttackTime = Time.time;
     }
     void attachedToPlayer()
     {
@@ -151,7 +162,10 @@ public class EnemyBug : MonoBehaviour
         Debug.Log("Dealing damage to player: " + damage);
         disAttachFromPlayer();
     }
+    // ---------------------------- ATTACK LOGIC ------------------ ----------
 
+
+    // ---------------------------- COLLISIONS AND TRIGGERS ---------------------------
     void OnCollisionEnter(Collision col)
     {
         if (!isLeaping) return;
@@ -168,7 +182,7 @@ public class EnemyBug : MonoBehaviour
             Debug.Log("Missed, hit ground.");
             isLeaping = false;
             ResetToNavMesh();
-            lastAttackTime = Time.time;
+            
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -186,6 +200,21 @@ public class EnemyBug : MonoBehaviour
         }
     }
 
+    void Knockback()
+    {
+        agent.enabled = false;
+        rb.isKinematic = false;
+
+        Vector3 dir = (transform.position - player.position).normalized;
+        dir.y = 1;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.AddForce(dir * knockbackForce, ForceMode.Impulse);
+    }
+    // ---------------------------- COLLISIONS AND TRIGGERS ---------------------------
+
+
+    //--------------------------- RESETS -------------------------
     void ResetToNavMesh()
     {
         rb.linearVelocity = Vector3.zero;
@@ -204,7 +233,7 @@ public class EnemyBug : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 5f);
         }
     }
-
+    //--------------------------- RESETS -------------------------
 }
 
 public enum EnemyState
