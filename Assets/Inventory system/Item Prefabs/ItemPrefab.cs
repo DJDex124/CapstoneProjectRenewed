@@ -31,5 +31,8 @@ public enum OldItemType
     Stick,
     Stone,
     Leaf,
-    // Add more item types as needed
+    Hammer,
+    Slingshot,
+    Spear,
+    //add more items as needed
 }

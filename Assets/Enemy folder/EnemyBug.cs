@@ -258,6 +258,7 @@ public class EnemyBug : MonoBehaviour
         if (health <= 0f)
         {
             Die();
+            
         }
     }
 
@@ -267,6 +268,8 @@ public class EnemyBug : MonoBehaviour
         agent.enabled = false; 
         this.enabled = false;
         isAlive = false;
+        Destroy(gameObject, 3f);
+        
     }
     // ---------------------------- COLLISIONS AND TRIGGERS ---------------------------
 
@@ -291,7 +294,11 @@ public class EnemyBug : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 5f);
         }
     }
+
+    
+
     //--------------------------- RESETS -------------------------
+
 }
 
 public enum EnemyState
