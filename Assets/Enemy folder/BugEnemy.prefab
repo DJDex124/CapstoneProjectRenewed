@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3983546769520315871}
   - component: {fileID: 4411862357420503016}
   - component: {fileID: 5688658799264613261}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BugEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,14 @@ MonoBehaviour:
   playerInRange: 0
   jumpForce: 5
   isLeaping: 0
+  knockbackForce: 2
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   enemyState: 0
+  isAlive: 1
+  isGrounded: 0
+  groundCheckDistance: 0.31
 --- !u!54 &4411862357420503016
 Rigidbody:
   m_ObjectHideFlags: 0

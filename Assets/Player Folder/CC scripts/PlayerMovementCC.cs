@@ -152,7 +152,8 @@ public class PlayerMovementCC : MonoBehaviour
             attackRadius,
             attackPoint.forward,
             attackRange,
-            enemyMask
+            enemyMask,
+            QueryTriggerInteraction.Ignore
         );
 
         Debug.Log("Hits: " + hits.Length);
@@ -160,13 +161,12 @@ public class PlayerMovementCC : MonoBehaviour
         foreach (RaycastHit hit in hits)
         {
             Debug.Log("Hit object: " + hit.collider.name);
-
-            EnemyScript enemy = hit.collider.GetComponentInParent<EnemyScript>();
-
-            if (enemy != null)
+            EnemyBug enemyBug = hit.collider.GetComponentInParent<EnemyBug>();
+            if (enemyBug != null && enemyBug.isAlive)
             {
-                Debug.Log("Enemy damaged");
-                enemy.TakeDamage(attackDmg);
+                Debug.Log("Hit EnemyBug: " + hit.collider.name);
+                enemyBug.Knockback();
+                enemyBug.TakeDamage(50);
             }
         }
     }

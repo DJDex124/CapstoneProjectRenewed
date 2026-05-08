@@ -3,7 +3,7 @@ using UnityEngine;
 public class AnimEventScript : MonoBehaviour
 {
     public PlayerMovementCC player;
-    public EnemyScript enemy;
+    private EnemyScript enemy;
     
 
     public void PerformAttackHit()

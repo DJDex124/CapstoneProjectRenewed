@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.XR;
 
 public class EnemyBug : MonoBehaviour
 {
@@ -26,7 +27,11 @@ public class EnemyBug : MonoBehaviour
     public bool isLeaping = false;
     public float knockbackForce = 2f;
 
+    public LayerMask groundMask;
     public EnemyState enemyState;
+    public bool isAlive = true;
+    public bool isGrounded;
+    public float groundCheckDistance = .5f;
 
 
     void Start()
@@ -36,33 +41,27 @@ public class EnemyBug : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = 5f;
         agent.updateRotation = false;
+        groundMask = LayerMask.GetMask("Ground");
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             player = playerObj.transform;
         enemyState = EnemyState.Idle;
+
+        
     }
 
     void Update()
     {
+        groundcheck();
         if (player == null) return;
         if (isLeaping) return;
 
-        if (PlayerMovementCC.current.isCrouching)
-        { 
-            canHearPlayer = false;
-        }
-        else if (PlayerMovementCC.current.isMoving)
-        {
-            canHearPlayer = true;
-        }
+        canHearPlayer = !PlayerMovementCC.current.isCrouching && PlayerMovementCC.current.isMoving;
 
         handleState();
         updateState();
-        if (Input.GetKey(KeyCode.T)&& playerInRange)
-        {
-            Knockback();
-        }    
+        
     }
 
 
@@ -72,6 +71,7 @@ public class EnemyBug : MonoBehaviour
         switch (enemyState)
         {
             case EnemyState.Idle:
+                if (!agent.enabled) return;
                 agent.ResetPath();
                 break;
             case EnemyState.Chase:
@@ -79,6 +79,10 @@ public class EnemyBug : MonoBehaviour
                 break;
             case EnemyState.Attack:
                 AttackPlayer();
+                break;
+
+            case EnemyState.Dead:
+                //if I want to add any dead logic. all of it is handled in my die function tho rn
                 break;
         }
     }
@@ -94,7 +98,8 @@ public class EnemyBug : MonoBehaviour
             enemyState = EnemyState.Chase;
         else
             enemyState = EnemyState.Idle;
-
+        if (health <= 0f)
+            enemyState = EnemyState.Dead;
 
     }
     void ChasePlayer()
@@ -181,6 +186,7 @@ public class EnemyBug : MonoBehaviour
         {
             Debug.Log("Missed, hit ground.");
             isLeaping = false;
+            lastAttackTime = Time.time; 
             ResetToNavMesh();
             
         }
@@ -200,16 +206,67 @@ public class EnemyBug : MonoBehaviour
         }
     }
 
-    void Knockback()
+    public void Knockback()
     {
         agent.enabled = false;
         rb.isKinematic = false;
+        isLeaping = false;
 
         Vector3 dir = (transform.position - player.position).normalized;
         dir.y = 1;
 
         rb.linearVelocity = Vector3.zero;
         rb.AddForce(dir * knockbackForce, ForceMode.Impulse);
+        StartCoroutine(ReEnableAgent());
+
+    }
+    IEnumerator ReEnableAgent()
+    {
+        if(!isAlive) yield break;
+        yield return new WaitForSeconds(0.2f);
+        yield return new WaitUntil(() => isGrounded);
+        yield return new WaitForSeconds(0.1f);
+        ResetToNavMesh();
+    }
+
+    
+    void groundcheck()
+    {
+        float halfHeight = GetComponent<Collider>().bounds.extents.y;
+        Vector3 rayOrigin = transform.position + Vector3.up * halfHeight;
+        isGrounded = Physics.Raycast(rayOrigin, Vector3.down, halfHeight + groundCheckDistance, groundMask);
+    }
+
+    void OnDrawGizmos()
+    {
+        float halfHeight = GetComponent<Collider>().bounds.extents.y;
+        Vector3 rayOrigin = transform.position + Vector3.up * halfHeight;
+        Gizmos.color = isGrounded ? Color.green : Color.red;
+        Gizmos.DrawLine(rayOrigin, rayOrigin + Vector3.down * (halfHeight + groundCheckDistance ));
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (transform.parent == Player.transform)
+        {
+            StopAllCoroutines();
+            disAttachFromPlayer();
+        }
+        health -= damage;
+        Debug.Log("Enemy took damage: " + damage);
+
+        if (health <= 0f)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("Enemy died.");
+        agent.enabled = false; 
+        this.enabled = false;
+        isAlive = false;
     }
     // ---------------------------- COLLISIONS AND TRIGGERS ---------------------------
 
@@ -217,6 +274,7 @@ public class EnemyBug : MonoBehaviour
     //--------------------------- RESETS -------------------------
     void ResetToNavMesh()
     {
+        Debug.Log("Reset Happened");
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = true;
         agent.enabled = true;
@@ -240,5 +298,6 @@ public enum EnemyState
 {
     Idle,
     Chase,
-    Attack
+    Attack,
+    Dead
 }
