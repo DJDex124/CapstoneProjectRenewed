@@ -33,8 +33,13 @@ public class PlayerInteractions : MonoBehaviour
         
         if (canSee && Input.GetKeyDown(KeyCode.E))
         {
-            OldInventory.current.AddItem(itemData);
-            Destroy(hit.collider.gameObject);
+            ItemPrefab itemPrefab = hit.collider.GetComponent<ItemPrefab>();
+            if (itemPrefab != null)
+            {
+                OldInventory.current.AddItem(itemData);
+                Destroy(hit.collider.gameObject);
+            }
+            
         }
     }
 
