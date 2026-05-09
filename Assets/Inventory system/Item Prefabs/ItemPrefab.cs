@@ -6,6 +6,7 @@ public class ItemPrefab : MonoBehaviour
     public OldItemType itemType;
     public OldItemData itemData;
 
+    public bool canPickup = false;   
 
 
     [Range(0f, 1f)]
@@ -16,11 +17,7 @@ public class ItemPrefab : MonoBehaviour
         if (OldInventory.current == null) { Debug.LogError("OldInventory.current is null!"); return; }
         if (itemData == null) { Debug.LogError("itemData is null!"); return; }
 
-        if (PlayerInteractions.current.canSee && Input.GetKeyDown(KeyCode.E))
-        {
-            OldInventory.current.AddItem(itemData);
-            Destroy(gameObject);
-        }
+       
     }
 
     

@@ -129,6 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemPrefab
   itemType: 0
   itemData: {fileID: 11400000, guid: 4236e0b39471a724fb4a1cffef58cfbd, type: 2}
+  spawnChance: 0
 --- !u!135 &7639316537343749247
 SphereCollider:
   m_ObjectHideFlags: 0

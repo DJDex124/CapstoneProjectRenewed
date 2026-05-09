@@ -1,5 +1,7 @@
+using NUnit.Framework.Interfaces;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using static UnityEditor.Progress;
 
 public class PlayerInteractions : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class PlayerInteractions : MonoBehaviour
     public bool canSee;
     public float pickupRange = 3f;
     public LayerMask pickupMask;
+    public OldItemData itemData;
 
     public static PlayerInteractions current;
 
@@ -18,20 +21,31 @@ public class PlayerInteractions : MonoBehaviour
     void Update()
     {
         HandlePickup();
+        handleDrop();
     }
-    void HandlePickup()
+    public void HandlePickup()
     {
         Vector3 rayOrigin = transform.position + Vector3.up * (PlayerMovementCC.current.controller.skinWidth + 0.05f);
         Vector3 lookDir = Camera.main.transform.forward;
         RaycastHit hit;
         canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, pickupMask);
 
-        if (canSee)
+        
+        if (canSee && Input.GetKeyDown(KeyCode.E))
         {
-           
-            Debug.Log($"Hit object: {hit.collider.gameObject.name}");
+            OldInventory.current.AddItem(itemData);
+            Destroy(hit.collider.gameObject);
         }
     }
+
+    void handleDrop()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OldInventory.current.DropSelectedItem(Player.transform);
+        }
+    }
+     
     private void OnDrawGizmos()
     {
         if (PlayerMovementCC.current == null || PlayerMovementCC.current.controller == null)
