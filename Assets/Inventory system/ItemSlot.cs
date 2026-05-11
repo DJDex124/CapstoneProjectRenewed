@@ -24,7 +24,7 @@ public class OldItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         SpriteImage = transform.GetChild(0).GetComponent<Image>();
         itemCountText = GetComponentInChildren<TextMeshProUGUI>();
 
-        if (itemInSlot != null)
+        if (itemInSlot == null)
         {
             SpriteImage.enabled = false;
             itemCountText.enabled = false;

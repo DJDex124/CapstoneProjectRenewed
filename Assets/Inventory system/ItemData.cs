@@ -5,10 +5,11 @@ public class OldItemData : ScriptableObject
 {
     public string itemName;
     public Sprite itemSprite;
-    
+    public OldItemData itemData;
 
     public GameObject pickupPrefab;
-    
+
+    public GameObject heldItem;
 
     public ItemType itemType;
     public enum ItemType

@@ -9,7 +9,9 @@ public class OldInventory : MonoBehaviour
     public int currentIndex;
     int maxIndex;
     public OldItemSlot[] itemSlots;
-    
+    public Transform handSpot;
+    public GameObject heldObject;
+    private int lastIndex = -1;
     public bool isOpen;
 
     public static OldInventory current;
@@ -38,6 +40,8 @@ public class OldInventory : MonoBehaviour
             slot.Init();
         }
         maxIndex = itemSlots.Length;
+
+        handSpot = PlayerMovementCC.current.handSpot;
     }
 
     void Update()
@@ -61,6 +65,13 @@ public class OldInventory : MonoBehaviour
         else if (scroll < 0f)
         {
             currentIndex = (currentIndex - 1 + maxIndex) % maxIndex;
+        }
+
+        if(currentIndex != lastIndex)
+        {
+            
+            UpdateHeldItem();
+            lastIndex = currentIndex;
         }
     }
     public void HandleInput()
@@ -176,5 +187,28 @@ public class OldInventory : MonoBehaviour
             Debug.Log("No item to drop.");
         }
     }
-    
+
+    void UpdateHeldItem()
+    {
+        if (heldObject != null)
+        {
+            Destroy(heldObject);
+        }
+
+        OldItemSlot selectedSlot = itemSlots[currentIndex];
+
+        if (selectedSlot.itemInSlot == null)
+            return;
+
+        GameObject heldPrefab = selectedSlot.itemInSlot.heldItem;
+
+        if (heldPrefab != null)
+        {
+            heldObject = Instantiate(heldPrefab, handSpot);
+
+            heldObject.transform.localPosition = Vector3.zero;
+            heldObject.transform.localRotation = Quaternion.identity;
+        }
+    }
+
 }

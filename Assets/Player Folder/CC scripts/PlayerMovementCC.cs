@@ -34,6 +34,8 @@ public class PlayerMovementCC : MonoBehaviour
     public Animator animator;
 
     public TrailRenderer swingTrail;
+
+    public Transform handSpot;
     void Start()
     {
         controller = GetComponent<CharacterController>();

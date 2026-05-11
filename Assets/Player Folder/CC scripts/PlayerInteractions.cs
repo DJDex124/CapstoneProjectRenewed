@@ -10,7 +10,7 @@ public class PlayerInteractions : MonoBehaviour
     public bool canSee;
     public float pickupRange = 3f;
     public LayerMask pickupMask;
-    public OldItemData itemData;
+    
 
     public static PlayerInteractions current;
 
@@ -36,7 +36,7 @@ public class PlayerInteractions : MonoBehaviour
             ItemPrefab itemPrefab = hit.collider.GetComponent<ItemPrefab>();
             if (itemPrefab != null)
             {
-                OldInventory.current.AddItem(itemData);
+                OldInventory.current.AddItem(itemPrefab.itemData);
                 Destroy(hit.collider.gameObject);
             }
             
