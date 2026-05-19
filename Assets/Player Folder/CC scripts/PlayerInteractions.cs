@@ -14,6 +14,12 @@ public class PlayerInteractions : MonoBehaviour
 
     public static PlayerInteractions current;
 
+    [Header("Glowsticks")]
+    [SerializeField] private GameObject glowstickPrefab;
+    [SerializeField] private Transform glowstickSpawnPoint;
+    [SerializeField] private int glowstickCount = 10;
+    [SerializeField] private float throwForce = 6f;
+
     void Start()
     {
         current = this;
@@ -22,6 +28,7 @@ public class PlayerInteractions : MonoBehaviour
     {
         HandlePickup();
         handleDrop();
+        HandleGlowstickDrop();
     }
     public void HandlePickup()
     {
@@ -71,5 +78,39 @@ public class PlayerInteractions : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         // Add logic to handle the object hit by the raycast
+    }
+
+    void HandleGlowstickDrop()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (glowstickCount <= 0)
+                return;
+
+            if (glowstickPrefab == null)
+                return;
+
+            glowstickCount--;
+
+            GameObject glowstick = Instantiate(
+                glowstickPrefab,
+                glowstickSpawnPoint.position,
+                Quaternion.identity
+            );
+
+            Rigidbody rb = glowstick.GetComponent<Rigidbody>();
+
+            if (rb != null)
+            {
+                Vector3 throwDirection =
+                    Camera.main.transform.forward +
+                    Vector3.up * 0.2f;
+
+                rb.AddForce(
+                    throwDirection.normalized * throwForce,
+                    ForceMode.Impulse
+                );
+            }
+        }
     }
 }
