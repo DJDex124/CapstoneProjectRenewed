@@ -18,6 +18,16 @@ public class EndDevice : MonoBehaviour
             return;
         }
         OldItemSlot selectedSlot = OldInventory.current.itemSlots[OldInventory.current.currentIndex];
+        if (selectedSlot.itemInSlot == null)
+        {
+            Debug.Log("No item in selected slot.");
+            return;
+        }
+        if (selectedSlot.itemInSlot.itemType != acceptedType)
+        {
+            Debug.Log("Selected item is not the correct type.");
+            return;
+        }
         OldItemData received = selectedSlot.itemInSlot;
         OldInventory.current.RemoveItem(received);
         receivedItems.Add(received);

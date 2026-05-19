@@ -91,12 +91,12 @@ public class GameManager : MonoBehaviour
     public void UseStamina(float amount)
     {
         currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
-        Debug.Log("Stamina: " + currentStamina);
+        
     }
     public void RegenerateStamina(float amount)
     {
         currentStamina = Mathf.Clamp(currentStamina + amount, 0f, maxStamina);
-        Debug.Log("Stamina: " + currentStamina);
+        
     }
 
     

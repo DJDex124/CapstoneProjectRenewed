@@ -16,4 +16,4 @@ MonoBehaviour:
   itemSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   pickupPrefab: {fileID: 5365650881138855633, guid: 460f80c98da45d444ab0af96f837614b, type: 3}
   heldItem: {fileID: 5365650881138855633, guid: 460f80c98da45d444ab0af96f837614b, type: 3}
-  itemType: 0
+  itemType: 4

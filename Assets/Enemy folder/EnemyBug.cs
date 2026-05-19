@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.SocialPlatforms;
+using UnityEngine.UIElements;
 
 public class EnemyBug : MonoBehaviour
 {
@@ -11,6 +13,14 @@ public class EnemyBug : MonoBehaviour
     private Rigidbody rb;
     private GameObject Player;
 
+    [Header("Speed Settings")]
+    public float speed = 3.5f;
+    public float rotationSpeed = 5f;
+    public float idleSpeed = 1f;
+    public float wanderRadius = 5f;
+    public bool isWandering = false;
+
+
     [Header("Damage Settings")]
     public float attackRange = 2.1f;
     public float damage = 10f;
@@ -18,7 +28,7 @@ public class EnemyBug : MonoBehaviour
     private float lastAttackTime;
 
     [Header("Player Check")]
-    public float Range = 10f;
+    public float detectionRange = 10f;
     public bool canHearPlayer = false;
     public bool playerInRange = false;
 
@@ -72,7 +82,7 @@ public class EnemyBug : MonoBehaviour
         {
             case EnemyState.Idle:
                 if (!agent.enabled) return;
-                agent.ResetPath();
+                Idle();
                 break;
             case EnemyState.Chase:
                 ChasePlayer();
@@ -108,6 +118,37 @@ public class EnemyBug : MonoBehaviour
         agent.SetDestination(player.position);
         RotateTowardsPlayer();
 
+    }
+    void Idle()
+    {
+        if (!agent.enabled) return;
+        if (isWandering) return;
+        agent.ResetPath();
+        StartCoroutine(IdleCoroutine(Random.Range(2,5f)));
+    }
+    IEnumerator IdleCoroutine(float time)
+    {
+        isWandering = true;
+        while (enemyState == EnemyState.Idle)
+        {
+            Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+            randomDirection += transform.position;
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas))
+            {
+                agent.SetDestination(hit.position);
+                agent.speed = idleSpeed;
+            }
+
+            yield return new WaitUntil(() =>
+                !agent.pathPending &&
+                agent.remainingDistance <= agent.stoppingDistance);
+
+            yield return new WaitForSeconds(time);
+        }
+
+        agent.speed = speed;
+        isWandering = false;
     }
     //--------------------------- ENEMY STATES LOGIC------------------------------
 
