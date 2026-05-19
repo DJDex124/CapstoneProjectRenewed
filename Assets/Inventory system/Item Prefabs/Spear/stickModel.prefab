@@ -60,9 +60,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: fd8796d209b0d394e84e14b0e30d60cc, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fd8796d209b0d394e84e14b0e30d60cc, type: 3}
       propertyPath: m_Name
       value: stickModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fd8796d209b0d394e84e14b0e30d60cc, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

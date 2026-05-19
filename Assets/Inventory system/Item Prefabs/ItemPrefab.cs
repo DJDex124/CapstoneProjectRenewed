@@ -28,6 +28,7 @@ public enum OldItemType
     Stick,
     Stone,
     Leaf,
+    CompletionDevice,
     Hammer,
     Slingshot,
     Spear,

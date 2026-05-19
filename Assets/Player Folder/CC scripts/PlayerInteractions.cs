@@ -10,7 +10,9 @@ public class PlayerInteractions : MonoBehaviour
     public bool canSee;
     public float pickupRange = 3f;
     public LayerMask pickupMask;
+    public LayerMask EndMask;
     
+
 
     public static PlayerInteractions current;
 
@@ -29,6 +31,7 @@ public class PlayerInteractions : MonoBehaviour
         HandlePickup();
         handleDrop();
         HandleGlowstickDrop();
+        HandleEndDevice();
     }
     public void HandlePickup()
     {
@@ -37,7 +40,6 @@ public class PlayerInteractions : MonoBehaviour
         RaycastHit hit;
         canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, pickupMask);
 
-        
         if (canSee && Input.GetKeyDown(KeyCode.E))
         {
             ItemPrefab itemPrefab = hit.collider.GetComponent<ItemPrefab>();
@@ -45,8 +47,8 @@ public class PlayerInteractions : MonoBehaviour
             {
                 OldInventory.current.AddItem(itemPrefab.itemData);
                 Destroy(hit.collider.gameObject);
+                
             }
-            
         }
     }
 
@@ -55,6 +57,27 @@ public class PlayerInteractions : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             OldInventory.current.DropSelectedItem(Player.transform);
+        }
+    }
+    void HandleEndDevice()
+    {
+        Vector3 rayOrigin = transform.position + Vector3.up * (PlayerMovementCC.current.controller.skinWidth + 0.05f);
+        Vector3 lookDir = Camera.main.transform.forward;
+        RaycastHit hit;
+        canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, EndMask);
+        if
+            (canSee)
+        {
+            Debug.Log("Looking at end device");
+        }
+        if (canSee && Input.GetKeyDown(KeyCode.E))
+        {
+            EndDevice endDevice = hit.collider.GetComponent<EndDevice>();
+            if (endDevice != null)
+            {
+                endDevice.TryReceiveFromInventory();
+              
+            }
         }
     }
      
@@ -71,14 +94,7 @@ public class PlayerInteractions : MonoBehaviour
         Gizmos.color = canSee ? Color.green : Color.red;
         Gizmos.DrawLine(rayOrigin, rayOrigin + lookDir * pickupRange);
     }
-    void endGameLogic()
-    {
-        //Temporary end logic. will change so that this only handles interactions not the end of the game
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        // Add logic to handle the object hit by the raycast
-    }
+    
 
     void HandleGlowstickDrop()
     {

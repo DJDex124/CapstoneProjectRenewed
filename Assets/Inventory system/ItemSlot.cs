@@ -13,6 +13,7 @@ public class OldItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public int itemCount;
     public int index;
 
+    public static OldItemSlot instance;
 
     [HideInInspector] public Image slotImage;
     [HideInInspector] public Image SpriteImage;
