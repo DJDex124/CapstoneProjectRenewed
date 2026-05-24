@@ -15,11 +15,15 @@ public class MazeDrawingMech : MonoBehaviour
     [SerializeField] private Color drawColor = Color.black;
     [SerializeField] private Color eraseColor = Color.white;
     [SerializeField] private int brushSize = 4;
+    [SerializeField] private int eraserSize = 10;
+    [SerializeField] private RectTransform brushUI;
+    [SerializeField] private int brushUISize;
 
     private Texture2D drawTexture;
 
     private bool mapOpen;
 
+    private bool wasDrawingLastFrame = false;
 
     private Vector2 lastMousePos;
 
@@ -36,6 +40,7 @@ public class MazeDrawingMech : MonoBehaviour
         if (mapOpen)
         {
             Draw();
+            UpdateBrushPreview();
         }
     }
 
@@ -49,12 +54,12 @@ public class MazeDrawingMech : MonoBehaviour
             CameraControllerCC.current.enabled = !mapOpen;
 
             mapPanel.SetActive(mapOpen);
-
+            brushUI.gameObject.SetActive(mapOpen);
             Cursor.lockState = mapOpen
                 ? CursorLockMode.None
                 : CursorLockMode.Locked;
 
-            Cursor.visible = mapOpen;
+            
         }
     }
 
@@ -80,10 +85,16 @@ public class MazeDrawingMech : MonoBehaviour
 
     void Draw()
     {
-        if (!Input.GetMouseButton(0))
-            return;
-
+        bool isDrawing = Input.GetMouseButton(0);
         bool isErasing = Input.GetMouseButton(1);
+
+        if (!isDrawing && !isErasing)
+        {
+            wasDrawingLastFrame = false;
+            return;
+        }
+
+        int currentSize = isErasing ? eraserSize : brushSize;
         Color currentColor = isErasing ? eraseColor : drawColor;
 
         RectTransform rectTransform = mapImage.rectTransform;
@@ -109,12 +120,20 @@ public class MazeDrawingMech : MonoBehaviour
 
         Vector2 currentMousePos = new Vector2(x, y);
 
-        DrawLine(lastMousePos, currentMousePos, currentColor);
+        if (!wasDrawingLastFrame)
+        {
+            DrawCircle(x, y, currentColor, currentSize);
+        }
+        else
+        {
+            DrawLine(lastMousePos, currentMousePos, currentColor, currentSize);
+        }
 
         lastMousePos = currentMousePos;
+        wasDrawingLastFrame = true;
     }
 
-    void DrawLine(Vector2 from, Vector2 to, Color color)
+    void DrawLine(Vector2 from, Vector2 to, Color color, int size)
     {
         float distance = Vector2.Distance(from, to);
         int steps = Mathf.CeilToInt(distance * 2f);
@@ -124,15 +143,15 @@ public class MazeDrawingMech : MonoBehaviour
             float t = i / (float)steps;
             Vector2 point = Vector2.Lerp(from, to, t);
 
-            DrawCircle((int)point.x, (int)point.y, color);
+            DrawCircle((int)point.x, (int)point.y, color, size);
         }
     }
 
-    void DrawCircle(int centerX, int centerY, Color color)
+    void DrawCircle(int centerX, int centerY, Color color, int size)
     {
-        for (int x = -brushSize; x <= brushSize; x++)
+        for (int x = -size; x <= size; x++)
         {
-            for (int y = -brushSize; y <= brushSize; y++)
+            for (int y = -size; y <= size; y++)
             {
                 int drawX = centerX + x;
                 int drawY = centerY + y;
@@ -143,7 +162,7 @@ public class MazeDrawingMech : MonoBehaviour
 
                 float distance = Mathf.Sqrt(x * x + y * y);
 
-                if (distance <= brushSize)
+                if (distance <= size)
                 {
                     drawTexture.SetPixel(drawX, drawY, color);
                 }
@@ -151,5 +170,31 @@ public class MazeDrawingMech : MonoBehaviour
         }
 
         drawTexture.Apply();
+    }
+
+    void UpdateBrushPreview()
+    {
+        brushUI.gameObject.SetActive(true);
+
+        
+        brushUI.position = Input.mousePosition;
+
+        bool isErasing = Input.GetMouseButton(1);
+
+        int currentSize = isErasing ? eraserSize : brushSize;
+
+
+        float scaleFactor = mapImage.rectTransform.rect.width / textureWidth;
+
+        float previewSize = currentSize * 24f * scaleFactor;
+
+        brushUI.sizeDelta = new Vector2(previewSize, previewSize);
+
+        
+        Image image = brushUI.GetComponent<Image>();
+
+        image.color = isErasing
+            ? new Color(1f, 0f, 0f, 0.35f)
+            : new Color(0f, 0f, 0f, 0.35f);
     }
 }
