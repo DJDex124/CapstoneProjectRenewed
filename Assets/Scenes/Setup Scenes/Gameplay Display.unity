@@ -2217,6 +2217,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 1, z: 1.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1707575291 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 224731093217011632, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
+  m_PrefabInstance: {fileID: 1727683732}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1707575296
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707575291}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 19308c809923a154da1c21023f2fcc2b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &1714979958 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5477749408508380018, guid: fd8796d209b0d394e84e14b0e30d60cc, type: 3}
@@ -2250,6 +2277,10 @@ PrefabInstance:
       propertyPath: swingTrail
       value: 
       objectReference: {fileID: 1358615805}
+    - target: {fileID: 1409166932843523913, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
+      propertyPath: animatorCam
+      value: 
+      objectReference: {fileID: 1707575296}
     - target: {fileID: 1409166932843523913, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
       propertyPath: attackCldwn
       value: 1
@@ -2329,6 +2360,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 569519633013207471, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
       insertIndex: -1
       addedObject: {fileID: 393338640}
+    - targetCorrespondingSourceObject: {fileID: 224731093217011632, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1707575296}
   m_SourcePrefab: {fileID: 100100000, guid: 82cf8f562698d844e90e1a43e3749d04, type: 3}
 --- !u!1 &1863259801
 GameObject:

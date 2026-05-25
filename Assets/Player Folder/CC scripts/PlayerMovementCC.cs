@@ -32,7 +32,7 @@ public class PlayerMovementCC : MonoBehaviour
     private float nextAttackTime = 0f;
 
     public Animator animator;
-
+    public Animator animatorCam;
     public TrailRenderer swingTrail;
 
     public Transform handSpot;
@@ -128,6 +128,11 @@ public class PlayerMovementCC : MonoBehaviour
         {
             isMoving = false;
         }
+
+        animatorCam.SetBool("IsWalking", isMoving);
+
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && isMoving;
+        animatorCam.SetBool("IsRunning", isRunning);
     }
     
 
