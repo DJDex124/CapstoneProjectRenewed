@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR;
@@ -43,6 +44,10 @@ public class EnemyBug : MonoBehaviour
     public bool isGrounded;
     public float groundCheckDistance = .5f;
 
+    public LayerMask wallMask;
+    public bool canSeeWall;
+    public float wallCheckDistance;
+
 
     void Start()
     {
@@ -64,6 +69,7 @@ public class EnemyBug : MonoBehaviour
     void Update()
     {
         groundcheck();
+        wallCheck();
         if (player == null) return;
         if (isLeaping) return;
 
@@ -78,23 +84,7 @@ public class EnemyBug : MonoBehaviour
     //--------------------------- ENEMY STATES LOGIC------------------------------
     void handleState()
     {
-        switch (enemyState)
-        {
-            case EnemyState.Idle:
-                if (!agent.enabled) return;
-                Idle();
-                break;
-            case EnemyState.Chase:
-                ChasePlayer();
-                break;
-            case EnemyState.Attack:
-                AttackPlayer();
-                break;
-
-            case EnemyState.Dead:
-                //if I want to add any dead logic. all of it is handled in my die function tho rn
-                break;
-        }
+       
     }
      void updateState()
     {
@@ -114,42 +104,34 @@ public class EnemyBug : MonoBehaviour
     }
     void ChasePlayer()
     {
-        if (!agent.enabled) return; 
-        agent.SetDestination(player.position);
-        RotateTowardsPlayer();
-
-    }
-    void Idle()
-    {
         if (!agent.enabled) return;
-        if (isWandering) return;
-        agent.ResetPath();
-        StartCoroutine(IdleCoroutine(Random.Range(2,5f)));
-    }
-    IEnumerator IdleCoroutine(float time)
-    {
-        isWandering = true;
-        while (enemyState == EnemyState.Idle)
+        if (playerInRange && canHearPlayer)
         {
-            Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
-            randomDirection += transform.position;
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas))
-            {
-                agent.SetDestination(hit.position);
-                agent.speed = idleSpeed;
-            }
-
-            yield return new WaitUntil(() =>
-                !agent.pathPending &&
-                agent.remainingDistance <= agent.stoppingDistance);
-
-            yield return new WaitForSeconds(time);
+            agent.SetDestination(player.position);
+            RotateTowardsPlayer();
         }
 
-        agent.speed = speed;
-        isWandering = false;
     }
+    
+    void idleBehaviour()
+    {
+        if (canHearPlayer)
+        {
+            ChasePlayer();
+        }
+        else
+        {
+           //move in a random direction. stop and move in another random direction. 
+           if(!canSeeWall)
+           {
+                speed = idleSpeed;
+                agent.SetDestination(transform.position + transform.forward * 1f);
+           }
+        }
+
+    }
+     
+
     //--------------------------- ENEMY STATES LOGIC------------------------------
 
 
@@ -270,6 +252,11 @@ public class EnemyBug : MonoBehaviour
         ResetToNavMesh();
     }
 
+    void wallCheck()
+    {
+        Vector3 rayOrigin = transform.position + Vector3.up * .5f;
+        canSeeWall = Physics.Raycast(rayOrigin, Vector3.forward, wallCheckDistance, wallMask);
+    }
     
     void groundcheck()
     {
@@ -278,13 +265,17 @@ public class EnemyBug : MonoBehaviour
         isGrounded = Physics.Raycast(rayOrigin, Vector3.down, halfHeight + groundCheckDistance, groundMask);
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         float halfHeight = GetComponent<Collider>().bounds.extents.y;
         Vector3 rayOrigin = transform.position + Vector3.up * halfHeight;
         Gizmos.color = isGrounded ? Color.green : Color.red;
         Gizmos.DrawLine(rayOrigin, rayOrigin + Vector3.down * (halfHeight + groundCheckDistance ));
+
+        Gizmos.color = canSeeWall ? Color.green : Color.red;
+        Gizmos.DrawLine(rayOrigin, rayOrigin + Vector3.forward * (wallCheckDistance));
     }
+   
 
     public void TakeDamage(float damage)
     {

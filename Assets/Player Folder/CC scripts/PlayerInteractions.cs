@@ -75,6 +75,7 @@ public class PlayerInteractions : MonoBehaviour
             EndDevice endDevice = hit.collider.GetComponent<EndDevice>();
             if (endDevice != null)
             {
+                
                 endDevice.TryReceiveFromInventory();
               
             }

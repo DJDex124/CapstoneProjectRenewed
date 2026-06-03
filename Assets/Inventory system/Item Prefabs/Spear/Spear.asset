@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
   itemName: 
   itemSprite: {fileID: 21300000, guid: 7dbf27cc45e6a4a499983ac406fdbed0, type: 3}
-  itemData: {fileID: 0}
   pickupPrefab: {fileID: 8045909526875608740, guid: 7a7753e775c0a3c4fa020d1a96ec782b, type: 3}
-  heldItem: {fileID: 8045909526875608740, guid: 7a7753e775c0a3c4fa020d1a96ec782b, type: 3}
+  heldItem: {fileID: 0}
   itemType: 2

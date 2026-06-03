@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 using NUnit.Framework.Interfaces;
+using UnityEditor;
 
 public class OldItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -13,7 +14,9 @@ public class OldItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public int itemCount;
     public int index;
 
-    public static OldItemSlot instance;
+    public bool toolInSlot;
+    public bool showTool;
+
 
     [HideInInspector] public Image slotImage;
     [HideInInspector] public Image SpriteImage;
@@ -47,12 +50,13 @@ public class OldItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if (selected)
         {
-            slotImage.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+            slotImage.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);  
         }
         else
         {
             slotImage.transform.localScale = new Vector3(1f, 1f, 1f);
         }
+        hasTool();
     }
 
 
@@ -69,5 +73,22 @@ public class OldItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerExit(PointerEventData eventData)
     {
         selected = false;
+    }
+
+    public void hasTool()
+    {
+        if (itemInSlot != null && itemInSlot.itemType == OldItemData.ItemType.Tool)
+        {
+            toolInSlot = true;
+            Debug.Log("Item is in slot");
+        }
+        else
+        {
+            toolInSlot = false;
+        }
+        if (toolInSlot && selected)
+        {
+            showTool = true;
+        }
     }
 }
