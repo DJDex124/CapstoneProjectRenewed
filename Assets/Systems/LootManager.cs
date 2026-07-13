@@ -8,7 +8,7 @@ public class LootManager : MonoBehaviour
     public List<GameObject> _lootPrefab;
     [Range(0, 1)]
     float spawnChance = 0.3f;
-    public int spawnAmount = 10;
+    public int spawnAmount = 25;
 
     [SerializeField] private MazeGeneration _mazeGeneration;   
 

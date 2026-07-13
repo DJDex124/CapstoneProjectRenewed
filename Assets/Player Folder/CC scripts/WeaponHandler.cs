@@ -20,9 +20,7 @@ public class WeaponHandler : MonoBehaviour
         else
         {
             spearDeselected();
-        }
-
-        
+        }  
     }
 
     public void spearSelected()
@@ -30,10 +28,8 @@ public class WeaponHandler : MonoBehaviour
         weapon.SetActive(true);
     }
     public void spearDeselected()
-    {
-        
-       weapon.SetActive(false);
-        
+    {  
+       weapon.SetActive(false);  
     }
     
 }

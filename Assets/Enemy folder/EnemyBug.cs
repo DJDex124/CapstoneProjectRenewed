@@ -1,10 +1,8 @@
 ﻿using System.Collections;
-using UnityEditor.Build;
+
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.SocialPlatforms;
-using UnityEngine.UIElements;
+
 
 public class EnemyBug : MonoBehaviour
 {
@@ -43,10 +41,12 @@ public class EnemyBug : MonoBehaviour
     public bool isAlive = true;
     public bool isGrounded;
     public float groundCheckDistance = .5f;
+    private Collider collider;
 
     public LayerMask wallMask;
     public bool canSeeWall;
-    public float wallCheckDistance;
+    public float wallCheckDistance = 5f;
+    public bool isTurning;
 
 
     void Start()
@@ -57,6 +57,9 @@ public class EnemyBug : MonoBehaviour
         agent.stoppingDistance = 5f;
         agent.updateRotation = false;
         groundMask = LayerMask.GetMask("Ground");
+        wallMask = LayerMask.GetMask("obstacleMask");
+
+        collider = GetComponent<Collider>();
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
@@ -73,65 +76,65 @@ public class EnemyBug : MonoBehaviour
         if (player == null) return;
         if (isLeaping) return;
 
-        canHearPlayer = !PlayerMovementCC.current.isCrouching && PlayerMovementCC.current.isMoving;
+        canHearPlayer = !PlayerMovementCC.current.isCrouching && PlayerMovementCC.current.isMoving && playerInRange;
+        bugBehavior();
 
-        handleState();
-        updateState();
-        
     }
 
 
     //--------------------------- ENEMY STATES LOGIC------------------------------
-    void handleState()
-    {
-       
-    }
-     void updateState()
+
+    void bugBehavior()
     {
         bool inAttackRange = !agent.pathPending
                           && agent.hasPath
                           && agent.remainingDistance <= agent.stoppingDistance;
-        if (inAttackRange)
-            enemyState = EnemyState.Attack;
-        else if
-            (canHearPlayer && playerInRange)
-            enemyState = EnemyState.Chase;
-        else
-            enemyState = EnemyState.Idle;
-        if (health <= 0f)
-            enemyState = EnemyState.Dead;
-
-    }
-    void ChasePlayer()
-    {
         if (!agent.enabled) return;
-        if (playerInRange && canHearPlayer)
+
+        if (inAttackRange && canHearPlayer)
+        {
+            AttackPlayer();
+        }
+        else if (playerInRange && canHearPlayer)
         {
             agent.SetDestination(player.position);
             RotateTowardsPlayer();
-        }
-
-    }
-    
-    void idleBehaviour()
-    {
-        if (canHearPlayer)
-        {
-            ChasePlayer();
-        }
+        } 
         else
         {
-           //move in a random direction. stop and move in another random direction. 
-           if(!canSeeWall)
-           {
-                speed = idleSpeed;
-                agent.SetDestination(transform.position + transform.forward * 1f);
-           }
+            //idleLogic();
         }
+    }
+    void idleLogic()
+    {
+        if (canSeeWall)
+        {
+            ResetToNavMesh();
+            StartCoroutine(turnAndMove(2f));
+        }
+        else if (!canSeeWall && !isTurning)
+        {
+            agent.SetDestination(transform.position + transform.forward * 10f);
+        }
+        
 
     }
-     
-
+    public IEnumerator turnAndMove(float time)
+    {
+        isTurning = true;
+        yield return new WaitForSeconds(time);
+        agent.isStopped = true;
+        Quaternion targetRotation = transform.rotation * Quaternion.Euler(0, 90, 0);
+        float elapsed = 0f, duration = 0.5f;
+        while (elapsed < duration)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.rotation = targetRotation;
+        isTurning = false;
+    }
     //--------------------------- ENEMY STATES LOGIC------------------------------
 
 
@@ -254,26 +257,29 @@ public class EnemyBug : MonoBehaviour
 
     void wallCheck()
     {
-        Vector3 rayOrigin = transform.position + Vector3.up * .5f;
-        canSeeWall = Physics.Raycast(rayOrigin, Vector3.forward, wallCheckDistance, wallMask);
+        float halfHeight = collider.bounds.extents.y;
+        Vector3 rayOrigin = transform.position + Vector3.up *halfHeight;
+        canSeeWall = Physics.Raycast(rayOrigin, rayOrigin + transform.forward, wallCheckDistance, wallMask);
     }
     
     void groundcheck()
     {
-        float halfHeight = GetComponent<Collider>().bounds.extents.y;
+        float halfHeight = collider.bounds.extents.y;
         Vector3 rayOrigin = transform.position + Vector3.up * halfHeight;
         isGrounded = Physics.Raycast(rayOrigin, Vector3.down, halfHeight + groundCheckDistance, groundMask);
     }
 
     private void OnDrawGizmos()
     {
-        float halfHeight = GetComponent<Collider>().bounds.extents.y;
+        float halfHeight = collider.bounds.extents.y;
         Vector3 rayOrigin = transform.position + Vector3.up * halfHeight;
         Gizmos.color = isGrounded ? Color.green : Color.red;
         Gizmos.DrawLine(rayOrigin, rayOrigin + Vector3.down * (halfHeight + groundCheckDistance ));
 
+        Vector3 lookDir = rayOrigin + transform.forward;
+       
         Gizmos.color = canSeeWall ? Color.green : Color.red;
-        Gizmos.DrawLine(rayOrigin, rayOrigin + Vector3.forward * (wallCheckDistance));
+        Gizmos.DrawLine(rayOrigin, rayOrigin + lookDir * wallCheckDistance);
     }
    
 

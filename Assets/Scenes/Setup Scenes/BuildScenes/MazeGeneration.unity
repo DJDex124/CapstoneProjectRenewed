@@ -155,7 +155,7 @@ MonoBehaviour:
   _spawnPosition: {x: 0, y: 0}
   mazePos: {fileID: 1949526067}
   _mazeCells: []
-  safeZone: 4
+  safeZone: 3
   enemySpawnCell: []
   lootSpawnCell: []
   enemySpawnAmount: 5
@@ -211,6 +211,7 @@ MonoBehaviour:
   _mazeGeneration: {fileID: 63317740}
   enemySpawnerPrefab:
   - {fileID: 7715858048182687398, guid: be32c2c37154b3c4888d7b4329617aea, type: 3}
+  - {fileID: 3386629174515473899, guid: 6e942986d98e4d640bddb126af99dd4e, type: 3}
 --- !u!4 &1712477710
 Transform:
   m_ObjectHideFlags: 0

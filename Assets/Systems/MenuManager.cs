@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
     public void startButton()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Gameplay Display");
+        SceneManager.LoadScene("Gameplay Display");
     }
     public void quitButton()
     {
@@ -12,7 +13,7 @@ public class MenuManager : MonoBehaviour
     }
     public void mainMenuButton()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenu");
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }

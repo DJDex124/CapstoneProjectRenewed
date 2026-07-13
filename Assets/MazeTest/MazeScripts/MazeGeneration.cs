@@ -29,8 +29,8 @@ public class MazeGeneration : MonoBehaviour
 
     public List<MazeCell> enemySpawnCell = new List<MazeCell>();
     public List<MazeCell> lootSpawnCell = new List<MazeCell>();
-    [SerializeField] private int enemySpawnAmount = 5;
-    [SerializeField] private int lootSpawnAmount = 5;
+    [SerializeField] private int enemySpawnAmount = 15;
+    [SerializeField] private int lootSpawnAmount = 10;
 
     public void pickSpawnableCells(List<MazeCell> cells)
     {

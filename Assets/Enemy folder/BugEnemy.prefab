@@ -151,10 +151,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBug
   health: 100
+  speed: 3.5
+  rotationSpeed: 5
+  idleSpeed: 1
+  wanderRadius: 5
+  isWandering: 0
   attackRange: 2.1
   damage: 10
   attackCooldown: 1
-  Range: 10
+  detectionRange: 10
   canHearPlayer: 0
   playerInRange: 0
   jumpForce: 5
@@ -162,11 +167,17 @@ MonoBehaviour:
   knockbackForce: 2
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   enemyState: 0
   isAlive: 1
   isGrounded: 0
   groundCheckDistance: 0.31
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  canSeeWall: 0
+  wallCheckDistance: 5
+  isTurning: 0
 --- !u!54 &4411862357420503016
 Rigidbody:
   m_ObjectHideFlags: 0

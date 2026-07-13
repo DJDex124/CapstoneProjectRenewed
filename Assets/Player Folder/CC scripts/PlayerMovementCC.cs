@@ -175,6 +175,13 @@ public class PlayerMovementCC : MonoBehaviour
                 enemyBug.Knockback();
                 enemyBug.TakeDamage(50);
             }
+
+            EnemyScript enemyScript = hit.collider.GetComponentInParent<EnemyScript>();
+            if (enemyScript != null)
+            {
+                Debug.Log("Hit EnemyScript: " + hit.collider.name);
+                enemyScript.TakeDamage(attackDmg);
+            }
         }
     }
 

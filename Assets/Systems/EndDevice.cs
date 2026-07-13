@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class EndDevice : MonoBehaviour
 {
 
@@ -40,7 +42,9 @@ public class EndDevice : MonoBehaviour
         if (receivedItems.Count >= requiredItemCount)
         {
             Debug.Log("Game Ended! All required items received.");
-            // Implement end game logic here (e.g., load end scene, show credits, etc.)
+            UnityEngine.SceneManagement.SceneManager.LoadScene("EndScreen");
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
     }

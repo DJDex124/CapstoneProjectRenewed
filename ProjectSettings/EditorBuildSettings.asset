@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Setup Scenes/BuildScenes/InventorySystem.unity
     guid: b777fc30fb728ff4ea56b43d97546aa7
+  - enabled: 1
+    path: Assets/Scenes/Setup Scenes/EndScreen.unity
+    guid: 5a6f6f1f026e0ed45b3468d3c95af568
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

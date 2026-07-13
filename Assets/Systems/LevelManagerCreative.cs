@@ -8,14 +8,18 @@ public class LevelManagerCreative : MonoBehaviour
         SceneManager.LoadScene("GameManager", LoadSceneMode.Additive);  
         SceneManager.LoadScene("UIManager", LoadSceneMode.Additive);
         SceneManager.LoadScene("InventorySystem", LoadSceneMode.Additive);
-        SceneManager.LoadScene("MazeGeneration", LoadSceneMode.Additive);
+        
 
         
     }
-    void resetLevel()
+    public void generateMaze()
+    {
+        SceneManager.LoadScene("MazeGeneration", LoadSceneMode.Additive);
+    }
+    public void resetLevel()
     {
         
         SceneManager.UnloadSceneAsync("MazeGeneration");
-        Start();
+        generateMaze();
     }
 }
