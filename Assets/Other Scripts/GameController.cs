@@ -34,8 +34,10 @@ public class GameController : MonoBehaviour
     void startGame()
     {
         levelManager.generateMaze();
+        //make into a couroutine to wait for the maze to generate before disabling the door
         door.gameObject.SetActive(false);
         mazeHasntGenerated = false;
+        textCanvas.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)

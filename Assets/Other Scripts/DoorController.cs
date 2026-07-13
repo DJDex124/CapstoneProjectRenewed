@@ -20,7 +20,7 @@ public class DoorController : MonoBehaviour
 
     public void OpenDoor()
     {
-        transform.position = ;
+        transform.position = new Vector3(transform.position.x, openPositiony, transform.position.z);
         doorIsOpen = true;
         Debug.Log("Door opened");
     }
