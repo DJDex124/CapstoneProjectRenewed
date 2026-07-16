@@ -9,6 +9,8 @@ TagManager:
   - ClubHolder
   - Weapon
   - textCanvas
+  - LootCell
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

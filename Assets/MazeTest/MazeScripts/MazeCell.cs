@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MazeCell : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class MazeCell : MonoBehaviour
     
     [SerializeField]
     private GameObject _unvisitedBlock;
+
+    [SerializeField]
+    private List <GameObject> _lootSpawnPoint;
 
 
     public bool IsVisited { get; private set; }
