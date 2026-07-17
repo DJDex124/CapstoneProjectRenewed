@@ -6,6 +6,10 @@ public class SpawnLoot : MonoBehaviour
     public List<GameObject> Loot;
     public int LootCount;
     public int MaxLootCount;
+   
+
+    public int maxLootCellCount = 10;
+    public int lootCellCount = 0;
 
     public List<GameObject> lootCells;
     public List<GameObject> SpawnPoints;
@@ -22,7 +26,12 @@ public class SpawnLoot : MonoBehaviour
         GameObject[] lootCellsArray = GameObject.FindGameObjectsWithTag("LootCell");
         foreach (GameObject cell in lootCellsArray)
         {
-            lootCells.Add(cell);
+            int randomIndex = Random.Range(0, 100);
+            if (randomIndex < 10 && lootCellCount <= maxLootCellCount)
+            {
+                lootCells.Add(cell);
+                lootCellCount++;
+            }
         }
         findLootSpawn();
         spawnLoot();

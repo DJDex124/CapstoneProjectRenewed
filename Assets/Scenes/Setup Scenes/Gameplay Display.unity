@@ -1123,6 +1123,8 @@ MonoBehaviour:
   - {fileID: 5048619002020271559, guid: 318901d7a37aad444add7e2efbc90f3a, type: 3}
   LootCount: 0
   MaxLootCount: 10
+  maxLootCellCount: 10
+  lootCellCount: 0
   lootCells: []
   SpawnPoints: []
 --- !u!4 &785975670
