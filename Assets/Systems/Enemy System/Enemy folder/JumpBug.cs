@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class JumpBug : MonoBehaviour
@@ -31,37 +33,43 @@ public class JumpBug : MonoBehaviour
     public LayerMask wallMask;
 
     bool isAlive = true;
-    public EnemyState enemyState;
+    public BugState enemyState;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+   
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        bugBehavior();
     }
     public void bugBehavior()
     {
        if (isAlive)
        {
+            if (canHearPlayer)
+            {
+                playerCheck();
+            }
             CheckGrounded();
             wallCheck();
-            playerCheck();
+            
             facePlayer();
             switch (enemyState)
             {
-                case EnemyState.Idle:
+                case BugState.Idle:
                     bugIdle();
                     break;
-                case EnemyState.Chase:
+                case BugState.Chase:
                     bugChase();
                     break;
-                case EnemyState.Attack:
+                case BugState.Attack:
                     JumpAttack();
+                    break;
+                case BugState.Attached:
                     break;
             }
        }
@@ -71,10 +79,10 @@ public class JumpBug : MonoBehaviour
 
     void bugIdle()
     {
-       
+       // need to add idle logic. need to find an idea and impliment it
         if (canHearPlayer)
         {
-            enemyState = EnemyState.Chase;
+            enemyState = BugState.Chase;
         }
     }
 
@@ -86,7 +94,7 @@ public class JumpBug : MonoBehaviour
             float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
             if (distanceToPlayer <= attackRange)
             {
-                enemyState = EnemyState.Attack;
+                enemyState = BugState.Attack;
             }
             else
             {
@@ -97,7 +105,7 @@ public class JumpBug : MonoBehaviour
         else
         {
             rb.linearVelocity = Vector3.zero;
-            enemyState = EnemyState.Idle;
+            enemyState = BugState.Idle;
         }
     }
 
@@ -107,10 +115,56 @@ public class JumpBug : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         if (Time.time - lastAttackTime >= attackCooldown)
         {
-            Vector3 direction = (player.transform.position - transform.position).normalized;
-            rb.AddForce(direction * jumpForce, ForceMode.Impulse);
+            float upwardForce = jumpForce * 0.5f; 
+            Vector3 direction = (player.transform.position - transform.position ).normalized;
+            rb.AddForce(direction * jumpForce + Vector3.up * upwardForce , ForceMode.Impulse);
             isLeaping = true;
             lastAttackTime = Time.time;
+        }
+        if (distanceToPlayer > attackRange)
+        {
+            if (canHearPlayer)
+            {
+                enemyState = BugState.Chase;
+            }
+            else
+            {
+                enemyState = BugState.Idle;
+            }
+            
+        }
+    }
+    IEnumerator DealDamage(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameManager.current.TakeDamage(damage);
+        disAttach();
+    }
+    void attached()
+    {
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.useGravity = false;
+        transform.SetParent(player.transform);
+        StartCoroutine(DealDamage(1.5f));
+        enemyState = BugState.Attached;
+    }
+    void disAttach()
+    {
+       transform.SetParent(null);
+       rb.useGravity = true;
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        if (distanceToPlayer <= attackRange)
+        {
+            enemyState = BugState.Attack;
+        }
+        else if(canHearPlayer)
+        {
+            enemyState = BugState.Chase;
+        }
+        else
+        {
+            enemyState = BugState.Idle;
         }
     }
     //------------------------ Bug Behavior methods ------------------------
@@ -127,19 +181,40 @@ public class JumpBug : MonoBehaviour
     void playerCheck()
     {
         PlayerMovementCC playerMovement = player.GetComponent<PlayerMovementCC>();
-        if (playerMovement.isMoving)
+        if(playerMovement.isCrouching)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-            if (distanceToPlayer <= detectionRange)
-            {
-                canHearPlayer = true;
-            }
+            canHearPlayer = false;      
+        }
+        else if (playerMovement.isMoving)
+        {
+             float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+             if (distanceToPlayer <= detectionRange)
+             {
+                    canHearPlayer = true;
+             }
         }
         else
         {
-            canHearPlayer = false;
+           canHearPlayer = false;
         }
 
+
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if(isLeaping)
+            {
+                attached(); 
+            }
+            isLeaping = false;
+        }
+        else if (collision.gameObject.CompareTag("Ground"))
+        {
+            isLeaping = false;
+            lastAttackTime = Time.time; 
+        }
     }
     void wallCheck()
     {
@@ -163,5 +238,6 @@ public enum BugState
 {
     Idle,
     Chase,
+    Attached,
     Attack
 }
