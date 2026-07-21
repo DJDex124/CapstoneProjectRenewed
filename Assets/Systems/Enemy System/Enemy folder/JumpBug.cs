@@ -9,7 +9,7 @@ public class JumpBug : MonoBehaviour
     private Rigidbody rb;
 
     [Header("Attack Settings")]
-    public float attackRange = 2.1f;
+    public float attackRange = 4f;
     public float damage = 10f;
     public float attackCooldown = 2f;
     public float lastAttackTime;
@@ -35,11 +35,15 @@ public class JumpBug : MonoBehaviour
     bool isAlive = true;
     public BugState enemyState;
 
-   
+    public Animator animator;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         player = GameObject.FindGameObjectWithTag("Player");
+        animator = GetComponent<Animator>();
+        animator.SetBool("Idle", isAlive);
     }
 
     void Update()
@@ -52,12 +56,13 @@ public class JumpBug : MonoBehaviour
        {
             if (canHearPlayer)
             {
-                playerCheck();
+                
+                facePlayer();
             }
             CheckGrounded();
             wallCheck();
-            
-            facePlayer();
+            playerCheck();
+
             switch (enemyState)
             {
                 case BugState.Idle:
@@ -83,6 +88,11 @@ public class JumpBug : MonoBehaviour
         if (canHearPlayer)
         {
             enemyState = BugState.Chase;
+            animator.SetBool("Idle", false);
+        }
+        else
+        {
+            animator.SetBool("Idle", true);
         }
     }
 
@@ -94,24 +104,31 @@ public class JumpBug : MonoBehaviour
             float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
             if (distanceToPlayer <= attackRange)
             {
+                
+                animator.SetBool("Chase", false);
+                animator.SetTrigger("Attack");
+                StartCoroutine(delay(0.06f));
                 enemyState = BugState.Attack;
             }
             else
             {
                 Vector3 direction = (player.transform.position - transform.position).normalized;
                 rb.MovePosition(transform.position + direction * speed * Time.deltaTime);
+                animator.SetBool("Chase", true);
             }
         }
         else
         {
             rb.linearVelocity = Vector3.zero;
             enemyState = BugState.Idle;
+            animator.SetBool("Chase", false);
         }
     }
 
 
     void JumpAttack()
     {
+        
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         if (Time.time - lastAttackTime >= attackCooldown)
         {
@@ -120,19 +137,27 @@ public class JumpBug : MonoBehaviour
             rb.AddForce(direction * jumpForce + Vector3.up * upwardForce , ForceMode.Impulse);
             isLeaping = true;
             lastAttackTime = Time.time;
-        }
-        if (distanceToPlayer > attackRange)
-        {
-            if (canHearPlayer)
+            StartCoroutine(delay(1f));
             {
-                enemyState = BugState.Chase;
+                if (distanceToPlayer > attackRange)
+                {
+                    if (canHearPlayer)
+                    {
+                        enemyState = BugState.Chase;
+                    }
+                    else
+                    {
+                        enemyState = BugState.Idle;
+                    }
+
+                }
+                else
+                {
+                    enemyState = BugState.Attack;
+                }
             }
-            else
-            {
-                enemyState = BugState.Idle;
-            }
-            
         }
+        
     }
     IEnumerator DealDamage(float delay)
     {
@@ -142,6 +167,7 @@ public class JumpBug : MonoBehaviour
     }
     void attached()
     {
+        animator.SetBool("Attached", true);
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.useGravity = false;
@@ -151,10 +177,11 @@ public class JumpBug : MonoBehaviour
     }
     void disAttach()
     {
+       animator.SetBool("Attached", false);
        transform.SetParent(null);
        rb.useGravity = true;
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        if (distanceToPlayer <= attackRange)
+        if (distanceToPlayer <= attackRange && canHearPlayer)
         {
             enemyState = BugState.Attack;
         }
@@ -167,6 +194,7 @@ public class JumpBug : MonoBehaviour
             enemyState = BugState.Idle;
         }
     }
+    
     //------------------------ Bug Behavior methods ------------------------
 
     //------------------------ Auto Check methods ------------------------
@@ -204,10 +232,7 @@ public class JumpBug : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if(isLeaping)
-            {
-                attached(); 
-            }
+            attached();
             isLeaping = false;
         }
         else if (collision.gameObject.CompareTag("Ground"))
@@ -233,6 +258,10 @@ public class JumpBug : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundMask);
     }
 
+    IEnumerator delay(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+    }
 }
 public enum BugState
 {

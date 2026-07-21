@@ -29,8 +29,10 @@ public class GameManager : MonoBehaviour
     [Header("Stamina")]
     public float maxStamina = 100f;
     public float currentStamina;
-    
 
+    [Header("Quota System")]
+    public int maxQuota = 200;
+    public float currentQuota;
 
 
     void Start()
@@ -78,8 +80,9 @@ public class GameManager : MonoBehaviour
             canJump = false;
         else
             canJump = true;
-        
 
+        if (currentQuota >= maxQuota)
+            endGame();
     }
 
 
@@ -105,5 +108,12 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Player has died!");
         //add what happens when the player dies here (e.g., respawn, game over screen, etc.)
+    }
+
+
+    void endGame()
+    {
+        Debug.Log("Game Over!");
+        //add what happens when the game ends here (e.g., show game over screen, return to main menu, etc.)
     }
 }
