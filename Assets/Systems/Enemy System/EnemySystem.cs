@@ -23,7 +23,7 @@ public class EnemySystem : MonoBehaviour
     public void findEnemyCells()
     {
         enemyCells.Clear();
-        GameObject[] enemyCellsArray = GameObject.FindGameObjectsWithTag("EnemyCell");
+        GameObject[] enemyCellsArray = GameObject.FindGameObjectsWithTag("LootCell");
         foreach (GameObject cell in enemyCellsArray)
         {
             int randomIndex = Random.Range(0, 100);
