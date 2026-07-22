@@ -733,7 +733,7 @@ GameObject:
   - component: {fileID: 184512812996479150}
   - component: {fileID: 7022070345779681316}
   m_Layer: 11
-  m_Name: MazeCell
+  m_Name: LootCell
   m_TagString: LootCell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -781,7 +781,9 @@ MonoBehaviour:
   _frontWall: {fileID: 722517297453167335}
   _backWall: {fileID: 515197049358329010}
   _unvisitedBlock: {fileID: 7570941401861642253}
-  _lootSpawnPoint: []
+  spawnPoints: []
+  cellType: 1
+  spawned: 0
 --- !u!1 &7570941401861642253
 GameObject:
   m_ObjectHideFlags: 0

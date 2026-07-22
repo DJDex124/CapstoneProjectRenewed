@@ -8,7 +8,7 @@ public class EnemySystem : MonoBehaviour
     public int MaxEnemyCount;
 
 
-    public int maxEnemyCellCount = 10;
+    public int maxEnemyCellCount = 15;
     public int EnemyCellCount = 0;
 
     public List<GameObject> enemyCells;
@@ -23,21 +23,20 @@ public class EnemySystem : MonoBehaviour
     public void findEnemyCells()
     {
         enemyCells.Clear();
-        GameObject[] enemyCellsArray = GameObject.FindGameObjectsWithTag("LootCell");
+        GameObject[] enemyCellsArray = GameObject.FindGameObjectsWithTag("EnemyCell");
         foreach (GameObject cell in enemyCellsArray)
         {
-            int randomIndex = Random.Range(0, 100);
-            if (randomIndex < 10 && EnemyCellCount <= maxEnemyCellCount)
+            if ( EnemyCellCount <= maxEnemyCellCount)
             {
                 enemyCells.Add(cell);
                 EnemyCellCount++;
             }
         }
-        findLootSpawn();
-        spawnLoot();
+        findEnemySpawn();
+        spawnEnemy();
     }
 
-    void findLootSpawn()
+    void findEnemySpawn()
     {
         foreach (GameObject cell in enemyCells)
         {
@@ -59,7 +58,7 @@ public class EnemySystem : MonoBehaviour
         }
     }
 
-    void spawnLoot()
+    void spawnEnemy()           
     {
         foreach (GameObject spawnPoint in SpawnPoints)
         {

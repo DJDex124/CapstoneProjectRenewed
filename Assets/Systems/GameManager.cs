@@ -8,6 +8,18 @@ public class GameManager : MonoBehaviour
     public bool canSprint = true;
     public bool canJump = true;
 
+    [Header("Health")]
+    public float maxHealth = 100f;
+    public float currentHealth;
+
+    [Header("Stamina")]
+    public float maxStamina = 100f;
+    public float currentStamina;
+
+    [Header("Quota System")]
+    public int maxQuota = 200;
+    public float currentQuota;
+
     void Awake()
     {
         if (current != null && current != this)
@@ -21,18 +33,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    [Header("Health")]
-    public float maxHealth = 100f;
-    public float currentHealth;
-
-    [Header("Stamina")]
-    public float maxStamina = 100f;
-    public float currentStamina;
-
-    [Header("Quota System")]
-    public int maxQuota = 200;
-    public float currentQuota;
 
 
     void Start()
@@ -102,7 +102,14 @@ public class GameManager : MonoBehaviour
         
     }
 
-    
+    void calculateQuota()
+    {
+        if(currentQuota <= maxQuota )
+        {
+            Debug.Log("Completed Quota");
+            //endgame/next level
+        }
+    }
 
     void Die()
     {
@@ -116,4 +123,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over!");
         //add what happens when the game ends here (e.g., show game over screen, return to main menu, etc.)
     }
+
+
 }

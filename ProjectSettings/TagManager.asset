@@ -11,6 +11,7 @@ TagManager:
   - textCanvas
   - LootCell
   - SpawnPoint
+  - EnemyCell
   layers:
   - Default
   - TransparentFX

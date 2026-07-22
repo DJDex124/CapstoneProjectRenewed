@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,21 @@ public class MazeGeneration : MonoBehaviour
 {
     [SerializeField]
     private MazeCell _mazeCellPrefab;
+    [Header("cell Settings")]
+    public MazeCell LootCell;
+    public MazeCell EnemyCell;
+    public MazeCell TrapCell;
+    public MazeCell BasicCell;
+    public List <MazeCell> cellsToSpawn;
+
+    public int maxlootCellAmount = 10;
+    public int currentlootCellAmount;
+
+    public int maxEnemyCellAmount = 15;
+    public int currentEnemyCellAmount;
+
+    public int maxTrapCellAmount = 10;
+    public int currentTrapCellAmount;
 
     public float _cellSize = 4f;
 
@@ -27,49 +43,39 @@ public class MazeGeneration : MonoBehaviour
     [SerializeField] private int safeZone = 4;
     private HashSet<Vector2Int> blockedCells = new HashSet<Vector2Int>();
 
-    public List<MazeCell> enemySpawnCell = new List<MazeCell>();
-    public List<MazeCell> lootSpawnCell = new List<MazeCell>();
-    [SerializeField] private int enemySpawnAmount = 15;
-    [SerializeField] private int lootSpawnAmount = 10;
-
-    public void pickSpawnableCells(List<MazeCell> cells)
+    public void addCells()
     {
-        //clears all the copied cells from these lists.
-        enemySpawnCell.Clear();
-        lootSpawnCell.Clear();
-
-        //makes sure the spawnable cells are not in the safe zone or blocked cells. can expand later to make things spawn further out
-        //can make more methods so that different things spawn further out in the maze, depending on rarity if we add that in
-        int centreX = _mazeWidth / 2;
-        int centreZ = _mazeDepth / 2;
-
-        //creates a list pf available cells that are not in the safe zone.
-        //means we can block cells within this list
-        List<MazeCell> available = cells.Where(cell=>
+        
+        while (currentEnemyCellAmount < maxEnemyCellAmount || currentlootCellAmount < maxlootCellAmount || currentTrapCellAmount < maxTrapCellAmount)
         {
-            int x = Mathf.RoundToInt(cell.transform.position.x / _cellSize);
-            int z = Mathf.RoundToInt(cell.transform.position.z / _cellSize);
-            return !blockedCells.Contains(new Vector2Int(x, z));
-        }).ToList();
-
-        //randomly picks from available list and adds to spawn list, removing from the available list.
-        for (int i = 0; i < enemySpawnAmount && available.Count > 0; i++)
-        {
-            int index = Random.Range(0, available.Count);
-            enemySpawnCell.Add(available[index]);
-            available.RemoveAt(index);
-        }
-
-        for (int i = 0; i < lootSpawnAmount && available.Count > 0; i++)
-        {
-            int index = Random.Range(0, available.Count);
-            lootSpawnCell.Add(available[index]);
-            available.RemoveAt(index);
+            if (currentlootCellAmount < maxlootCellAmount)
+            {
+                cellsToSpawn.Add(LootCell);
+                currentlootCellAmount++;
+                
+            }
+            if (currentEnemyCellAmount < maxEnemyCellAmount)
+            {
+                cellsToSpawn.Add(EnemyCell);
+                currentEnemyCellAmount++;
+                
+            }
+            if (currentTrapCellAmount < maxTrapCellAmount)
+            {
+                cellsToSpawn.Add(TrapCell);
+                currentTrapCellAmount++;
+                
+            }
         }
     }
 
+   
+
     IEnumerator Start()
     {
+        addCells();
+        
+
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
 
         int centerX = _mazeWidth / 2;
@@ -84,6 +90,13 @@ public class MazeGeneration : MonoBehaviour
                 blockedCells.Add(new Vector2Int(x, z));
             }
         }
+        int totalSpawnable = (_mazeWidth * _mazeDepth) - blockedCells.Count;
+        while (totalSpawnable > cellsToSpawn.Count)
+        {
+            cellsToSpawn.Add(BasicCell);
+        }
+
+        cellsToSpawn.Shuffle();
 
         for (int x = 0; x < _mazeWidth; x++)
         {
@@ -93,20 +106,30 @@ public class MazeGeneration : MonoBehaviour
 
                 if (blockedCells.Contains(pos))
                     continue;
+                MazeCell prefabToUse;
 
-                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab,
+                if (cellsToSpawn.Count > 0)
+                {
+                    prefabToUse = cellsToSpawn[0];
+                    cellsToSpawn.RemoveAt(0);
+                }
+                else
+                {
+                    prefabToUse = BasicCell;
+                }
+                _mazeGrid[x, z] = Instantiate(prefabToUse,
                     new Vector3(x * _cellSize, 0, z * _cellSize),
                     Quaternion.identity, mazePos);
 
                 _mazeCells.Add(_mazeGrid[x, z]);
             }
         }
-
+        
         MazeCell startCell = _mazeCells[Random.Range(0, _mazeCells.Count)];
         yield return GenerateMaze(null, startCell);
 
         CreateEntranceAndExit();
-        pickSpawnableCells(_mazeCells);
+        
     }
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell)
@@ -269,4 +292,18 @@ public class MazeGeneration : MonoBehaviour
     }
 
     
+}
+public static class listExtentions
+{
+    public static void Shuffle<T>(this IList<T> list)
+    {
+        System.Random rng = new System.Random();
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            (list[k], list[n]) = (list[n], list[k]);
+        }
+    }
 }

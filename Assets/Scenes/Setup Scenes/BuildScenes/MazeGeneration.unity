@@ -149,6 +149,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _mazeCellPrefab: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
+  LootCell: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
+  EnemyCell: {fileID: 7022070345779681316, guid: f281c34c5f9285041b0dc601f728a70c, type: 3}
+  TrapCell: {fileID: 7022070345779681316, guid: d6fdabf7cb630024489403ef075e224b, type: 3}
+  BasicCell: {fileID: 7022070345779681316, guid: 4567b9016ed0c7b4f89afc030727ddd7, type: 3}
+  cellsToSpawn: []
+  maxlootCellAmount: 10
+  currentlootCellAmount: 0
+  maxEnemyCellAmount: 10
+  currentEnemyCellAmount: 0
+  maxTrapCellAmount: 10
+  currentTrapCellAmount: 0
   _cellSize: 12
   _mazeWidth: 15
   _mazeDepth: 15
@@ -156,10 +167,6 @@ MonoBehaviour:
   mazePos: {fileID: 1949526067}
   _mazeCells: []
   safeZone: 3
-  enemySpawnCell: []
-  lootSpawnCell: []
-  enemySpawnAmount: 5
-  lootSpawnAmount: 5
 --- !u!4 &63317741
 Transform:
   m_ObjectHideFlags: 0
@@ -174,58 +181,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1949526067}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1712477708
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1712477710}
-  - component: {fileID: 1712477709}
-  m_Layer: 0
-  m_Name: LootSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1712477709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712477708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1fab77ef92976e4791687b9dcaed18e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LootManager
-  LootSpawner: {fileID: 1712477710}
-  _lootPrefab:
-  - {fileID: 5365650881138855633, guid: 460f80c98da45d444ab0af96f837614b, type: 3}
-  spawnAmount: 10
-  _mazeGeneration: {fileID: 63317740}
-  enemySpawnerPrefab:
-  - {fileID: 7715858048182687398, guid: be32c2c37154b3c4888d7b4329617aea, type: 3}
-  - {fileID: 3386629174515473899, guid: 6e942986d98e4d640bddb126af99dd4e, type: 3}
---- !u!4 &1712477710
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712477708}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 11.94, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1949526066
 GameObject:
@@ -264,4 +219,3 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1949526067}
-  - {fileID: 1712477710}

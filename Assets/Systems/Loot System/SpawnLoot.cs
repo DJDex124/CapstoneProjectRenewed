@@ -26,8 +26,8 @@ public class SpawnLoot : MonoBehaviour
         GameObject[] lootCellsArray = GameObject.FindGameObjectsWithTag("LootCell");
         foreach (GameObject cell in lootCellsArray)
         {
-            int randomIndex = Random.Range(0, 100);
-            if (randomIndex < 10 && lootCellCount <= maxLootCellCount)
+            
+            if ( lootCellCount <= maxLootCellCount)
             {
                 lootCells.Add(cell);
                 lootCellCount++;
