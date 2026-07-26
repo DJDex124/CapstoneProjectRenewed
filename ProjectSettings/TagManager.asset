@@ -12,6 +12,7 @@ TagManager:
   - LootCell
   - SpawnPoint
   - EnemyCell
+  - Start Screen
   layers:
   - Default
   - TransparentFX

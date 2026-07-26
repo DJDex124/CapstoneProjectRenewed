@@ -11,6 +11,8 @@ public class OldItemData : ScriptableObject
     public ItemType itemType;
     public GameObject clubHolder;
 
+    public int itemValue;   
+    public int maxStackSize;
     public enum ItemType
     {
         Consumable,

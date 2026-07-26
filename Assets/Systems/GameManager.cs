@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,11 @@ public class GameManager : MonoBehaviour
     [Header("Quota System")]
     public int maxQuota = 200;
     public float currentQuota;
+
+    [SerializeField]
+    private TextMeshProUGUI quotaText;
+    [SerializeField]
+    private Canvas ScreenCanvas;
 
     void Awake()
     {
@@ -58,6 +64,8 @@ public class GameManager : MonoBehaviour
             UIManager.current.staminaSlider.maxValue = maxStamina;
             UIManager.current.staminaSlider.value = currentStamina;
         }
+        ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>(); 
+
         
     }
 
@@ -81,8 +89,8 @@ public class GameManager : MonoBehaviour
         else
             canJump = true;
 
-        if (currentQuota >= maxQuota)
-            endGame();
+        handleQuota();
+        handleScreenUI();
     }
 
 
@@ -102,12 +110,31 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void calculateQuota()
+    void handleQuota()
     {
+
         if(currentQuota <= maxQuota )
         {
             Debug.Log("Completed Quota");
             //endgame/next level
+        }
+    }
+    void handleScreenUI()
+    {
+        if (quotaText == null)
+        { 
+             if (ScreenCanvas != null)
+             {
+                quotaText = ScreenCanvas.GetComponentInChildren<TextMeshProUGUI>();
+             }
+        }
+        if (quotaText != null)
+        {
+            quotaText.text = "Quota: " + currentQuota + "/" + maxQuota;
+        }
+        else
+        {
+            Debug.LogWarning("Quota Text component not found in the ScreenCanvas.");
         }
     }
 
