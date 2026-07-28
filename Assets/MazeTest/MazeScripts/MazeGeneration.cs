@@ -13,7 +13,10 @@ public class MazeGeneration : MonoBehaviour
     public MazeCell EnemyCell;
     public MazeCell TrapCell;
     public MazeCell BasicCell;
+    public MazeCell spawnCell;
     public List <MazeCell> cellsToSpawn;
+
+    public Transform playerSpawn;
 
     public int maxlootCellAmount = 10;
     public int currentlootCellAmount;
@@ -104,8 +107,10 @@ public class MazeGeneration : MonoBehaviour
             {
                 Vector2Int pos = new Vector2Int(x, z);
 
+                // Skip the safe zone
                 if (blockedCells.Contains(pos))
                     continue;
+
                 MazeCell prefabToUse;
 
                 if (cellsToSpawn.Count > 0)
@@ -117,19 +122,36 @@ public class MazeGeneration : MonoBehaviour
                 {
                     prefabToUse = BasicCell;
                 }
-                _mazeGrid[x, z] = Instantiate(prefabToUse,
+
+                _mazeGrid[x, z] = Instantiate(
+                    prefabToUse,
                     new Vector3(x * _cellSize, 0, z * _cellSize),
-                    Quaternion.identity, mazePos);
+                    Quaternion.identity,
+                    mazePos);
 
                 _mazeCells.Add(_mazeGrid[x, z]);
             }
         }
-        
+
+        Vector3 spawnPosition = new Vector3(centerX * _cellSize, 0, centerZ * _cellSize);
+
+        _mazeGrid[centerX, centerZ] = Instantiate(spawnCell, spawnPosition, Quaternion.identity, mazePos);
+
+        _mazeCells.Add(_mazeGrid[centerX, centerZ]);
+
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            player.transform.position = spawnPosition + Vector3.up;
+        }
+
         MazeCell startCell = _mazeCells[Random.Range(0, _mazeCells.Count)];
+
         yield return GenerateMaze(null, startCell);
 
         CreateEntranceAndExit();
-        
     }
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell)
@@ -137,7 +159,7 @@ public class MazeGeneration : MonoBehaviour
         currentCell.Visit();
         ClearWalls(previousCell, currentCell);
 
-        yield return new WaitForSeconds(0.04f);
+        //yield return new WaitForSeconds(0.04f);
 
         MazeCell nextCell;
 

@@ -153,7 +153,9 @@ MonoBehaviour:
   EnemyCell: {fileID: 7022070345779681316, guid: f281c34c5f9285041b0dc601f728a70c, type: 3}
   TrapCell: {fileID: 7022070345779681316, guid: d6fdabf7cb630024489403ef075e224b, type: 3}
   BasicCell: {fileID: 7022070345779681316, guid: 4567b9016ed0c7b4f89afc030727ddd7, type: 3}
+  spawnCell: {fileID: 1423296806981749143, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
   cellsToSpawn: []
+  playerSpawn: {fileID: 3325062037787847128, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
   maxlootCellAmount: 10
   currentlootCellAmount: 0
   maxEnemyCellAmount: 10
@@ -161,8 +163,8 @@ MonoBehaviour:
   maxTrapCellAmount: 10
   currentTrapCellAmount: 0
   _cellSize: 12
-  _mazeWidth: 15
-  _mazeDepth: 15
+  _mazeWidth: 10
+  _mazeDepth: 10
   _spawnPosition: {x: 0, y: 0}
   mazePos: {fileID: 1949526067}
   _mazeCells: []

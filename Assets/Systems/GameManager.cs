@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
     {
         if (quotaText == null)
         { 
+            
              if (ScreenCanvas != null)
              {
                 quotaText = ScreenCanvas.GetComponentInChildren<TextMeshProUGUI>();
