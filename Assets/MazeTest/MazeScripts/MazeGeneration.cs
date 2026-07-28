@@ -151,7 +151,7 @@ public class MazeGeneration : MonoBehaviour
 
         yield return GenerateMaze(null, startCell);
 
-        CreateEntranceAndExit();
+        //CreateEntranceAndExit();
     }
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell)
