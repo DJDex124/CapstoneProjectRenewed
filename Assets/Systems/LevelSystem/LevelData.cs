@@ -7,4 +7,7 @@ public class LevelData : ScriptableObject
     public int lootCellCount;
     public int enemyCellCount;
     public int trapCellCount;
+
+    public int lootSpawnCount;
+    public int enemySpawnCount;
 }

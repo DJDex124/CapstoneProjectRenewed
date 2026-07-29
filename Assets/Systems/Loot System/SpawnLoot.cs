@@ -3,6 +3,21 @@ using UnityEngine;
 
 public class SpawnLoot : MonoBehaviour
 {
+    public static SpawnLoot current { get; private set; }
+    private void Awake()
+    {
+        if (current != null && current != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            current = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+
     public List<GameObject> Loot;
     public int LootCount;
     public int MaxLootCount;
@@ -22,7 +37,10 @@ public class SpawnLoot : MonoBehaviour
     }
     public void findLootCells()
     {
+        LootCount = 0;
+        lootCellCount = 0;
         lootCells.Clear();
+        SpawnPoints.Clear();
         GameObject[] lootCellsArray = GameObject.FindGameObjectsWithTag("LootCell");
         foreach (GameObject cell in lootCellsArray)
         {

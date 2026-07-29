@@ -16,3 +16,5 @@ MonoBehaviour:
   lootCellCount: 5
   enemyCellCount: 2
   trapCellCount: 2
+  lootSpawnCount: 5
+  enemySpawnCount: 2

@@ -3,6 +3,20 @@ using UnityEngine;
 
 public class EnemySystem : MonoBehaviour
 {
+    public static EnemySystem current { get; private set; }
+    private void Awake()
+    {
+        if (current != null && current != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            current = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
     public List<GameObject> Enemy;
     public int EnemyCount;
     public int MaxEnemyCount;
@@ -13,15 +27,13 @@ public class EnemySystem : MonoBehaviour
 
     public List<GameObject> enemyCells;
     public List<GameObject> SpawnPoints;
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            findEnemyCells();
-        }
-    }
+   
+        
     public void findEnemyCells()
     {
+        EnemyCount = 0; 
+        EnemyCellCount = 0;
+        SpawnPoints.Clear();
         enemyCells.Clear();
         GameObject[] enemyCellsArray = GameObject.FindGameObjectsWithTag("EnemyCell");
         foreach (GameObject cell in enemyCellsArray)

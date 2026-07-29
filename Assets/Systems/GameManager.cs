@@ -63,18 +63,27 @@ public class GameManager : MonoBehaviour
         
         
         StartCoroutine(MazeGeneration.current.StartMazeGeneration());
+
+        yield return new WaitForSeconds(0.5f);
+        SpawnLoot.current.findLootCells();
+        EnemySystem.current.findEnemyCells();
     }
    
 
     void setData()
     {
         //Maze Data
-        MazeGeneration.current.maxlootCellAmount = level1.lootCellCount;
+        MazeGeneration.current.maxlootCellAmount = currentLevel.lootCellCount;
         MazeGeneration.current._mazeDepth = currentLevel.mazeWidthandDepth;
         MazeGeneration.current._mazeWidth = currentLevel.mazeWidthandDepth;
 
         // loot data
+        SpawnLoot.current.MaxLootCount = currentLevel.lootSpawnCount;
+        SpawnLoot.current.maxLootCellCount = currentLevel.lootCellCount;
 
+        // enemy data
+        EnemySystem.current.MaxEnemyCount = currentLevel.enemySpawnCount;
+        EnemySystem.current.maxEnemyCellCount = currentLevel.enemyCellCount;
     }
 
     void Awake()
