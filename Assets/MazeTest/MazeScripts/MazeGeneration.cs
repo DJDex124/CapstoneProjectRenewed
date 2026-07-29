@@ -50,7 +50,7 @@ public class MazeGeneration : MonoBehaviour
     public List<MazeCell> _mazeCells = new List<MazeCell>();
 
 
-    [SerializeField] private int safeZone = 4;
+    [SerializeField] private int safeZone = 1;
     private HashSet<Vector2Int> blockedCells = new HashSet<Vector2Int>();
 
     public bool createExit = false;
