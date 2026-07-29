@@ -2,10 +2,19 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class MazeGeneration : MonoBehaviour
 {
+    public static MazeGeneration current {  get; private set; }
+
+    private void Awake()
+    {
+        current = this;
+    }
+
+
     [SerializeField]
     private MazeCell _mazeCellPrefab;
     [Header("cell Settings")]
@@ -29,11 +38,9 @@ public class MazeGeneration : MonoBehaviour
 
     public float _cellSize = 4f;
 
-    [SerializeField]
-    private int _mazeWidth;
+    public int _mazeWidth;
 
-    [SerializeField]
-    private int _mazeDepth;
+    public int _mazeDepth;
 
     public Vector2Int _spawnPosition;
 
@@ -46,6 +53,7 @@ public class MazeGeneration : MonoBehaviour
     [SerializeField] private int safeZone = 4;
     private HashSet<Vector2Int> blockedCells = new HashSet<Vector2Int>();
 
+    public bool createExit = false;
     public void addCells()
     {
         
@@ -70,11 +78,12 @@ public class MazeGeneration : MonoBehaviour
                 
             }
         }
+        
     }
 
-   
+  
 
-    IEnumerator Start()
+    public IEnumerator StartMazeGeneration()
     {
         addCells();
         
@@ -151,7 +160,7 @@ public class MazeGeneration : MonoBehaviour
 
         yield return GenerateMaze(null, startCell);
 
-        //CreateEntranceAndExit();
+        CreateEntranceAndExit();
     }
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell)
@@ -291,30 +300,32 @@ public class MazeGeneration : MonoBehaviour
             }
         }
 
-        Vector2Int exitPos = edgeCells[Random.Range(0, edgeCells.Count)];
-        MazeCell exitCell = _mazeGrid[exitPos.x, exitPos.y];
+        if ( createExit)
+        {
+            Vector2Int exitPos = edgeCells[Random.Range(0, edgeCells.Count)];
+            MazeCell exitCell = _mazeGrid[exitPos.x, exitPos.y];
 
-        if (exitPos.x == 0)
-        {
-            exitCell.ClearLeftWall();
+            if (exitPos.x == 0)
+            {
+                exitCell.ClearLeftWall();
+            }
+            else if (exitPos.x == _mazeWidth - 1)
+            {
+                exitCell.ClearRightWall();
+            }
+            else if (exitPos.y == 0)
+            {
+                exitCell.ClearBackWall();
+            }
+            else if (exitPos.y == _mazeDepth - 1)
+            {
+                exitCell.ClearFrontWall();
+            }
         }
-        else if (exitPos.x == _mazeWidth - 1)
-        {
-            exitCell.ClearRightWall();
-        }
-        else if (exitPos.y == 0)
-        {
-            exitCell.ClearBackWall();
-        }
-        else if (exitPos.y == _mazeDepth - 1)
-        {
-            exitCell.ClearFrontWall();
-        }
-
     }
-
-    
 }
+
+
 public static class listExtentions
 {
     public static void Shuffle<T>(this IList<T> list)

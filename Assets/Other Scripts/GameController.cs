@@ -23,17 +23,19 @@ public class GameController : MonoBehaviour
     {
         if (canStartGame && Input.GetKeyDown(KeyCode.E) && mazeHasntGenerated)
         {
+            StartCoroutine(GameManager.current.levelChange());
             startGame();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            levelManager.resetLevel();
+            
+            StartCoroutine(GameManager.current.levelChange());
         }
 
     }
     void startGame()
     {
-        levelManager.generateMaze();
+        
         //make into a couroutine to wait for the maze to generate before disabling the door
         door.gameObject.SetActive(false);
         mazeHasntGenerated = false;

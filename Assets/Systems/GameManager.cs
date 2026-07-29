@@ -1,5 +1,8 @@
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -25,6 +28,45 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI quotaText;
     [SerializeField]
     private Canvas ScreenCanvas;
+
+    [Header("levelSystem")]
+    public LevelData level1;
+    public LevelData level2;
+    [SerializeField]
+    private LevelData currentLevel;
+
+    private bool cantChangeLevel = false;
+
+    public IEnumerator levelChange()
+    {
+
+        LevelManagerCreative.current.resetLevel();
+        yield return new WaitForSeconds(1f);
+
+        if (currentLevel == null)
+        {
+            currentLevel = level1;
+            setData();
+            
+        }
+        else if (currentLevel == level1) 
+        { 
+            currentLevel = level2;
+            setData(); 
+        }
+        
+        
+        StartCoroutine(MazeGeneration.current.StartMazeGeneration());
+    }
+   
+
+    void setData()
+    {
+        //Maze Data
+        MazeGeneration.current.maxlootCellAmount = level1.lootCellCount;
+        MazeGeneration.current._mazeDepth = currentLevel.mazeWidthandDepth;
+        MazeGeneration.current._mazeWidth = currentLevel.mazeWidthandDepth;
+    }
 
     void Awake()
     {

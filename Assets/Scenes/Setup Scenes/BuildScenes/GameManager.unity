@@ -154,6 +154,13 @@ MonoBehaviour:
   currentHealth: 0
   maxStamina: 100
   currentStamina: 0
+  maxQuota: 200
+  currentQuota: 0
+  quotaText: {fileID: 0}
+  ScreenCanvas: {fileID: 0}
+  level1: {fileID: 11400000, guid: a9a974fb1ae254849aa15e340b8ffe7c, type: 2}
+  level2: {fileID: 11400000, guid: 0b2880d977bcf3846b1e67b472398ba3, type: 2}
+  currentLevel: {fileID: 0}
 --- !u!4 &1384062487
 Transform:
   m_ObjectHideFlags: 0
