@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [Header("levelSystem")]
     public LevelData level1;
     public LevelData level2;
+    public LevelData level3;
     [SerializeField]
     private LevelData currentLevel;
 
@@ -47,12 +48,17 @@ public class GameManager : MonoBehaviour
         {
             currentLevel = level1;
             setData();
-            
+
         }
-        else if (currentLevel == level1) 
-        { 
+        else if (currentLevel == level1)
+        {
             currentLevel = level2;
-            setData(); 
+            setData();
+        }
+        else if (currentLevel == level2)
+        {
+            currentLevel = level3;
+            setData();
         }
         
         
@@ -66,6 +72,9 @@ public class GameManager : MonoBehaviour
         MazeGeneration.current.maxlootCellAmount = level1.lootCellCount;
         MazeGeneration.current._mazeDepth = currentLevel.mazeWidthandDepth;
         MazeGeneration.current._mazeWidth = currentLevel.mazeWidthandDepth;
+
+        // loot data
+
     }
 
     void Awake()
