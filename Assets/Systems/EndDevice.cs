@@ -11,6 +11,11 @@ public class EndDevice : MonoBehaviour
 
     public int requiredItemCount = 3; // Number of items required to end the game
 
+    private void Start()
+    {
+        GameManager.current.assignScreenCanvas();
+    }
+
     // Call this when the player interacts with the device
     public void TryReceiveFromInventory()
     {
@@ -33,8 +38,11 @@ public class EndDevice : MonoBehaviour
         OldItemData received = selectedSlot.itemInSlot;
         OldInventory.current.RemoveItem(received);
         receivedItems.Add(received);
+        GameManager.current.currentQuota++;
+        
 
         Debug.Log($"Device received: {received.itemName}");
+
     }
 
     void endGame()
@@ -48,11 +56,5 @@ public class EndDevice : MonoBehaviour
         }
 
     }
-    void Update()
-    {
-        if (receivedItems.Count >= requiredItemCount)
-        {
-            endGame();
-        }
-    }
+    
 }

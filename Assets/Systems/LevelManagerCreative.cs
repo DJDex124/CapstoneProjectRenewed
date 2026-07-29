@@ -26,13 +26,7 @@ public class LevelManagerCreative : MonoBehaviour
 
 
     }
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            resetLevel();
-        }
-    }
+   
     public void resetLevel()
     {
         

@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private LevelData currentLevel;
 
-    private bool cantChangeLevel = false;
 
     public IEnumerator levelChange()
     {
@@ -84,6 +83,9 @@ public class GameManager : MonoBehaviour
         // enemy data
         EnemySystem.current.MaxEnemyCount = currentLevel.enemySpawnCount;
         EnemySystem.current.maxEnemyCellCount = currentLevel.enemyCellCount;
+
+        // quota update
+        maxQuota = currentLevel.lootSpawnCount;
     }
 
     void Awake()
@@ -124,7 +126,7 @@ public class GameManager : MonoBehaviour
             UIManager.current.staminaSlider.maxValue = maxStamina;
             UIManager.current.staminaSlider.value = currentStamina;
         }
-        ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>(); 
+        
 
         
     }
@@ -179,8 +181,13 @@ public class GameManager : MonoBehaviour
             //endgame/next level
         }
     }
-    void handleScreenUI()
+    public void assignScreenCanvas()
     {
+        ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>();
+    }
+     public void handleScreenUI()
+    {
+        
         if (quotaText == null)
         { 
             
