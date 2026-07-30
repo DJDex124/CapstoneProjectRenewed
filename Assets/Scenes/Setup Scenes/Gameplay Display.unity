@@ -7632,11 +7632,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000013041734426, guid: d803e729730d97a4e89edf13b602b3f4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 71.44276
+      value: 101.17
       objectReference: {fileID: 0}
     - target: {fileID: 4000013041734426, guid: d803e729730d97a4e89edf13b602b3f4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000018365745
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 4000013041734426, guid: d803e729730d97a4e89edf13b602b3f4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8207,6 +8207,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Road_set_v1_s_road_up_2m_HD
       objectReference: {fileID: 0}
+    - target: {fileID: 4000010221898982, guid: f1f1a409b6b97cc4ebd46da8ebcaf014, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.09
+      objectReference: {fileID: 0}
     - target: {fileID: 4000013694635034, guid: f1f1a409b6b97cc4ebd46da8ebcaf014, type: 3}
       propertyPath: m_LocalPosition.x
       value: 86.48
@@ -8327,7 +8331,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3325062037787847128, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 66.86
+      value: 74.54
       objectReference: {fileID: 0}
     - target: {fileID: 3325062037787847128, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
       propertyPath: m_LocalPosition.y
