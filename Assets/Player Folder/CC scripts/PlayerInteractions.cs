@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class PlayerInteractions : MonoBehaviour
@@ -34,12 +35,9 @@ public class PlayerInteractions : MonoBehaviour
         handleGlowstickDrop();
         handleEndDevice();
         handleConsumable();
-
-        if (Input.GetKeyDown(KeyCode.F))
+        if ( OldInventory.current.flashLightSelected)
         {
             FlashLightToggle();
-
-
         }
     }
     public void handlePickup()
@@ -148,18 +146,28 @@ public class PlayerInteractions : MonoBehaviour
             }
         }
     }
+    
 
-    void FlashLightToggle()
+    public void FlashLightToggle()
     {
-        if (flCheck == false)
+        if (Flashlight == null)
         {
-            flCheck = true;
-            Flashlight.SetActive(true);
+            Debug.LogError("Flashlight GameObject is not assigned in the inspector.");
+            return;
         }
-        else if (flCheck == true) 
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            flCheck = false;
-            Flashlight.SetActive(false);
+            if (flCheck == false)
+            {
+                flCheck = true;
+                Flashlight.SetActive(true);
+            }
+            else if (flCheck == true)
+            {
+                flCheck = false;
+                Flashlight.SetActive(false);
+            }
         }
     }
 }

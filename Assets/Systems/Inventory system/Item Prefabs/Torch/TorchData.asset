@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7caca105983bb6b41ba848b54291f0ff, type: 3}
-  m_Name: CompetionDevice
+  m_Name: TorchData
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
   itemName: 
-  itemSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  pickupPrefab: {fileID: 5365650881138855633, guid: 460f80c98da45d444ab0af96f837614b, type: 3}
-  heldItem: {fileID: 5365650881138855633, guid: 460f80c98da45d444ab0af96f837614b, type: 3}
-  itemType: 4
+  itemSprite: {fileID: 0}
+  pickupPrefab: {fileID: 0}
+  heldItem: {fileID: 8697105779387944293, guid: f3112112b4c37f248bd83f19dad1a4fd, type: 3}
+  itemType: 2
   consumableType: 0
-  toolType: 0
+  toolType: 1
   clubHolder: {fileID: 0}
   itemValue: 0
   maxStackSize: 0

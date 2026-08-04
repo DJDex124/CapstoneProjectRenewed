@@ -10,6 +10,7 @@ public class OldItemData : ScriptableObject
     public GameObject heldItem;
     public ItemType itemType;
     public ConsumableType consumableType;
+    public ToolType toolType;
     public GameObject clubHolder;
 
     public int itemValue;   
@@ -27,7 +28,16 @@ public class OldItemData : ScriptableObject
     }
     public enum ConsumableType
     {
+        NA,
         Health,
-        Stamina,
+        Stamina
+        
+    }
+    public enum ToolType
+    {
+        NA,
+        Flashlight,
+        Glowstick,
+        Crowbar
     }
 }

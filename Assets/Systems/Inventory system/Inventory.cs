@@ -13,6 +13,9 @@ public class OldInventory : MonoBehaviour
     private int lastIndex = -1;
     public bool isOpen;
 
+    public bool flashLightSelected = false;
+    public bool crowbarSelected = false;
+
     public static OldInventory current;
 
     private void Awake()
@@ -45,9 +48,9 @@ public class OldInventory : MonoBehaviour
 
     void Update()
     {
-    
+       toggleTool();
 
-        
+
         for (int i = 0; i < itemSlots.Length; i++)
         {
             itemSlots[i].index = i;
@@ -69,7 +72,7 @@ public class OldInventory : MonoBehaviour
         if(currentIndex != lastIndex)
         {
             
-            UpdateHeldItem();
+            
             lastIndex = currentIndex;
         }
     }
@@ -209,6 +212,7 @@ public class OldInventory : MonoBehaviour
             heldObject.transform.localRotation = Quaternion.identity;
         }
     }
+
     public void UseSelectedItem()
     {
         HealthStaminaSystem healthSystem = HealthStaminaSystem.current;
@@ -234,6 +238,30 @@ public class OldInventory : MonoBehaviour
             return;
         }
         RemoveItem(selectedSlot.itemInSlot);
+    }
+    public void toggleTool()
+    {
+        OldItemSlot selectedSlot = itemSlots[currentIndex];
+        if (selectedSlot == null)
+        {
+            return;
+        }
+        if (selectedSlot.itemInSlot != null && selectedSlot.itemInSlot.toolType == OldItemData.ToolType.Flashlight)
+        {
+            flashLightSelected = true;
+        }
+        else
+        {
+            flashLightSelected = false;
+        }
+        if (selectedSlot.itemInSlot != null && selectedSlot.itemInSlot.toolType == OldItemData.ToolType.Crowbar)
+        {
+            crowbarSelected = true;
+        }
+        else
+        {
+            crowbarSelected = false;
+        }
     }
 
 }
