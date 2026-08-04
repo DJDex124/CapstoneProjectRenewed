@@ -10,8 +10,9 @@ public class PlayerInteractions : MonoBehaviour
     public float pickupRange = 3f;
     public LayerMask pickupMask;
     public LayerMask EndMask;
-    
-    
+
+    public bool flCheck;
+    public GameObject Flashlight;
 
     public static PlayerInteractions current;
 
@@ -24,6 +25,7 @@ public class PlayerInteractions : MonoBehaviour
     void Start()
     {
         current = this;
+        flCheck = false;
     }
     void Update()
     {
@@ -32,6 +34,13 @@ public class PlayerInteractions : MonoBehaviour
         handleGlowstickDrop();
         handleEndDevice();
         handleConsumable();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FlashLightToggle();
+
+
+        }
     }
     public void handlePickup()
     {
@@ -137,6 +146,20 @@ public class PlayerInteractions : MonoBehaviour
                     ForceMode.Impulse
                 );
             }
+        }
+    }
+
+    void FlashLightToggle()
+    {
+        if (flCheck == false)
+        {
+            flCheck = true;
+            Flashlight.SetActive(true);
+        }
+        else if (flCheck == true) 
+        {
+            flCheck = false;
+            Flashlight.SetActive(false);
         }
     }
 }
