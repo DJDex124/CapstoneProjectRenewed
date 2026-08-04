@@ -52,7 +52,7 @@ public class PlayerMovementCC : MonoBehaviour
         jump();
         handleSpeed();
         attack();
-        
+        SlowHeal();
 
         if (isGrounded && velocity.y < 0)
         {
@@ -86,39 +86,46 @@ public class PlayerMovementCC : MonoBehaviour
     }
     void jump()
     {
-        if (GameManager.current == null)
+        if (HealthStaminaSystem.current == null)
             return;
-        if (Input.GetButtonDown("Jump") && isGrounded && GameManager.current.canJump)
+        if (Input.GetButtonDown("Jump") && isGrounded && HealthStaminaSystem.current.canJump)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             Debug.Log("Jumping with velocity: " + velocity.y);
-            GameManager.current.currentStamina -= 10f;
+            if (HealthStaminaSystem.current.canLoseStamina)
+            { 
+                HealthStaminaSystem.current.currentStamina -= 10f; 
+            }
         }
     }
     void handleSpeed()
     {
-        if (GameManager.current == null)
+        if (HealthStaminaSystem.current == null)
             return;
 
-        if (Input.GetKey(KeyCode.LeftShift) && GameManager.current.canSprint && isGrounded)
+        if (Input.GetKey(KeyCode.LeftShift) && HealthStaminaSystem.current.canSprint && isGrounded)
         {
             isCrouching = false;
             speed = sprintSpeed;
-            GameManager.current.currentStamina -= 20f * Time.deltaTime;
+            if (HealthStaminaSystem.current.canLoseStamina)
+            {
+                HealthStaminaSystem.current.currentStamina -= 20f * Time.deltaTime;
+            }
+            
         }
         else if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
             speed = crouchSpeed;
-            GameManager.current.canJump = false;
-            GameManager.current.RegenerateStamina(10f * Time.deltaTime);
+            HealthStaminaSystem.current.canJump = false;
+            HealthStaminaSystem.current.RegenerateStamina(15f * Time.deltaTime);
             isCrouching = true;
         }
         else
         {
             isCrouching = false;
-            GameManager.current.canJump = true;
+            HealthStaminaSystem.current.canJump = true;
             speed = 5f;
-            GameManager.current.RegenerateStamina(10f * Time.deltaTime);
+            HealthStaminaSystem.current.RegenerateStamina(10f * Time.deltaTime);
         }
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
@@ -149,6 +156,17 @@ public class PlayerMovementCC : MonoBehaviour
 
         
         }
+    }
+    void SlowHeal()
+    {
+        if (HealthStaminaSystem.current == null)
+            return;
+        if (!isMoving)
+        {
+            HealthStaminaSystem.current.healPlayer(0.5f * Time.deltaTime);
+        } 
+
+
     }
 
     public void PerformAttackHit()

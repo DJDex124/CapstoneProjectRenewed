@@ -25,8 +25,8 @@ public class UIManager : MonoBehaviour
     public void UpdateSliders()
     {
         if (healthSlider != null)
-            healthSlider.value = GameManager.current.currentHealth;
+            healthSlider.value = HealthStaminaSystem.current.currentHealth;
         if (staminaSlider != null)
-            staminaSlider.value = GameManager.current.currentStamina;
+            staminaSlider.value = HealthStaminaSystem.current.currentStamina;
     }
 }

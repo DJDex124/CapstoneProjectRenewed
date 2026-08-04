@@ -11,7 +11,7 @@ public class PlayerInteractions : MonoBehaviour
     public LayerMask pickupMask;
     public LayerMask EndMask;
     
-
+    
 
     public static PlayerInteractions current;
 
@@ -27,12 +27,13 @@ public class PlayerInteractions : MonoBehaviour
     }
     void Update()
     {
-        HandlePickup();
+        handlePickup();
         handleDrop();
-        HandleGlowstickDrop();
-        HandleEndDevice();
+        handleGlowstickDrop();
+        handleEndDevice();
+        handleConsumable();
     }
-    public void HandlePickup()
+    public void handlePickup()
     {
         Vector3 rayOrigin = transform.position + Vector3.up * (PlayerMovementCC.current.controller.skinWidth + 0.05f);
         Vector3 lookDir = Camera.main.transform.forward;
@@ -50,6 +51,7 @@ public class PlayerInteractions : MonoBehaviour
             }
         }
     }
+    
 
     void handleDrop()
     {
@@ -58,7 +60,7 @@ public class PlayerInteractions : MonoBehaviour
             OldInventory.current.DropSelectedItem(Player.transform);
         }
     }
-    void HandleEndDevice()
+    void handleEndDevice()
     {
         Vector3 rayOrigin = transform.position + Vector3.up * (PlayerMovementCC.current.controller.skinWidth + 0.05f);
         Vector3 lookDir = Camera.main.transform.forward;
@@ -81,6 +83,14 @@ public class PlayerInteractions : MonoBehaviour
         }
     }
      
+    void handleConsumable()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OldInventory.current.UseSelectedItem();
+        }
+        
+    }
     private void OnDrawGizmos()
     {
         if (PlayerMovementCC.current == null || PlayerMovementCC.current.controller == null)
@@ -96,7 +106,7 @@ public class PlayerInteractions : MonoBehaviour
     }
     
 
-    void HandleGlowstickDrop()
+    void handleGlowstickDrop()
     {
         if (Input.GetKeyDown(KeyCode.G))
         {

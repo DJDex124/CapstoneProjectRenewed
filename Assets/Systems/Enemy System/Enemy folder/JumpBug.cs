@@ -162,7 +162,7 @@ public class JumpBug : MonoBehaviour
     IEnumerator DealDamage(float delay)
     {
         yield return new WaitForSeconds(delay);
-        GameManager.current.TakeDamage(damage);
+        HealthStaminaSystem.current.TakeDamage(damage);
         disAttach();
     }
     void attached()

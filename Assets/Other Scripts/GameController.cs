@@ -3,14 +3,13 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject door; 
-    public LevelManagerCreative levelManager;
+
     
     public Canvas textCanvas;
     public TextMeshProUGUI startText;
 
-    public bool canStartGame = false;
-    bool mazeHasntGenerated = true;
+    public bool inRange = false;
+    bool canStartGame = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,32 +20,25 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canStartGame && Input.GetKeyDown(KeyCode.E) && mazeHasntGenerated)
+        if (inRange && Input.GetKeyDown(KeyCode.E) && GameManager.current.canStartGame)
         {
             StartCoroutine(GameManager.current.levelChange());
-            startGame();
+            canStartGame = false;
+            textCanvas.gameObject.SetActive(false);
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            
             StartCoroutine(GameManager.current.levelChange());
         }
 
     }
-    void startGame()
-    {
-        
-        //make into a couroutine to wait for the maze to generate before disabling the door
-        door.gameObject.SetActive(false);
-        mazeHasntGenerated = false;
-        textCanvas.gameObject.SetActive(false);
-    }
+    
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            canStartGame = true;
+            inRange = true;
             startText.enabled = true;
         }
         
@@ -55,7 +47,7 @@ public class GameController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            canStartGame = false;
+            inRange = false;
             startText.enabled = false;
         }
     }

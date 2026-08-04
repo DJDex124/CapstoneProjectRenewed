@@ -9,16 +9,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager current { get; private set; }
     
-    public bool canSprint = true;
-    public bool canJump = true;
+    
 
-    [Header("Health")]
-    public float maxHealth = 100f;
-    public float currentHealth;
-
-    [Header("Stamina")]
-    public float maxStamina = 100f;
-    public float currentStamina;
+    public bool canStartGame = true;
 
     [Header("Quota System")]
     public int maxQuota = 200;
@@ -39,7 +32,8 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator levelChange()
     {
-
+        
+        Debug.Log("Level Change Initiated");
         LevelManagerCreative.current.resetLevel();
         yield return new WaitForSeconds(1f);
 
@@ -47,25 +41,33 @@ public class GameManager : MonoBehaviour
         {
             currentLevel = level1;
             setData();
-
+            Debug.Log("Level 1 Data Set");
         }
         else if (currentLevel == level1)
         {
             currentLevel = level2;
             setData();
+            Debug.Log("Level 2 Data Set");
         }
         else if (currentLevel == level2)
         {
             currentLevel = level3;
             setData();
+            Debug.Log("Level 3 Data Set");
         }
-        
-        
+        else if (currentLevel == level3)
+        {
+            Debug.Log("Game Completed!");
+            endGame();
+            yield break;
+        }
+        Debug.Log("Starting Maze Generation for Level: " + currentLevel.name);
         StartCoroutine(MazeGeneration.current.StartMazeGeneration());
 
         yield return new WaitForSeconds(0.5f);
         SpawnLoot.current.findLootCells();
         EnemySystem.current.findEnemyCells();
+        canStartGame = false;
     }
    
 
@@ -86,6 +88,7 @@ public class GameManager : MonoBehaviour
 
         // quota update
         maxQuota = currentLevel.lootSpawnCount;
+        EndDevice.current.Quota = maxQuota;
     }
 
     void Awake()
@@ -105,82 +108,18 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth;
-        currentStamina = maxStamina;
-
-        if (UIManager.current == null)
-        {
-            Debug.LogWarning("UIManager not found. Make sure it is loaded before GameManager.");
-            return;
-        }
-        if (UIManager.current.healthSlider != null)
-        {
-            UIManager.current.healthSlider.minValue = 0f;
-            UIManager.current.healthSlider.maxValue = maxHealth;
-            UIManager.current.healthSlider.value = currentHealth;
-        }
-
-        if (UIManager.current.staminaSlider != null)
-        {
-            UIManager.current.staminaSlider.minValue = 0f;
-            UIManager.current.staminaSlider.maxValue = maxStamina;
-            UIManager.current.staminaSlider.value = currentStamina;
-        }
-        
-
-        
+       
     }
 
     void Update()
     {
-        if (UIManager.current == null)
-        {
-            Debug.LogWarning("UIManager not found. Make sure it is loaded before GameManager.");
-            return;
-        }
-        UIManager.current.UpdateSliders();
-
-        if (currentHealth <= 0)
-            Die();
-        if (currentStamina <= 0)
-            canSprint = false;
-        else
-            canSprint = true;
-        if (currentStamina <= 10)
-            canJump = false;
-        else
-            canJump = true;
-
-        handleQuota();
+        
         handleScreenUI();
-    }
-
-
-    public void TakeDamage(float amount)
-    {
-        currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
-        Debug.Log("Health: " + currentHealth);
-    }
-    public void UseStamina(float amount)
-    {
-        currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
-        
-    }
-    public void RegenerateStamina(float amount)
-    {
-        currentStamina = Mathf.Clamp(currentStamina + amount, 0f, maxStamina);
         
     }
 
-    void handleQuota()
-    {
 
-        if(currentQuota <= maxQuota )
-        {
-            Debug.Log("Completed Quota");
-            //endgame/next level
-        }
-    }
+    
     public void assignScreenCanvas()
     {
         ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>();

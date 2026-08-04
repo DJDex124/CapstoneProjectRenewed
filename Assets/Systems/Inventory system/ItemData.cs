@@ -9,10 +9,14 @@ public class OldItemData : ScriptableObject
     public GameObject pickupPrefab;
     public GameObject heldItem;
     public ItemType itemType;
+    public ConsumableType consumableType;
     public GameObject clubHolder;
 
     public int itemValue;   
     public int maxStackSize;
+
+    
+
     public enum ItemType
     {
         Consumable,
@@ -20,5 +24,10 @@ public class OldItemData : ScriptableObject
         Tool,
         DontUse,
         endDevice
+    }
+    public enum ConsumableType
+    {
+        Health,
+        Stamina,
     }
 }

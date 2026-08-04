@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class EndDevice : MonoBehaviour
 {
+    public static EndDevice current { get; private set; }
+    void Awake()
+    {
+        current = this;
+    }
 
     public OldItemData.ItemType acceptedType = OldItemData.ItemType.Item;
     public List<OldItemData> receivedItems = new List<OldItemData>();
 
-    public int requiredItemCount = 3; // Number of items required to end the game
+    public int Quota = 3; // Number of items required to end the game
 
     private void Start()
     {
@@ -42,12 +47,15 @@ public class EndDevice : MonoBehaviour
         
 
         Debug.Log($"Device received: {received.itemName}");
-
+        if (receivedItems.Count >= Quota)
+        {
+            GameManager.current.canStartGame = true;
+        }
     }
 
     void endGame()
     {
-        if (receivedItems.Count >= requiredItemCount)
+        if (receivedItems.Count >= Quota)
         {
             Debug.Log("Game Ended! All required items received.");
             UnityEngine.SceneManagement.SceneManager.LoadScene("EndScreen");

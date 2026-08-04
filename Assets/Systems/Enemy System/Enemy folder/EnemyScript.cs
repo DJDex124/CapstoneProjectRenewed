@@ -221,7 +221,7 @@ public class EnemyScript : MonoBehaviour
     {
         if (GameManager.current != null)
         {
-            GameManager.current.TakeDamage(damage);
+            HealthStaminaSystem.current.TakeDamage(damage);
             Debug.Log("damaging playeer");
         }
     }

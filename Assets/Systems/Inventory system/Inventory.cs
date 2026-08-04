@@ -1,8 +1,7 @@
-using NUnit.Framework.Interfaces;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static OldItemData;
+
 
 public class OldInventory : MonoBehaviour
 {
@@ -48,7 +47,7 @@ public class OldInventory : MonoBehaviour
     {
     
 
-        //Old system
+        
         for (int i = 0; i < itemSlots.Length; i++)
         {
             itemSlots[i].index = i;
@@ -83,7 +82,7 @@ public class OldInventory : MonoBehaviour
         }
 
     }
-    //Old system, will be used for hotbar and quick access slots, new system will be used for inventory management and crafting
+    
     public void AddItem(OldItemData item)
     {
 
@@ -209,6 +208,32 @@ public class OldInventory : MonoBehaviour
             heldObject.transform.localPosition = Vector3.zero;
             heldObject.transform.localRotation = Quaternion.identity;
         }
+    }
+    public void UseSelectedItem()
+    {
+        HealthStaminaSystem healthSystem = HealthStaminaSystem.current;
+
+        OldItemSlot selectedSlot = itemSlots[currentIndex];
+        if (selectedSlot.itemInSlot == null)
+        {
+            Debug.Log("No item in selected slot.");
+            return;
+        }
+        if (selectedSlot.itemInSlot.consumableType == OldItemData.ConsumableType.Stamina
+            && healthSystem.currentStamina <= healthSystem.maxStamina)
+        {
+            StartCoroutine(healthSystem.disableStamina(15f));
+        }
+        else if (selectedSlot.itemInSlot.consumableType == OldItemData.ConsumableType.Health 
+                  && healthSystem.currentHealth <= healthSystem.maxHealth )
+        {
+            healthSystem.healPlayer(100f);
+        }
+        else
+        {
+            return;
+        }
+        RemoveItem(selectedSlot.itemInSlot);
     }
 
 }
