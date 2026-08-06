@@ -22,13 +22,12 @@ public class GameController : MonoBehaviour
     {
         if (inRange && Input.GetKeyDown(KeyCode.E) && GameManager.current.canStartGame)
         {
-            StartCoroutine(GameManager.current.levelChange());
-            canStartGame = false;
-            textCanvas.gameObject.SetActive(false);
+            GameManager.current.StartGame();
+            
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            StartCoroutine(GameManager.current.levelChange());
+            GameManager.current.StartGame();
         }
 
     }

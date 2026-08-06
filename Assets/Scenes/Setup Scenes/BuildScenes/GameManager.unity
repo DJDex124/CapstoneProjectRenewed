@@ -148,16 +148,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 049134f4693b61f4ba08955d1984e764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  canSprint: 1
-  canJump: 1
-  maxHealth: 100
-  currentHealth: 0
-  maxStamina: 100
-  currentStamina: 0
+  canStartGame: 1
   maxQuota: 200
   currentQuota: 0
   quotaText: {fileID: 0}
   ScreenCanvas: {fileID: 0}
+  levels:
+  - {fileID: 11400000, guid: a9a974fb1ae254849aa15e340b8ffe7c, type: 2}
+  - {fileID: 11400000, guid: 0b2880d977bcf3846b1e67b472398ba3, type: 2}
+  - {fileID: 11400000, guid: 5e4da6a3b0a37754ba8b24e743122d95, type: 2}
   level1: {fileID: 11400000, guid: a9a974fb1ae254849aa15e340b8ffe7c, type: 2}
   level2: {fileID: 11400000, guid: 0b2880d977bcf3846b1e67b472398ba3, type: 2}
   level3: {fileID: 11400000, guid: 5e4da6a3b0a37754ba8b24e743122d95, type: 2}

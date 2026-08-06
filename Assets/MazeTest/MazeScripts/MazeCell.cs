@@ -26,8 +26,14 @@ public class MazeCell : MonoBehaviour
 
 
     public bool IsVisited { get; private set; }
+    public int GridX { get; private set; }
+    public int GridZ { get; private set; }
+    public void SetGridPosition(int x, int z)
+    {
+        GridX = x;
+        GridZ = z;
+    }
 
-   
     public void Visit()
     {
         IsVisited = true;

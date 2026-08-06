@@ -43,6 +43,7 @@ public class MazeGeneration : MonoBehaviour
     public int _mazeDepth;
 
     public Vector2Int _spawnPosition;
+    public Vector3 fixedCentrePosition;
 
     public Transform mazePos;
 
@@ -54,6 +55,9 @@ public class MazeGeneration : MonoBehaviour
     private HashSet<Vector2Int> blockedCells = new HashSet<Vector2Int>();
 
     public bool createExit = false;
+
+
+    
     public void addCells()
     {
         
@@ -93,16 +97,19 @@ public class MazeGeneration : MonoBehaviour
         int centerX = _mazeWidth / 2;
         int centerZ = _mazeDepth / 2;
 
-        int halfSize = safeZone / 2;
+        Vector3 naturalCenterPos = mazePos.position + new Vector3(centerX * _cellSize, 0, centerZ * _cellSize);
+        Vector3 offset = fixedCentrePosition - naturalCenterPos;
 
-        for (int x = centerX - halfSize; x < centerX + halfSize; x++)
-        {
-            for (int z = centerZ - halfSize; z < centerZ + halfSize; z++)
-            {
-                blockedCells.Add(new Vector2Int(x, z));
-            }
-        }
-        int totalSpawnable = (_mazeWidth * _mazeDepth) - blockedCells.Count;
+        //int halfSize = safeZone / 2;
+
+        // for (int x = centerX - halfSize; x < centerX + halfSize; x++)
+        //{
+        //for (int z = centerZ - halfSize; z < centerZ + halfSize; z++)
+        // {
+        //  blockedCells.Add(new Vector2Int(x, z));
+        // }
+        // }
+        int totalSpawnable = (_mazeWidth * _mazeDepth);// - blockedCells.Count;
         while (totalSpawnable > cellsToSpawn.Count)
         {
             cellsToSpawn.Add(BasicCell);
@@ -116,8 +123,8 @@ public class MazeGeneration : MonoBehaviour
             {
                 Vector2Int pos = new Vector2Int(x, z);
 
-                // Skip the safe zone
-                if (blockedCells.Contains(pos))
+                // Skip the centre cell
+                if (x == centerX && z == centerZ)
                     continue;
 
                 MazeCell prefabToUse;
@@ -134,15 +141,16 @@ public class MazeGeneration : MonoBehaviour
 
                 _mazeGrid[x, z] = Instantiate(
                     prefabToUse,
-                    new Vector3(x * _cellSize, 0, z * _cellSize),
+                    new Vector3(x * _cellSize, 0, z * _cellSize) + mazePos.position + offset,
                     Quaternion.identity,
                     mazePos);
 
+                _mazeGrid[x, z].SetGridPosition(x, z);
                 _mazeCells.Add(_mazeGrid[x, z]);
             }
         }
 
-        Vector3 spawnPosition = new Vector3(centerX * _cellSize, 0, centerZ * _cellSize);
+        Vector3 spawnPosition = new Vector3(centerX * _cellSize, 0, centerZ * _cellSize) + mazePos.position + offset;
 
         _mazeGrid[centerX, centerZ] = Instantiate(spawnCell, spawnPosition, Quaternion.identity, mazePos);
 
@@ -156,7 +164,7 @@ public class MazeGeneration : MonoBehaviour
             player.transform.position = spawnPosition + Vector3.up;
         }
 
-        MazeCell startCell = _mazeCells[Random.Range(0, _mazeCells.Count)];
+        MazeCell startCell = _mazeGrid[centerX, centerZ];
 
         yield return GenerateMaze(null, startCell);
 
@@ -192,8 +200,8 @@ public class MazeGeneration : MonoBehaviour
 
     private IEnumerable<MazeCell> GetUnvisitedCells(MazeCell currentCell)
     {
-        int x = Mathf.RoundToInt(currentCell.transform.position.x / _cellSize);
-        int z = Mathf.RoundToInt(currentCell.transform.position.z / _cellSize);
+        int x = currentCell.GridX;
+        int z = currentCell.GridZ;
 
         Vector2Int checkPos;
 

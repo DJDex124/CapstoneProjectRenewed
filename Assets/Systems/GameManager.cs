@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,9 +10,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager current { get; private set; }
     
-    
-
+    public bool isChangingLevel = false;
+    public bool mazeGenerated = false;
     public bool canStartGame = true;
+    public bool noLevelsLeft = false;
 
     [Header("Quota System")]
     public int maxQuota = 200;
@@ -23,54 +25,75 @@ public class GameManager : MonoBehaviour
     private Canvas ScreenCanvas;
 
     [Header("levelSystem")]
+    public List<LevelData> levels;
+
     public LevelData level1;
     public LevelData level2;
     public LevelData level3;
     [SerializeField]
     private LevelData currentLevel;
 
-
+    public void StartGame()
+    {
+        StartCoroutine(levelChange());
+    }
     public IEnumerator levelChange()
     {
+        if (isChangingLevel) yield break;
+        isChangingLevel = true;
         
         Debug.Log("Level Change Initiated");
         LevelManagerCreative.current.resetLevel();
         yield return new WaitForSeconds(1f);
 
-        if (currentLevel == null)
+        changeLevelData();
+        if (noLevelsLeft)
         {
-            currentLevel = level1;
-            setData();
-            Debug.Log("Level 1 Data Set");
-        }
-        else if (currentLevel == level1)
-        {
-            currentLevel = level2;
-            setData();
-            Debug.Log("Level 2 Data Set");
-        }
-        else if (currentLevel == level2)
-        {
-            currentLevel = level3;
-            setData();
-            Debug.Log("Level 3 Data Set");
-        }
-        else if (currentLevel == level3)
-        {
-            Debug.Log("Game Completed!");
+
+            isChangingLevel = false;
             endGame();
             yield break;
         }
-        Debug.Log("Starting Maze Generation for Level: " + currentLevel.name);
-        StartCoroutine(MazeGeneration.current.StartMazeGeneration());
 
-        yield return new WaitForSeconds(0.5f);
+        mazeGenerated = false;
+        Debug.Log("Starting Maze Generation for Level: " + currentLevel.name);
+        StartCoroutine(generateMaze());
+
+        yield return new WaitUntil(() => mazeGenerated);
         SpawnLoot.current.findLootCells();
         EnemySystem.current.findEnemyCells();
         canStartGame = false;
+        isChangingLevel = false;
+    }
+    IEnumerator generateMaze()
+    {
+        yield return StartCoroutine(MazeGeneration.current.StartMazeGeneration());
+        mazeGenerated = true;
+    }
+    void changeLevelData()
+    {
+        if (currentLevel == null)
+        {
+            currentLevel = levels[0];
+        }
+        
+        else if (levels.IndexOf(currentLevel) + 1 >= levels.Count)
+        {
+            Debug.Log("Game Completed!");
+            
+            noLevelsLeft = true;
+            return;
+        }
+        else 
+        {
+            currentLevel = levels[levels.IndexOf(currentLevel) + 1];
+        }
+
+        setData();
+        currentQuota = 0;
     }
    
-
+    
     void setData()
     {
         //Maze Data
