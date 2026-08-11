@@ -28,13 +28,7 @@ public class SpawnLoot : MonoBehaviour
 
     public List<GameObject> lootCells;
     public List<GameObject> SpawnPoints;
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            findLootCells();
-        }
-    }
+    
     public void findLootCells()
     {
         LootCount = 0;

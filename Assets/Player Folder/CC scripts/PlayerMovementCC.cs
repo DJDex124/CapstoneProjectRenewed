@@ -36,6 +36,7 @@ public class PlayerMovementCC : MonoBehaviour
     public TrailRenderer swingTrail;
 
     public Transform handSpot;
+    public bool makingSound = false;
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -63,6 +64,15 @@ public class PlayerMovementCC : MonoBehaviour
         controller.Move(move * speed * Time.deltaTime);
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        if (isMoving && !isCrouching)
+        {
+            makingSound = true;
+        }
+        else
+        {
+            makingSound = false;
+        }
     }
 
     void groundcheck()

@@ -27,9 +27,6 @@ public class GameManager : MonoBehaviour
     [Header("levelSystem")]
     public List<LevelData> levels;
 
-    public LevelData level1;
-    public LevelData level2;
-    public LevelData level3;
     [SerializeField]
     private LevelData currentLevel;
 
