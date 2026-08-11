@@ -159,10 +159,10 @@ public class MazeGeneration : MonoBehaviour
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        if (player != null)
-        {
-            player.transform.position = spawnPosition + Vector3.up;
-        }
+        //if (player != null)
+        //{
+            //player.transform.position = spawnPosition + Vector3.up;
+        //}
 
         MazeCell startCell = _mazeGrid[centerX, centerZ];
 
