@@ -1,9 +1,9 @@
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using UnityEngine.AI;
 using UnityEngine;
+using Unity.AI.Navigation;
 
 public class MazeGeneration : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class MazeGeneration : MonoBehaviour
     {
         current = this;
     }
-
+    public NavMeshSurface navMeshSurface;
 
     [SerializeField]
     private MazeCell _mazeCellPrefab;
@@ -169,6 +169,7 @@ public class MazeGeneration : MonoBehaviour
         yield return GenerateMaze(null, startCell);
 
         CreateEntranceAndExit();
+        navMeshSurface.BuildNavMesh();
     }
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell)
