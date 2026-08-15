@@ -7134,6 +7134,7 @@ GameObject:
   - component: {fileID: 1114615525}
   - component: {fileID: 1114615527}
   - component: {fileID: 1114615526}
+  - component: {fileID: 1114615528}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -7149,7 +7150,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114615524}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: -92}
   m_LocalScale: {x: 3.7313206, y: 3.7313206, z: 3.7313206}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7157,7 +7158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 555, y: 394}
+  m_AnchoredPosition: {x: 62, y: 38}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1114615526
@@ -7182,15 +7183,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Quota \n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8bb1f09afe968874da650f43e01ae07d, type: 2}
+  m_sharedMaterial: {fileID: 573321103184343658, guid: 8bb1f09afe968874da650f43e01ae07d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4278251789
+  m_fontColor: {r: 0.050013695, g: 0.9433962, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7207,8 +7208,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.64
-  m_fontSizeBase: 42.64
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7260,6 +7261,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114615524}
   m_CullTransparentMesh: 1
+--- !u!114 &1114615528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114615524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b2aae67cc5a78419b565c91268906a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIAnims
+  horizontalJitter: 30
+  verticalJitter: 10
+  minDelay: 0.1
+  maxDelay: 2
+  minDuration: 0.1
+  maxDuration: 0.3
+  jitterSpeed: 0.2
 --- !u!1 &1137737419 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8391222552659086748, guid: 76a23ea14267fc742adb3bf26705d596, type: 3}
@@ -8536,7 +8556,6 @@ MonoBehaviour:
   lastAttackTime: 0
   jumpSpeed: 8
   jumpAttackRange: 4
-  jumpDamage: 15
   isJumping: 0
   jumpTarget: {x: 0, y: 0, z: 0}
   hearingRange: 9
@@ -14531,7 +14550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.11320752, g: 0.10199357, b: 0.10199357, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

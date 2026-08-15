@@ -32,6 +32,17 @@ public class MazeCell : MonoBehaviour
     {
         GridX = x;
         GridZ = z;
+
+        //these two logic checks prevent internal cells from owning a wall preventing overlapping
+        if (x > 0)
+        {
+            _leftWall.SetActive(false);
+        }
+
+        if (z > 0)
+        {
+            _backWall.SetActive(false);
+        }
     }
 
     public void Visit()
