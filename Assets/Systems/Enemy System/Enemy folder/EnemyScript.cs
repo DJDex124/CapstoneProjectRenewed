@@ -26,6 +26,9 @@ public class EnemyScript : MonoBehaviour
     private float lastSeen;
     private bool canSeePlayer;
 
+    [SerializeField] private PlayerMovementCC playerMovement;
+    [SerializeField] private HealthStaminaSystem PlayerStats;
+
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -221,7 +224,7 @@ public class EnemyScript : MonoBehaviour
     {
         if (GameManager.current != null)
         {
-            HealthStaminaSystem.current.TakeDamage(damage);
+            PlayerStats.TakeDamage(damage);
             Debug.Log("damaging playeer");
         }
     }

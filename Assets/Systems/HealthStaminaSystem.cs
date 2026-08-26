@@ -8,6 +8,7 @@ public class HealthStaminaSystem : MonoBehaviour
     public bool canSprint = true;
     public bool canJump = true;
     public bool canLoseStamina = true;
+    [SerializeField] private UIManager uiManager;
 
 
     [Header("Health")]
@@ -37,23 +38,23 @@ public class HealthStaminaSystem : MonoBehaviour
         currentHealth = maxHealth;
         currentStamina = maxStamina;
 
-        if (UIManager.current == null)
+        if (uiManager == null)
         {
             Debug.LogWarning("UIManager not found. Make sure it is loaded before GameManager.");
             return;
         }
-        if (UIManager.current.healthSlider != null)
+        if (uiManager.healthSlider != null)
         {
-            UIManager.current.healthSlider.minValue = 0f;
-            UIManager.current.healthSlider.maxValue = maxHealth;
-            UIManager.current.healthSlider.value = currentHealth;
+            uiManager.healthSlider.minValue = 0f;
+            uiManager.healthSlider.maxValue = maxHealth;
+            uiManager.healthSlider.value = currentHealth;
         }
 
-        if (UIManager.current.staminaSlider != null)
+        if (uiManager.staminaSlider != null)
         {
-            UIManager.current.staminaSlider.minValue = 0f;
-            UIManager.current.staminaSlider.maxValue = maxStamina;
-            UIManager.current.staminaSlider.value = currentStamina;
+            uiManager.staminaSlider.minValue = 0f;
+            uiManager.staminaSlider.maxValue = maxStamina;
+            uiManager.staminaSlider.value = currentStamina;
         }
 
 
@@ -63,12 +64,12 @@ public class HealthStaminaSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UIManager.current == null)
+        if (uiManager == null)
         {
             Debug.LogWarning("UIManager not found. Make sure it is loaded before GameManager.");
             return;
         }
-        UIManager.current.UpdateSliders();
+        uiManager.UpdateSliders();
 
         if (currentHealth <= 0)
             //Die();

@@ -11,6 +11,8 @@ public class EnemyBug : MonoBehaviour
     private Transform player;
     private Rigidbody rb;
     private GameObject Player;
+    [SerializeField] private PlayerMovementCC playerMovement;
+    [SerializeField] private HealthStaminaSystem PlayerStats;
 
     [Header("Speed Settings")]
     public float speed = 3.5f;
@@ -48,7 +50,7 @@ public class EnemyBug : MonoBehaviour
     public float wallCheckDistance = 5f;
     public bool isTurning;
 
-
+    
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
@@ -76,7 +78,7 @@ public class EnemyBug : MonoBehaviour
         if (player == null) return;
         if (isLeaping) return;
 
-        canHearPlayer = !PlayerMovementCC.current.isCrouching && PlayerMovementCC.current.isMoving && playerInRange;
+        canHearPlayer = !playerMovement.isCrouching && playerMovement.isMoving && playerInRange;
         bugBehavior();
 
     }
@@ -189,7 +191,7 @@ public class EnemyBug : MonoBehaviour
     IEnumerator DealDamage(float delay)
     { 
         yield return new WaitForSeconds(delay);
-        HealthStaminaSystem.current.TakeDamage(damage);
+        PlayerStats.TakeDamage(damage);
         Debug.Log("Dealing damage to player: " + damage);
         disAttachFromPlayer();
     }

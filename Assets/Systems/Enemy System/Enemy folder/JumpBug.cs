@@ -36,7 +36,7 @@ public class JumpBug : MonoBehaviour
     public BugState enemyState;
 
     public Animator animator;
-
+    [SerializeField] private PlayerMovementCC playerMovement;
 
     void Start()
     {
@@ -208,8 +208,12 @@ public class JumpBug : MonoBehaviour
     }
     void playerCheck()
     {
-        PlayerMovementCC playerMovement = player.GetComponent<PlayerMovementCC>();
-        if(playerMovement.isCrouching)
+        if (player == null || playerMovement == null)
+        {
+            canHearPlayer = false;
+            return;
+        }
+        if (playerMovement.isCrouching)
         {
             canHearPlayer = false;      
         }

@@ -3,15 +3,18 @@ using UnityEngine.ProBuilder.MeshOperations;
 
 public class HandItemHandler : MonoBehaviour
 {
-    public static HandItemHandler current;
+   
     public GameObject weapon;
     public GameObject Torch;
+    [SerializeField] private Inventory inventory;
 
     void Start()
     {
         weapon = GameObject.FindGameObjectWithTag("Weapon");
         weapon.SetActive(false);
         Torch.SetActive(false);
+        if (inventory == null)
+            inventory = GetComponent<Inventory>();
     }
 
     void Update()
@@ -21,10 +24,12 @@ public class HandItemHandler : MonoBehaviour
 
     void HandleTools()
     {
-        
-        
-            if (OldInventory.current.flashLightSelected)
-            {
+        if (inventory == null)
+            return;
+
+        if (inventory.flashLightSelected)
+
+         {
                 torchSelected();
                 Debug.Log("Torch selected");
             }
@@ -34,7 +39,7 @@ public class HandItemHandler : MonoBehaviour
                 Debug.Log("Torch deselected");
             }
             if
-                (OldInventory.current.crowbarSelected)
+                (inventory.crowbarSelected)
             {
                 spearSelected();
             }
@@ -42,7 +47,6 @@ public class HandItemHandler : MonoBehaviour
             {
                 spearDeselected();
             }
-        
         
     }
 

@@ -5,10 +5,15 @@ using UnityEngine.AI;
 
 public class RoachEnemy : MonoBehaviour
 {
+    #region References
     [Header("References")]
     [SerializeField] private Transform player;
     [SerializeField] private GameObject targetPlayer;
     [SerializeField] private NavMeshAgent navMesh;
+    public bool isDead;
+    [SerializeField] private float health = 100f;
+    private Vector3 directionToPlayer;
+    private float distanceToPlayer;
 
     [Header("Layers")]
     [SerializeField] private LayerMask groundMask;
@@ -19,22 +24,22 @@ public class RoachEnemy : MonoBehaviour
     [SerializeField] private float targetRadius;
     private Vector3 targetPoint;
     private bool targetPointSet;
-    public bool canPatrol;
+    [SerializeField] bool canPatrol;
     private bool patrolDelayRunning;
     private bool stuckCheckRunning;
     private bool StuckCheck = false;
+    [SerializeField] bool isPatrolling = false;
 
     [Header("Attack Settings")]
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
-    [SerializeField] private float lastAttackTime;
     private bool canAttack;
     
     private bool isStuckToPlayer;
    
     [Header("Jump Attack Settings")]
-    [SerializeField] private float jumpSpeed = 8f;
+    [SerializeField] private float jumpSpeed = 4f;
     [SerializeField] private float jumpAttackRange = 4f;
     [SerializeField] private bool isJumping;
     [SerializeField] private Vector3 jumpTarget;
@@ -45,22 +50,27 @@ public class RoachEnemy : MonoBehaviour
 
     private bool isPlayerInRange;
     private bool canHearPlayer;
-    public enemyState currentState;
-    
+    [SerializeField] enemyState currentState;
+    [SerializeField] Animator animator;
+    [SerializeField] private Rigidbody rb;
+    #endregion
 
 
 
-    private void Awake()
+    private void Start()
     {
         canPatrol = true;
         navMesh = GetComponent<NavMeshAgent>();
-        
-        
+        canAttack = true;
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true; // Make Rigidbody kinematic to prevent physics interference
     }
     private void Update()
     {
         detectPlayer();
         updateBehaviorState();
+        performAnimation();
     }
 
 
@@ -80,7 +90,6 @@ public class RoachEnemy : MonoBehaviour
         
         canHearPlayer = Physics.CheckSphere(transform.position, hearingRange, playerMask);
         isPlayerInRange = Physics.CheckSphere(transform.position, attackRange, playerMask);
-        canAttack = Time.time - lastAttackTime >= attackCooldown && isPlayerInRange && canHearPlayer;
 
         if (canHearPlayer)
         {
@@ -106,7 +115,10 @@ public class RoachEnemy : MonoBehaviour
     {
         canAttack = false;
         yield return new WaitForSeconds(attackCooldown);
+        rb.isKinematic = true; // Make Rigidbody kinematic again after jump attack
+        navMesh.enabled = true; // re-enable NavMeshAgent after jump attack
         canAttack = true;
+        isJumping = false;
     }
 
     private void performPatrol()
@@ -121,6 +133,7 @@ public class RoachEnemy : MonoBehaviour
         if (targetPointSet)
         {
             navMesh.SetDestination(targetPoint);
+            isPatrolling = true;
 
             if (!stuckCheckRunning)
             { 
@@ -131,12 +144,13 @@ public class RoachEnemy : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPoint) < 1f)
         {
             targetPointSet = false;
+            isPatrolling = false;
         }
         if (StuckCheck)
         {
             targetPointSet = false;
         }
-        performIdleAnimation();
+        
         Debug.Log("Patrolling");
 
         if (!patrolDelayRunning && !targetPointSet)
@@ -144,11 +158,41 @@ public class RoachEnemy : MonoBehaviour
             StartCoroutine(patrolDelay());
         }
     }
-    private void performIdleAnimation()
+    private void performAnimation()
     {
-        // Implement idle animation logic here
-        // For example, you can use an Animator component to play the idle animation
-        // animator.SetTrigger("Idle");
+        if(animator == null)
+        {
+            Debug.LogWarning("Animator component is not assigned.");
+            return;
+        }
+        if (isDead)
+        {
+            animator.SetBool("isDead", true);
+            animator.SetBool("Attack", false);
+            animator.SetBool("Move", false);
+            animator.SetBool("Idle", false);
+            return;
+        }
+        if (currentState == enemyState.Attack && !isJumping)
+        {
+            animator.SetBool("Attack", true);
+            animator.SetBool("Move", false);
+            animator.SetBool("Idle", false);
+        }
+        else if (isPatrolling | currentState == enemyState.Chase)
+        {
+            animator.SetBool("Attack", false);
+            animator.SetBool("Move", true);
+            animator.SetBool("Idle", false);
+        }
+        else 
+        {
+            animator.SetBool("isAttacking", false);
+            animator.SetBool("Move", false);
+            animator.SetBool("Idle", true);
+        }
+
+        
     }
 
     private void performChase()
@@ -156,70 +200,74 @@ public class RoachEnemy : MonoBehaviour
         if (!navMesh.isOnNavMesh || player == null) return;
         navMesh.SetDestination(player.transform.position);
         Debug.Log("Chasing");
+        // set chase animation here
     }
 
     private IEnumerator performJumpAttack()
     {
-        isJumping = true;
-        lastAttackTime = Time.time;
-
-        
-        if (player == null) 
-        {
-            isJumping = false; yield break; 
-        }
+        if (player == null || !navMesh)
+            yield break; // Exit if the player is not found or navMesh is not available
 
         navMesh.enabled = false; // hand off movement control entirely
-
+        rb.isKinematic = false; // Make Rigidbody non-kinematic to allow physics interactions
         jumpTarget = player.transform.position;
-        Vector3 startPos = transform.position;
-        float elapsed = 0f;
-        float duration = Vector3.Distance(startPos, jumpTarget) / jumpSpeed;
+        rb.AddForce((jumpTarget - transform.position).normalized * jumpSpeed, ForceMode.Impulse);
+        isJumping = true;
+        StartCoroutine(AttackCooldown());
 
-        while (elapsed < duration && !isStuckToPlayer)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            // simple arc: lerp position + a sine bump for height
-            Vector3 flatPos = Vector3.Lerp(startPos, jumpTarget, t);
-            flatPos.y += Mathf.Sin(t * Mathf.PI) * 1.5f; // jump arc height
-            transform.position = flatPos;
-
-            yield return null;
-        }
-
-        // if we finished the arc without hitting the player, land normally
-        if (!isStuckToPlayer)
-        {
-            navMesh.enabled = true;
-            isJumping = false;
-        }
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (isJumping && other.gameObject == player)
+        if (!isJumping || isStuckToPlayer)
+            return;
+
+        if (other.gameObject.CompareTag("Player"))
         {
-            StickToPlayer(other.transform);
+            StickToPlayer();
+        }
+        else
+        {
+            disAttach();
         }
     }
 
-    private void StickToPlayer(Transform playerTransform)
+    private void StickToPlayer()
     {
         isStuckToPlayer = true;
-        isJumping = false;
-
-        // deal damage once on impact
-        // playerTransform.GetComponent<PlayerHealth>().TakeDamage(jumpDamage);
-
-        transform.SetParent(playerTransform);
-        transform.localPosition = Vector3.zero; // or an offset if you don't want it centered
+        
+        transform.SetParent(player.transform);
+        rb.isKinematic = true; // Make Rigidbody kinematic to prevent further physics interactions
+        StartCoroutine(DealDamage(1.5f));
+    }
+    void disAttach()
+    {
+        isStuckToPlayer = false;
+        transform.SetParent(null);
+        rb.isKinematic = false; // Make Rigidbody non-kinematic to allow physics interactions
+        navMesh.enabled = true; // re-enable NavMeshAgent after jump attack
+        
+    }
+    IEnumerator DealDamage(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        HealthStaminaSystem.current.TakeDamage(damage);
+        disAttach();
     }
     private void updateBehaviorState()
     {
+        if (isDead)
+        {
+            currentState = enemyState.Dead;
+            return;
+        }
         if (isJumping)
         {
             return; 
+        }
+        if (isStuckToPlayer)
+        {
+            currentState = enemyState.Attached;
+            return;
         }
         if (!canHearPlayer && !isPlayerInRange)
         {
@@ -236,6 +284,7 @@ public class RoachEnemy : MonoBehaviour
             StartCoroutine(performJumpAttack());
             currentState = enemyState.Attack;
         }
+        
     }
 
     private IEnumerator patrolDelay()
@@ -260,11 +309,65 @@ public class RoachEnemy : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
     }
+
+    private void Die()
+    {
+        StopAllCoroutines();
+        isDead = true;
+        navMesh.enabled = false;
+        rb.isKinematic = true; // Make Rigidbody kinematic to prevent physics interference
+        currentState = enemyState.Dead;
+        StartCoroutine(deathDelay(3f));
+    }
+    private IEnumerator deathDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
+    }
+    public void TakeDamage(float damage)
+    {
+        float knockbackForce = 5f; 
+        health -= damage;
+        Debug.Log("Enemy took damage: " + damage);
+        navMesh.enabled = false;
+        rb.isKinematic = false;
+        
+
+        Vector3 dir = (transform.position - player.position).normalized;
+        dir.y = 1;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.AddForce(dir * knockbackForce, ForceMode.Impulse);
+
+        if (health <= 0f)
+        {
+            Die();
+
+        }
+        StartCoroutine(waitForSeconds(2f));
+        navMesh.enabled = true;
+        rb.isKinematic = true;
+    }
+    void handlePlayerVisibility()
+    {
+        if (player == null)
+            return;
+       directionToPlayer = player.position - transform.position;
+       distanceToPlayer = directionToPlayer.magnitude;
+        if (player == null)
+        {
+            return;
+        }
+        Physics.Linecast(transform.position, player.position, out RaycastHit hit);
+
+    }
 }
 public enum enemyState
 {
     Patrol,
     Chase,
-    Attack
+    Attack,
+    Attached,
+    Dead
 }
 

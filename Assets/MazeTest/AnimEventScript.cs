@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class AnimEventScript : MonoBehaviour
 {
-    public PlayerMovementCC player;
-    private EnemyScript enemy;
-    
-
+    [SerializeField] PlayerMovementCC player;
+ 
     public void PerformAttackHit()
     {
         player.PerformAttackHit();
@@ -19,14 +17,5 @@ public class AnimEventScript : MonoBehaviour
     public void DisableTrail() 
     {
         player.DisableTrail();
-    }
-
-    public void EnemyDealDamage()
-    {
-        EnemyScript enemy = GetComponentInParent<EnemyScript>();
-        if (enemy != null)
-        {
-            enemy.DealDamage();
-        }
     }
 }

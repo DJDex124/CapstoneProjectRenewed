@@ -3,12 +3,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class OldInventory : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
     public int currentIndex;
     int maxIndex;
     public OldItemSlot[] itemSlots;
-    public Transform handSpot;
     public GameObject heldObject;
     private int lastIndex = -1;
     public bool isOpen;
@@ -16,19 +15,7 @@ public class OldInventory : MonoBehaviour
     public bool flashLightSelected = false;
     public bool crowbarSelected = false;
 
-    public static OldInventory current;
-
-    private void Awake()
-    {
-        if (current == null)
-        {
-            current = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    
 
 
     void Start()
@@ -43,7 +30,7 @@ public class OldInventory : MonoBehaviour
         }
         maxIndex = itemSlots.Length;
 
-        handSpot = PlayerMovementCC.current.handSpot;
+        
     }
 
     void Update()
@@ -190,28 +177,7 @@ public class OldInventory : MonoBehaviour
         }
     }
 
-    void UpdateHeldItem()
-    {
-        if (heldObject != null)
-        {
-            Destroy(heldObject);
-        }
-
-        OldItemSlot selectedSlot = itemSlots[currentIndex];
-
-        if (selectedSlot.itemInSlot == null)
-            return;
-
-        GameObject heldPrefab = selectedSlot.itemInSlot.heldItem;
-
-        if (heldPrefab != null)
-        {
-            heldObject = Instantiate(heldPrefab, handSpot);
-
-            heldObject.transform.localPosition = Vector3.zero;
-            heldObject.transform.localRotation = Quaternion.identity;
-        }
-    }
+   
 
     public void UseSelectedItem()
     {

@@ -9,11 +9,12 @@ public class SoundManager : MonoBehaviour
     public static SoundManager current;
 
     [Header("SFX")]
-    public sound[] sfxLibrary;
+    public Sound[] sfxLibrary;
+    
     [Range(0f, 1f)] public float sfxVolume = 1f;
 
     [Header("Music")]
-    public sound[] musicLibrary;
+    public Sound[] musicLibrary;
     public AudioSource musicSource;
     [Range(0f, 1f)] public float musicVolume = 1f;
 
@@ -21,9 +22,9 @@ public class SoundManager : MonoBehaviour
     public AudioMixerGroup sfxMixer;
     public AudioMixerGroup musicMixer;
 
-    private sound currentMusic;
-    private Dictionary<string, sound> sfxDict = new Dictionary<string, sound>();
-    private Dictionary<string, sound> musicDict = new Dictionary<string, sound>();
+    private Sound currentMusic;
+    private Dictionary<string, Sound> sfxDict = new Dictionary<string, Sound>();
+    private Dictionary<string, Sound> musicDict = new Dictionary<string, Sound>();
 
     private void Awake()
     {
@@ -37,23 +38,21 @@ public class SoundManager : MonoBehaviour
         current = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
-
        
-        foreach (sound s in sfxLibrary)
+
+        foreach (Sound S in sfxLibrary)
         {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-            s.source.loop = s.loop;
-            s.source.volume = s.maxVolume * sfxVolume;
-            s.source.playOnAwake = false;
-            s.source.outputAudioMixerGroup = sfxMixer;
-            sfxDict[s.name] = s;
+            S.source.clip = S.clip;
+            S.source.loop = S.loop;
+            S.source.volume = S.maxVolume * musicVolume;
+            S.source.playOnAwake = false;
+            S.source.outputAudioMixerGroup = musicMixer;
+            sfxDict[S.name] = S;
         }
 
-       
-        foreach (sound s in musicLibrary)
+        foreach (Sound S in musicLibrary)
         {
-            musicDict[s.name] = s;
+            musicDict[S.name] = S;
         }
 
         
@@ -81,61 +80,53 @@ public class SoundManager : MonoBehaviour
     }
 
     
-    public void PlaySFX(string name)
-    {
-        if (!sfxDict.TryGetValue(name, out sound s))
-        {
-            Debug.LogWarning($"SFX '{name}' not found.");
-            return;
-        }
-
-        s.source.volume = s.maxVolume * sfxVolume;
-
-        
-        if (s.stoppable)
-            s.source.Play();
-        else
-            s.source.PlayOneShot(s.clip);
-    }
 
     
-    public void PlaySFXAt(string name, Vector3 position)
+    public void PlaySFXAt(string name, AudioSource target)
     {
-        if (!sfxDict.TryGetValue(name, out sound s))
+        if (!sfxDict.TryGetValue(name, out Sound S))
         {
             Debug.LogWarning($"SFX '{name}' not found.");
+            
+        }
+        if (target == null)
+        {
+            Debug.LogWarning($"Target AudioSource is null for SFX '{name}'.");
             return;
         }
-
-        GameObject tempGO = new GameObject($"TempAudio_{name}");
-        tempGO.transform.position = position;
-
-        AudioSource tempSource = tempGO.AddComponent<AudioSource>();
-        tempSource.outputAudioMixerGroup = sfxMixer;
-        tempSource.spatialBlend = 1f; // full 3D
-        tempSource.volume = s.maxVolume * sfxVolume;
-        tempSource.pitch = GetRandomPitch(s);
-        tempSource.clip = s.clip;
-        tempSource.Play();
-
-        Destroy(tempGO, s.clip.length);
+        if (target.isPlaying) 
+            return; 
+        target.outputAudioMixerGroup = sfxMixer;
+        target.spatialBlend = 1f; // full 3D
+        target.volume = S.maxVolume * sfxVolume;
+        target.pitch = GetRandomPitch(S);
+        target.clip = S.clip;
+        target.loop = S.loop;
+        target.Play();
     }
 
   
     public void StopSFX(string name)
     {
-        if (!sfxDict.TryGetValue(name, out sound s))
+        if (!sfxDict.TryGetValue(name, out Sound s))
         {
             Debug.LogWarning($"SFX '{name}' not found.");
             return;
         }
         s.source.Stop();
     }
+    public void StopSFXAt(string name, AudioSource target)
+    {
+        
+        target.Stop();
 
-  
+    }
+
+
+
     public bool IsSFXPlaying(string name)
     {
-        if (!sfxDict.TryGetValue(name, out sound s))
+        if (!sfxDict.TryGetValue(name, out Sound s))
         {
             Debug.LogWarning($"SFX '{name}' not found.");
             return false;
@@ -146,7 +137,7 @@ public class SoundManager : MonoBehaviour
     
     public void PlayMusic(string name, bool fadeIn = false)
     {
-        if (!musicDict.TryGetValue(name, out sound s))
+        if (!musicDict.TryGetValue(name, out Sound s))
         {
             Debug.LogWarning($"Music '{name}' not found.");
             return;
@@ -170,7 +161,7 @@ public class SoundManager : MonoBehaviour
     
     public void CrossfadeToMusic(string name, float duration = 1.5f)
     {
-        if (!musicDict.TryGetValue(name, out sound next))
+        if (!musicDict.TryGetValue(name, out Sound next))
         {
             Debug.LogWarning($"Music '{name}' not found.");
             return;
@@ -178,7 +169,7 @@ public class SoundManager : MonoBehaviour
         StartCoroutine(CrossfadeCoroutine(next, duration));
     }
 
-    private IEnumerator CrossfadeCoroutine(sound next, float duration)
+    private IEnumerator CrossfadeCoroutine(Sound next, float duration)
     {
         // Fade out current track
         yield return StartCoroutine(StartFade(musicSource, musicSource.volume, 0f, duration));
@@ -197,7 +188,7 @@ public class SoundManager : MonoBehaviour
     {
         sfxVolume = Mathf.Clamp01(volume);
         sfxMixer.audioMixer.SetFloat("sfxVolume", sfxVolume);
-        foreach (sound s in sfxLibrary)
+        foreach (Sound s in sfxLibrary)
             s.source.volume = sfxVolume * s.maxVolume;
     }
 
@@ -231,7 +222,7 @@ public class SoundManager : MonoBehaviour
             source.Stop();
     }
 
-    private float GetRandomPitch(sound s)
+    private float GetRandomPitch(Sound s)
     {
         return 1f + Random.Range(-s.pitchVariance, s.pitchVariance);
     }
@@ -239,7 +230,7 @@ public class SoundManager : MonoBehaviour
 
 
 [System.Serializable]
-public class sound
+public class Sound
 {
     public string name;
     public AudioClip clip;

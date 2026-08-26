@@ -15,6 +15,7 @@ public class EndDevice : MonoBehaviour
     public List<OldItemData> receivedItems = new List<OldItemData>();
 
     public int Quota = 3; // Number of items required to end the game
+    [SerializeField] private Inventory playerInventory;
 
     private void Start()
     {
@@ -24,12 +25,12 @@ public class EndDevice : MonoBehaviour
     // Call this when the player interacts with the device
     public void TryReceiveFromInventory()
     {
-        if (OldInventory.current == null)
+        if (playerInventory == null)
         {
             Debug.LogError("No inventory found!");
             return;
         }
-        OldItemSlot selectedSlot = OldInventory.current.itemSlots[OldInventory.current.currentIndex];
+        OldItemSlot selectedSlot = playerInventory.itemSlots[playerInventory.currentIndex];
         if (selectedSlot.itemInSlot == null)
         {
             Debug.Log("No item in selected slot.");
@@ -41,7 +42,7 @@ public class EndDevice : MonoBehaviour
             return;
         }
         OldItemData received = selectedSlot.itemInSlot;
-        OldInventory.current.RemoveItem(received);
+        playerInventory.RemoveItem(received);
         receivedItems.Add(received);
         GameManager.current.currentQuota++;
         

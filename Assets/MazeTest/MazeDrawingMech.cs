@@ -18,6 +18,7 @@ public class MazeDrawingMech : MonoBehaviour
     [SerializeField] private int eraserSize = 10;
     [SerializeField] private RectTransform brushUI;
     [SerializeField] private int brushUISize;
+    [SerializeField] private PlayerMovementCC playerMovement;
 
     private Texture2D drawTexture;
 
@@ -50,7 +51,7 @@ public class MazeDrawingMech : MonoBehaviour
         {
             mapOpen = !mapOpen;
 
-            PlayerMovementCC.current.enabled = !mapOpen;
+            playerMovement.enabled = !mapOpen;
             CameraControllerCC.current.enabled = !mapOpen;
 
             mapPanel.SetActive(mapOpen);

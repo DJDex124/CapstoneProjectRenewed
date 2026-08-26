@@ -4,29 +4,20 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 
 {
-    public static UIManager current { get; private set; }
-
     [Header("UI")]
     public Slider healthSlider;
     public Slider staminaSlider;
-
-    void Awake()
-    {
-        if (current != null && current != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            current = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
+    [SerializeField] private HealthStaminaSystem PlayerStats;
+  
     public void UpdateSliders()
     {
+        if (PlayerStats == null )
+        {
+            return;
+        }
         if (healthSlider != null)
-            healthSlider.value = HealthStaminaSystem.current.currentHealth;
+            healthSlider.value = PlayerStats.currentHealth;
         if (staminaSlider != null)
-            staminaSlider.value = HealthStaminaSystem.current.currentStamina;
+            staminaSlider.value = PlayerStats.currentStamina;
     }
 }

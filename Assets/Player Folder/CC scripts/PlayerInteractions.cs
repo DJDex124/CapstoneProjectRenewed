@@ -15,6 +15,7 @@ public class PlayerInteractions : MonoBehaviour
     public bool flCheck;
     public GameObject Flashlight;
 
+    [SerializeField] private PlayerMovementCC playerMovement;
     public static PlayerInteractions current;
 
     [Header("Glowsticks")]
@@ -23,26 +24,41 @@ public class PlayerInteractions : MonoBehaviour
     [SerializeField] private int glowstickCount = 10;
     [SerializeField] private float throwForce = 6f;
 
+    [SerializeField] private Inventory inventory;
     void Start()
     {
         current = this;
         flCheck = false;
+        
+        if(inventory == null) 
+        inventory = GetComponent<Inventory>();
     }
     void Update()
     {
+        
+        handleGlowstickDrop();
+        if (inventory == null)
+        {
+            Debug.LogError("Inventory reference is not assigned in the inspector.");
+            return;
+        }
+        handleConsumable();
         handlePickup();
         handleDrop();
-        handleGlowstickDrop();
         handleEndDevice();
-        handleConsumable();
-        if ( OldInventory.current.flashLightSelected)
+        if (inventory.flashLightSelected)
         {
             FlashLightToggle();
         }
     }
     public void handlePickup()
     {
-        Vector3 rayOrigin = transform.position + Vector3.up * (PlayerMovementCC.current.controller.skinWidth + 0.05f);
+        if(playerMovement == null)
+        {
+            Debug.LogError("Player reference is not assigned in the inspector.");
+            return;
+        }
+        Vector3 rayOrigin = transform.position + Vector3.up * (playerMovement.controller.skinWidth + 0.05f);
         Vector3 lookDir = Camera.main.transform.forward;
         RaycastHit hit;
         canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, pickupMask);
@@ -52,7 +68,7 @@ public class PlayerInteractions : MonoBehaviour
             ItemPrefab itemPrefab = hit.collider.GetComponent<ItemPrefab>();
             if (itemPrefab != null)
             {
-                OldInventory.current.AddItem(itemPrefab.itemData);
+                inventory.AddItem(itemPrefab.itemData);
                 Destroy(hit.collider.gameObject);
                 
             }
@@ -64,12 +80,17 @@ public class PlayerInteractions : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            OldInventory.current.DropSelectedItem(Player.transform);
+            inventory.DropSelectedItem(Player.transform);
         }
     }
     void handleEndDevice()
     {
-        Vector3 rayOrigin = transform.position + Vector3.up * (PlayerMovementCC.current.controller.skinWidth + 0.05f);
+        if (playerMovement == null)
+        {
+            Debug.LogError("Player reference is not assigned in the inspector.");
+            return;
+        }
+        Vector3 rayOrigin = transform.position + Vector3.up * (playerMovement.controller.skinWidth + 0.05f);
         Vector3 lookDir = Camera.main.transform.forward;
         RaycastHit hit;
         canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, EndMask);
@@ -94,19 +115,24 @@ public class PlayerInteractions : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            OldInventory.current.UseSelectedItem();
+            inventory.UseSelectedItem();
         }
         
     }
     private void OnDrawGizmos()
     {
-        if (PlayerMovementCC.current == null || PlayerMovementCC.current.controller == null)
+        if (playerMovement == null)
+        {
+            Debug.LogError("Inventory reference is not assigned in the inspector.");
+            return;
+        }
+        if (playerMovement == null || playerMovement.controller == null)
             return;
         if (Camera.main == null)
             return;
 
         Vector3 lookDir = Camera.main.transform.forward;
-        Vector3 vector3 = transform.position + (Vector3.up * (PlayerMovementCC.current.controller.skinWidth + 0.05f));
+        Vector3 vector3 = transform.position + (Vector3.up * (playerMovement.controller.skinWidth + 0.05f));
         Vector3 rayOrigin = vector3;
         Gizmos.color = canSee ? Color.green : Color.red;
         Gizmos.DrawLine(rayOrigin, rayOrigin + lookDir * pickupRange);

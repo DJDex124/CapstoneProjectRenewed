@@ -17,9 +17,10 @@ public class PlayerMovementCC : MonoBehaviour
 
     public CharacterController controller;
     private Vector3 velocity;
-    private bool isGrounded;
-    
-    public static PlayerMovementCC current;
+    [SerializeField]private bool isGrounded;
+    [SerializeField] private HealthStaminaSystem healthStaminaSystem;
+
+
 
     [Header("Attack Settings")]
     public float attackRange = 2f;
@@ -37,10 +38,11 @@ public class PlayerMovementCC : MonoBehaviour
 
     public Transform handSpot;
     public bool makingSound = false;
+    [SerializeField] private AudioSource _audioSource;
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        current = this;
+        _audioSource = GetComponent<AudioSource>();
 
         if (swingTrail != null)
             swingTrail.emitting = false;
@@ -96,46 +98,50 @@ public class PlayerMovementCC : MonoBehaviour
     }
     void jump()
     {
-        if (HealthStaminaSystem.current == null)
+        if (healthStaminaSystem == null)
             return;
-        if (Input.GetButtonDown("Jump") && isGrounded && HealthStaminaSystem.current.canJump)
+        if (Input.GetButtonDown("Jump") && isGrounded && healthStaminaSystem.canJump)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             Debug.Log("Jumping with velocity: " + velocity.y);
-            if (HealthStaminaSystem.current.canLoseStamina)
+            if (healthStaminaSystem.canLoseStamina)
             { 
-                HealthStaminaSystem.current.currentStamina -= 10f; 
+                healthStaminaSystem.currentStamina -= 10f; 
             }
         }
     }
     void handleSpeed()
     {
-        if (HealthStaminaSystem.current == null)
+        if (healthStaminaSystem == null)
             return;
 
-        if (Input.GetKey(KeyCode.LeftShift) && HealthStaminaSystem.current.canSprint && isGrounded)
+        if (Input.GetKey(KeyCode.LeftShift) && healthStaminaSystem.canSprint && isGrounded)
         {
             isCrouching = false;
             speed = sprintSpeed;
-            if (HealthStaminaSystem.current.canLoseStamina)
+            if (healthStaminaSystem.canLoseStamina)
             {
-                HealthStaminaSystem.current.currentStamina -= 20f * Time.deltaTime;
+                healthStaminaSystem.currentStamina -= 20f * Time.deltaTime;
             }
-            
+            if (_audioSource == null)
+                return;
+            SoundManager.current.PlaySFXAt("FootSteps", _audioSource);
+
         }
         else if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
             speed = crouchSpeed;
-            HealthStaminaSystem.current.canJump = false;
-            HealthStaminaSystem.current.RegenerateStamina(15f * Time.deltaTime);
+            healthStaminaSystem.canJump = false;
+            healthStaminaSystem.RegenerateStamina(15f * Time.deltaTime);
             isCrouching = true;
+            SoundManager.current.StopSFXAt("FootSteps", _audioSource);
         }
         else
         {
             isCrouching = false;
-            HealthStaminaSystem.current.canJump = true;
+            healthStaminaSystem.canJump = true;
             speed = 5f;
-            HealthStaminaSystem.current.RegenerateStamina(10f * Time.deltaTime);
+            healthStaminaSystem.RegenerateStamina(10f * Time.deltaTime);
         }
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
@@ -169,11 +175,11 @@ public class PlayerMovementCC : MonoBehaviour
     }
     void SlowHeal()
     {
-        if (HealthStaminaSystem.current == null)
+        if (healthStaminaSystem == null)
             return;
         if (!isMoving)
         {
-            HealthStaminaSystem.current.healPlayer(0.5f * Time.deltaTime);
+            healthStaminaSystem.healPlayer(0.5f * Time.deltaTime);
         } 
 
 
@@ -190,17 +196,17 @@ public class PlayerMovementCC : MonoBehaviour
             enemyMask,
             QueryTriggerInteraction.Ignore
         );
-
+         
         Debug.Log("Hits: " + hits.Length);
 
         foreach (RaycastHit hit in hits)
         {
             Debug.Log("Hit object: " + hit.collider.name);
-            EnemyBug enemyBug = hit.collider.GetComponentInParent<EnemyBug>();
-            if (enemyBug != null && enemyBug.isAlive)
+            RoachEnemy enemyBug = hit.collider.GetComponentInParent<RoachEnemy>();
+            if (enemyBug != null && !enemyBug.isDead)
             {
                 Debug.Log("Hit EnemyBug: " + hit.collider.name);
-                enemyBug.Knockback();
+                
                 enemyBug.TakeDamage(50);
             }
 
