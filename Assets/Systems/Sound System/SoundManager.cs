@@ -42,11 +42,6 @@ public class SoundManager : MonoBehaviour
 
         foreach (Sound S in sfxLibrary)
         {
-            S.source.clip = S.clip;
-            S.source.loop = S.loop;
-            S.source.volume = S.maxVolume * musicVolume;
-            S.source.playOnAwake = false;
-            S.source.outputAudioMixerGroup = musicMixer;
             sfxDict[S.name] = S;
         }
 
@@ -62,8 +57,49 @@ public class SoundManager : MonoBehaviour
             musicSource.outputAudioMixerGroup = musicMixer;
         }
 
-        PlayMusic("MenuMusic", true);
+        
     }
+    public void PlayLoop(string name, AudioSource target)
+    {
+        if (!sfxDict.TryGetValue(name, out Sound S))
+        {
+            Debug.LogWarning($"SFX '{name}' not found.");
+            return;
+        }
+        if (target == null) return;
+
+        // Already playing this exact clip? Do nothing.
+        if (target.isPlaying && target.clip == S.clip)
+            return;
+
+        target.outputAudioMixerGroup = sfxMixer;
+        target.spatialBlend = 1f;
+        target.volume = S.maxVolume * sfxVolume;
+        target.pitch = GetRandomPitch(S);
+        target.clip = S.clip;
+        target.loop = true;
+        target.Play();
+    }
+    public void PlayOneShotSFX(string name, AudioSource target)
+    {
+        if (!sfxDict.TryGetValue(name, out Sound S))
+        {
+            Debug.LogWarning($"SFX '{name}' not found.");
+            return;
+        }
+        if (target == null) return;
+
+        target.outputAudioMixerGroup = sfxMixer;
+        target.spatialBlend = 1f;
+        target.pitch = GetRandomPitch(S);
+        target.PlayOneShot(S.clip, S.maxVolume * sfxVolume);
+    }
+    public void StopLoop(AudioSource target)
+    {
+        if (target != null && target.isPlaying)
+            target.Stop();
+    }
+
 
     private void OnDestroy()
     {
@@ -81,108 +117,9 @@ public class SoundManager : MonoBehaviour
 
     
 
-    
-    public void PlaySFXAt(string name, AudioSource target)
-    {
-        if (!sfxDict.TryGetValue(name, out Sound S))
-        {
-            Debug.LogWarning($"SFX '{name}' not found.");
-            
-        }
-        if (target == null)
-        {
-            Debug.LogWarning($"Target AudioSource is null for SFX '{name}'.");
-            return;
-        }
-        if (target.isPlaying) 
-            return; 
-        target.outputAudioMixerGroup = sfxMixer;
-        target.spatialBlend = 1f; // full 3D
-        target.volume = S.maxVolume * sfxVolume;
-        target.pitch = GetRandomPitch(S);
-        target.clip = S.clip;
-        target.loop = S.loop;
-        target.Play();
-    }
-
   
-    public void StopSFX(string name)
-    {
-        if (!sfxDict.TryGetValue(name, out Sound s))
-        {
-            Debug.LogWarning($"SFX '{name}' not found.");
-            return;
-        }
-        s.source.Stop();
-    }
-    public void StopSFXAt(string name, AudioSource target)
-    {
-        
-        target.Stop();
 
-    }
-
-
-
-    public bool IsSFXPlaying(string name)
-    {
-        if (!sfxDict.TryGetValue(name, out Sound s))
-        {
-            Debug.LogWarning($"SFX '{name}' not found.");
-            return false;
-        }
-        return s.source.isPlaying;
-    }
-
-    
-    public void PlayMusic(string name, bool fadeIn = false)
-    {
-        if (!musicDict.TryGetValue(name, out Sound s))
-        {
-            Debug.LogWarning($"Music '{name}' not found.");
-            return;
-        }
-
-        musicSource.clip = s.clip;
-        musicSource.loop = s.loop;
-        currentMusic = s;
-
-        if (fadeIn)
-        {
-            StartCoroutine(StartFade(musicSource, 0f, s.maxVolume * musicVolume, 3f));
-        }
-        else
-        {
-            musicSource.volume = s.maxVolume * musicVolume;
-            musicSource.Play();
-        }
-    }
-
-    
-    public void CrossfadeToMusic(string name, float duration = 1.5f)
-    {
-        if (!musicDict.TryGetValue(name, out Sound next))
-        {
-            Debug.LogWarning($"Music '{name}' not found.");
-            return;
-        }
-        StartCoroutine(CrossfadeCoroutine(next, duration));
-    }
-
-    private IEnumerator CrossfadeCoroutine(Sound next, float duration)
-    {
-        // Fade out current track
-        yield return StartCoroutine(StartFade(musicSource, musicSource.volume, 0f, duration));
-
-        // Swap clip
-        musicSource.clip = next.clip;
-        musicSource.loop = next.loop;
-        currentMusic = next;
-
-        // Fade in next track
-        yield return StartCoroutine(StartFade(musicSource, 0f, next.maxVolume * musicVolume, duration));
-    }
-
+   
   
     public void SetSFXVolume(float volume)
     {
@@ -200,28 +137,6 @@ public class SoundManager : MonoBehaviour
             musicSource.volume = musicVolume * currentMusic.maxVolume;
     }
 
-   
-    public static IEnumerator StartFade(AudioSource source, float startVolume, float targetVolume, float duration)
-    {
-        source.volume = startVolume;
-
-        if (targetVolume > 0f && !source.isPlaying)
-            source.Play();
-
-        float currentTime = 0f;
-        while (currentTime < duration)
-        {
-            currentTime += Time.deltaTime;
-            source.volume = Mathf.Lerp(startVolume, targetVolume, currentTime / duration);
-            yield return null;
-        }
-
-        source.volume = targetVolume;
-
-        if (targetVolume <= 0f)
-            source.Stop();
-    }
-
     private float GetRandomPitch(Sound s)
     {
         return 1f + Random.Range(-s.pitchVariance, s.pitchVariance);
@@ -235,8 +150,10 @@ public class Sound
     public string name;
     public AudioClip clip;
 
-    [Range(0f, 1f)] public float maxVolume = 1f;
-    [Range(0f, 0.5f)] public float pitchVariance = 0f; 
+    [Range(0f, 1f)] 
+    public float maxVolume = 1f;
+    [Range(0f, 0.5f)] 
+    public float pitchVariance = 0f; 
     public bool loop = false;
     public bool stoppable = false; // if true, uses Play() instead of PlayOneShot so StopSFX works
 

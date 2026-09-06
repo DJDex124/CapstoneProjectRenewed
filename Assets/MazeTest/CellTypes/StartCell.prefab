@@ -860,7 +860,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3416429612492991837
 Transform:
   m_ObjectHideFlags: 0
@@ -1056,8 +1056,8 @@ GameObject:
   - component: {fileID: 3325062037787847128}
   - component: {fileID: 1423296806981749143}
   m_Layer: 11
-  m_Name: MazeCellStart
-  m_TagString: LootCell
+  m_Name: StartCell
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

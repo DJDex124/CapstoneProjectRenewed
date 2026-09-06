@@ -7,6 +7,7 @@ public class CameraControllerCC : MonoBehaviour
     private float sensitivity = 2f;
     private float xRotation = 0f;
 
+    public bool paused = false;
     public Ray LookRay => new Ray(transform.position, transform.forward);
 
     void Awake()
@@ -24,13 +25,16 @@ public class CameraControllerCC : MonoBehaviour
     
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+        if (!paused)
+        {
+            float mouseX = Input.GetAxis("Mouse X") * sensitivity;
+            float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        transform.parent.Rotate(Vector3.up * mouseX);
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            transform.parent.Rotate(Vector3.up * mouseX);
+        }
     }
 }

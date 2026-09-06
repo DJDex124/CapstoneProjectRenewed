@@ -42,13 +42,19 @@ public class PlayerMovementCC : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        _audioSource = GetComponent<AudioSource>();
-
+        
         if (swingTrail != null)
             swingTrail.emitting = false;
+       
+        if (_audioSource != null)
+        {
+            return;
+        }
+        _audioSource = GetComponent<AudioSource>();
+
     }
 
-   
+
     void Update()
     {
         groundcheck();
@@ -74,6 +80,15 @@ public class PlayerMovementCC : MonoBehaviour
         else
         {
             makingSound = false;
+        }
+        if (makingSound)
+        {
+            SoundManager.current.PlayLoop("FootSteps", _audioSource);
+            Debug.Log("walking");
+        }
+        else
+        {
+            SoundManager.current.StopLoop(_audioSource);
         }
     }
 
@@ -123,10 +138,7 @@ public class PlayerMovementCC : MonoBehaviour
             {
                 healthStaminaSystem.currentStamina -= 20f * Time.deltaTime;
             }
-            if (_audioSource == null)
-                return;
-            SoundManager.current.PlaySFXAt("FootSteps", _audioSource);
-
+            
         }
         else if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
@@ -134,7 +146,7 @@ public class PlayerMovementCC : MonoBehaviour
             healthStaminaSystem.canJump = false;
             healthStaminaSystem.RegenerateStamina(15f * Time.deltaTime);
             isCrouching = true;
-            SoundManager.current.StopSFXAt("FootSteps", _audioSource);
+            
         }
         else
         {

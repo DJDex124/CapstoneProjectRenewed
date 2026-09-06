@@ -18,7 +18,8 @@ public class GameController : MonoBehaviour
     public float lowerSpeed = 2.0f;
     public float lowerWaitTime = 0.6f;
 
-    private bool isLowering = false;
+    private bool isMoving = false;
+    private bool isUp = true;  
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,20 +30,28 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inRange && Input.GetKeyDown(KeyCode.E) && GameManager.current.canStartGame)
+        if (inRange && Input.GetKeyDown(KeyCode.E) )
         {
-            GameManager.current.StartGame();
-            if(!isLowering)
-                StartCoroutine(LowerEleWithDelay());
-
+            handleElevator();
+            if (GameManager.current.canStartGame)
+            {
+                GameManager.current.StartGame();
+            }
         }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            GameManager.current.StartGame();
-        }
-
+        
     }
     
+    private void handleElevator()
+    {
+        if (!isMoving && isUp)
+        {
+            StartCoroutine(LowerEleWithDelay());
+        }
+        else if (!isMoving && !isUp)
+        {
+            StartCoroutine(LiftEleWithDelay());
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -64,8 +73,8 @@ public class GameController : MonoBehaviour
 
     private IEnumerator LowerEleWithDelay()
     {
-        isLowering = true;
-
+        isMoving = true;
+        isUp = false;
         yield return new WaitForSeconds(lowerWaitTime);
         if (elevatorPrefab != null)
         {
@@ -83,7 +92,36 @@ public class GameController : MonoBehaviour
 
 
                 yield return null;
+
             }
+            isMoving = false;
+        }
+        
+
+    }
+    private IEnumerator LiftEleWithDelay()
+    {
+        isMoving = true;
+        isUp = true;
+        yield return new WaitForSeconds(lowerWaitTime);
+        if (elevatorPrefab != null)
+        {
+
+            Vector3 targetPosition = elevatorPrefab.transform.position + new Vector3(0, lowerDistance, 0);
+
+
+            while (elevatorPrefab.transform.position != targetPosition)
+            {
+                elevatorPrefab.transform.position = Vector3.MoveTowards(
+                    elevatorPrefab.transform.position,
+                    targetPosition,
+                    lowerSpeed * Time.deltaTime
+                );
+
+
+                yield return null;
+            }
+            isMoving = false;
         }
     }
 }

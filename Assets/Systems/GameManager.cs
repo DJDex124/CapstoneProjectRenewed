@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI quotaText;
     [SerializeField]
     private Canvas ScreenCanvas;
+    [SerializeField]
+    private Canvas PauseMenuCanvas;
 
     [Header("levelSystem")]
     public List<LevelData> levels;
@@ -122,27 +125,56 @@ public class GameManager : MonoBehaviour
             current = this;
             DontDestroyOnLoad(gameObject);
         }
-    }
+        if (ScreenCanvas == null)
+        {
+            ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>();
+            if (ScreenCanvas == null)
+            {
+                Debug.LogWarning("ScreenCanvas not found in the scene.");
+                
+            }
+        }
+        if (PauseMenuCanvas == null)
+        {
+            PauseMenuCanvas = GameObject.Find("PauseMenuCanvas")?.GetComponent<Canvas>();
+            if (PauseMenuCanvas == null)
+            {
+                Debug.LogWarning("PauseMenuCanvas not found in the scene.");
 
-
-
-    void Start()
-    {
-       
+            }
+        }
+        if (PauseMenuCanvas != null)
+        {
+            PauseMenuCanvas.enabled = false;
+        }
+        
     }
 
     void Update()
     {
         
         handleScreenUI();
-        
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            togglePauseGame();
+        }
+
     }
 
 
     
     public void assignScreenCanvas()
     {
-        ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>();
+        if (ScreenCanvas == null)
+        {
+            ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>();
+            if (ScreenCanvas == null)
+            {
+                Debug.LogWarning("ScreenCanvas not found in the scene.");
+            }
+        }
+        
     }
      public void handleScreenUI()
     {
@@ -163,6 +195,42 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("Quota Text component not found in the ScreenCanvas.");
         }
+    }
+
+    public void togglePauseGame()
+    {
+
+        
+        if (PauseMenuCanvas != null)
+        {
+            if (PauseMenuCanvas.enabled)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+
+            }
+        }
+        
+    }
+    public void PauseGame()
+    {
+        PauseMenuCanvas.enabled = true;
+        Time.timeScale = 0f; // Pause the game
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        CameraControllerCC.current.paused = true;
+    }
+    public void ResumeGame()
+    {
+        PauseMenuCanvas.enabled = false;
+        Time.timeScale = 1f; // Resume the game
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        CameraControllerCC.current.paused = false;
+
     }
 
     void Die()

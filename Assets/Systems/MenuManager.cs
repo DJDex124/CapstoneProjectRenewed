@@ -17,4 +17,13 @@ public class MenuManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+    public void resumeButton()
+    {
+        GameManager.current.ResumeGame();
+    }
+    public void pauseButton()
+    {
+        GameManager.current.PauseGame();
+    }
+    
 }

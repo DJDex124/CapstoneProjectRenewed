@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef80df0f74113246a92bcb3d0cfccff, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  mazeWidthandDepth: 6
-  lootCellCount: 2
-  enemyCellCount: 1
+  mazeWidthandDepth: 4
+  lootCellCount: 1
+  enemyCellCount: 0
   trapCellCount: 1
-  lootSpawnCount: 3
-  enemySpawnCount: 1
+  lootSpawnCount: 1
+  enemySpawnCount: 0
