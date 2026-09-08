@@ -41,11 +41,14 @@ public class EndDevice : MonoBehaviour
             Debug.Log("Selected item is not the correct type.");
             return;
         }
+        int itemValue = Random.Range(10, 50); // Random value for the item
+
         OldItemData received = selectedSlot.itemInSlot;
         playerInventory.RemoveItem(received);
         receivedItems.Add(received);
-        GameManager.current.currentQuota++;
-        
+        //GameManager.current.currentQuota++;
+        GameManager.current.addMoney(itemValue);
+
 
         Debug.Log($"Device received: {received.itemName}");
         if (receivedItems.Count >= Quota)

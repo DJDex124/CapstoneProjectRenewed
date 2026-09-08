@@ -19,7 +19,7 @@ public class LevelManagerCreative : MonoBehaviour
     }
     void Start()
     {
-        SceneManager.LoadScene("GameManager", LoadSceneMode.Additive);  
+        //SceneManager.LoadScene("GameManager", LoadSceneMode.Additive);  
         //SceneManager.LoadScene("UIManager", LoadSceneMode.Additive);
         //SceneManager.LoadScene("InventorySystem", LoadSceneMode.Additive);
         SceneManager.LoadScene("MazeGeneration", LoadSceneMode.Additive);

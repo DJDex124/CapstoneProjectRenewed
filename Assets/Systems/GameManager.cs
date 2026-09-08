@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager current { get; private set; }
-    
+
     public bool isChangingLevel = false;
     public bool mazeGenerated = false;
     public bool canStartGame = true;
@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private LevelData currentLevel;
 
+    [Header("Currency System")]
+    [SerializeField]
+    private int totalMoney = 0;
+
+    
+
     public void StartGame()
     {
         StartCoroutine(levelChange());
@@ -41,7 +47,7 @@ public class GameManager : MonoBehaviour
     {
         if (isChangingLevel) yield break;
         isChangingLevel = true;
-        
+
         Debug.Log("Level Change Initiated");
         LevelManagerCreative.current.resetLevel();
         yield return new WaitForSeconds(1f);
@@ -76,15 +82,15 @@ public class GameManager : MonoBehaviour
         {
             currentLevel = levels[0];
         }
-        
+
         else if (levels.IndexOf(currentLevel) + 1 >= levels.Count)
         {
             Debug.Log("Game Completed!");
-            
+
             noLevelsLeft = true;
             return;
         }
-        else 
+        else
         {
             currentLevel = levels[levels.IndexOf(currentLevel) + 1];
         }
@@ -92,8 +98,8 @@ public class GameManager : MonoBehaviour
         setData();
         currentQuota = 0;
     }
-   
-    
+
+
     void setData()
     {
         //Maze Data
@@ -131,7 +137,7 @@ public class GameManager : MonoBehaviour
             if (ScreenCanvas == null)
             {
                 Debug.LogWarning("ScreenCanvas not found in the scene.");
-                
+
             }
         }
         if (PauseMenuCanvas == null)
@@ -147,12 +153,12 @@ public class GameManager : MonoBehaviour
         {
             PauseMenuCanvas.enabled = false;
         }
-        
+
     }
 
     void Update()
     {
-        
+
         handleScreenUI();
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -163,7 +169,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    
+
     public void assignScreenCanvas()
     {
         if (ScreenCanvas == null)
@@ -174,18 +180,18 @@ public class GameManager : MonoBehaviour
                 Debug.LogWarning("ScreenCanvas not found in the scene.");
             }
         }
-        
+
     }
-     public void handleScreenUI()
+    public void handleScreenUI()
     {
-        
+
         if (quotaText == null)
-        { 
-            
-             if (ScreenCanvas != null)
-             {
+        {
+
+            if (ScreenCanvas != null)
+            {
                 quotaText = ScreenCanvas.GetComponentInChildren<TextMeshProUGUI>();
-             }
+            }
         }
         if (quotaText != null)
         {
@@ -200,7 +206,7 @@ public class GameManager : MonoBehaviour
     public void togglePauseGame()
     {
 
-        
+
         if (PauseMenuCanvas != null)
         {
             if (PauseMenuCanvas.enabled)
@@ -213,7 +219,7 @@ public class GameManager : MonoBehaviour
 
             }
         }
-        
+
     }
     public void PauseGame()
     {
@@ -233,7 +239,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void Die()
+    public void Die()
     {
         Debug.Log("Player has died!");
         //add what happens when the player dies here (e.g., respawn, game over screen, etc.)
@@ -246,5 +252,34 @@ public class GameManager : MonoBehaviour
         //add what happens when the game ends here (e.g., show game over screen, return to main menu, etc.)
     }
 
+    public void addMoney(int amount)
+    {
+        totalMoney += amount;
+        Debug.Log("Total Money: " + totalMoney);
 
+    }
+    public void removeMoney(int amount)
+    {
+        if (amount > totalMoney)
+        {
+            Debug.LogWarning("Attempted to remove more money than available. Setting total money to 0.");
+            // display warning or make denying sound
+            return;
+        }
+        totalMoney -= amount;
+        if (totalMoney < 0)
+        {
+            totalMoney = 0;
+        }
+        Debug.Log("Total Money: " + totalMoney);
+    }
+
+    public void loadSpecificLevel(LevelData level)
+    {
+        currentLevel = level;
+        setData();
+        StartCoroutine(levelChange());
+    }
+
+    
 }

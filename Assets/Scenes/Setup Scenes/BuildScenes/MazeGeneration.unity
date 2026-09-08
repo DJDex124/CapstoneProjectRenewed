@@ -158,11 +158,11 @@ MonoBehaviour:
   spawnCell: {fileID: 1423296806981749143, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
   cellsToSpawn: []
   playerSpawn: {fileID: 3325062037787847128, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
-  maxlootCellAmount: 10
+  maxlootCellAmount: 0
   currentlootCellAmount: 0
-  maxEnemyCellAmount: 10
+  maxEnemyCellAmount: 0
   currentEnemyCellAmount: 0
-  maxTrapCellAmount: 10
+  maxTrapCellAmount: 0
   currentTrapCellAmount: 0
   _cellSize: 12
   _mazeWidth: 10

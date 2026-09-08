@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   mazeWidthandDepth: 4
-  lootCellCount: 1
+  lootCellCount: 2
   enemyCellCount: 0
-  trapCellCount: 1
-  lootSpawnCount: 1
+  trapCellCount: 0
+  lootSpawnCount: 4
   enemySpawnCount: 0

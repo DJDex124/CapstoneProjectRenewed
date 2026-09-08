@@ -106,13 +106,13 @@ public class MazeGeneration : MonoBehaviour
         //{
         //for (int z = centerZ - halfSize; z < centerZ + halfSize; z++)
         // {
-        //  blockedCells.Add(new Vector2Int(x, z));
-        // }
-        // }
+         // blockedCells.Add(new Vector2Int(x, z));
+         //}
+         //}
         int totalSpawnable = (_mazeWidth * _mazeDepth);// - blockedCells.Count;
         while (totalSpawnable > cellsToSpawn.Count)
         {
-            cellsToSpawn.Add(BasicCell);
+           cellsToSpawn.Add(BasicCell);
         }
 
         cellsToSpawn.Shuffle();
@@ -149,7 +149,7 @@ public class MazeGeneration : MonoBehaviour
                 _mazeCells.Add(_mazeGrid[x, z]);
             }
         }
-
+        
         Vector3 spawnPosition = new Vector3(centerX * _cellSize, 0, centerZ * _cellSize) + mazePos.position + offset;
 
         _mazeGrid[centerX, centerZ] = Instantiate(spawnCell, spawnPosition, Quaternion.identity, mazePos);
@@ -171,6 +171,7 @@ public class MazeGeneration : MonoBehaviour
         CreateEntranceAndExit();
         navMeshSurface.BuildNavMesh();
     }
+
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell)
     {

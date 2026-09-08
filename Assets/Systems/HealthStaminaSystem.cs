@@ -72,8 +72,8 @@ public class HealthStaminaSystem : MonoBehaviour
         uiManager.UpdateSliders();
 
         if (currentHealth <= 0)
-            //Die();
-            if (currentStamina <= 0)
+            GameManager.current.Die();
+        if (currentStamina <= 0)
                 canSprint = false;
             else
                 canSprint = true;
