@@ -21,4 +21,5 @@ MonoBehaviour:
   toolType: 1
   clubHolder: {fileID: 0}
   itemValue: 0
+  price: 50
   maxStackSize: 0

@@ -45,12 +45,14 @@ public class SpawnLoot : MonoBehaviour
                 lootCellCount++;
             }
         }
-        findLootSpawn();
-        spawnLoot();
+
+        spawnRandomLoot();
     }
 
     void findLootSpawn()
     {
+        // use this if I want to make sure that loot spawns in each loot cell and not randomly everywhere
+        // downside is that if there are more loot cells than loot to spawn, some loot cells will be empty
         foreach (GameObject cell in lootCells)
         {
             List<GameObject> potentialSpawns = new List<GameObject>();
@@ -70,7 +72,32 @@ public class SpawnLoot : MonoBehaviour
             }
         }
     }
+   
+    void spawnRandomLoot()
+    {
+        // use this if I want spawns to be randomly everywhere and if I want more loot to spawn than loot cells
+        foreach (GameObject cell in lootCells)
+        {
+            foreach (Transform child in cell.transform)
+            {
+                if (child.CompareTag("SpawnPoint"))
+                    SpawnPoints.Add(child.gameObject);
+            }
+        }
+        for (int i = 0; i < MaxLootCount; i++)
+        { 
+            Debug.Log("Spawning Loot: " + i);
+            int randomIndex = Random.Range(0, SpawnPoints.Count);
+            GameObject spawnPosition = SpawnPoints[randomIndex];
+            SpawnPoints.RemoveAt(randomIndex);
 
+            int randomLootIndex = Random.Range(0, Loot.Count);
+            GameObject lootPrefab = Loot[randomLootIndex];
+            Instantiate(lootPrefab, spawnPosition.transform.position, Quaternion.identity);
+            LootCount++;
+
+        }
+    }
     void spawnLoot()
     {
         foreach (GameObject spawnPoint in SpawnPoints)

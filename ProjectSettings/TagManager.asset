@@ -13,6 +13,7 @@ TagManager:
   - SpawnPoint
   - EnemyCell
   - Start Screen
+  - DeathScreen
   layers:
   - Default
   - TransparentFX
@@ -27,8 +28,8 @@ TagManager:
   - ENEMY
   - obstacleMask
   - glowMask
-  - 
-  - 
+  - Valuables
+  - computerScreen
   - 
   - 
   - 

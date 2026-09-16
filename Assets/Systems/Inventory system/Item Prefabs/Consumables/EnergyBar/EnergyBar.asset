@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
   itemName: SnackBar
   itemSprite: {fileID: 0}
-  pickupPrefab: {fileID: 0}
+  pickupPrefab: {fileID: 7683030054686114081, guid: e506dde264a18f949af4cdd53c1bc1f5, type: 3}
   heldItem: {fileID: 0}
   itemType: 0
   consumableType: 1
+  toolType: 0
   clubHolder: {fileID: 0}
   itemValue: 0
+  price: 10
   maxStackSize: 1

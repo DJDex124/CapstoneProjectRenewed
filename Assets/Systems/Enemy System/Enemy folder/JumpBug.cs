@@ -37,6 +37,7 @@ public class JumpBug : MonoBehaviour
 
     public Animator animator;
     [SerializeField] private PlayerMovementCC playerMovement;
+    [SerializeField] private HealthStaminaSystem HealthStaminaSystem;
 
     void Start()
     {
@@ -161,8 +162,12 @@ public class JumpBug : MonoBehaviour
     }
     IEnumerator DealDamage(float delay)
     {
+        if (HealthStaminaSystem == null)
+        {
+            HealthStaminaSystem = player.GetComponent<HealthStaminaSystem>();
+        }
         yield return new WaitForSeconds(delay);
-        HealthStaminaSystem.current.TakeDamage(damage);
+        HealthStaminaSystem.TakeDamage(damage);
         disAttach();
     }
     void attached()
@@ -236,6 +241,7 @@ public class JumpBug : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            HealthStaminaSystem = collision.gameObject.GetComponent<HealthStaminaSystem>();
             attached();
             isLeaping = false;
         }

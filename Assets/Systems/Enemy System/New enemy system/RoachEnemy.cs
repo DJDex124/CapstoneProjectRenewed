@@ -249,8 +249,9 @@ public class RoachEnemy : MonoBehaviour
     }
     IEnumerator DealDamage(float delay)
     {
+        HealthStaminaSystem healthStaminaSystem = player.GetComponent<HealthStaminaSystem>();
         yield return new WaitForSeconds(delay);
-        HealthStaminaSystem.current.TakeDamage(damage);
+        healthStaminaSystem.TakeDamage(damage);
         disAttach();
     }
     private void updateBehaviorState()

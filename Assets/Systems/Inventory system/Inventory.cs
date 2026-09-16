@@ -181,8 +181,7 @@ public class Inventory : MonoBehaviour
 
     public void UseSelectedItem()
     {
-        HealthStaminaSystem healthSystem = HealthStaminaSystem.current;
-
+        HealthStaminaSystem healthSystem = GameObject.FindWithTag("Player").GetComponent<HealthStaminaSystem>();
         OldItemSlot selectedSlot = itemSlots[currentIndex];
         if (selectedSlot.itemInSlot == null)
         {

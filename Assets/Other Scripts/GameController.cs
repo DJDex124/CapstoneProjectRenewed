@@ -30,13 +30,19 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inRange && Input.GetKeyDown(KeyCode.E) )
+        if (inRange && Input.GetKeyDown(KeyCode.E))
         {
-            handleElevator();
-            if (GameManager.current.canStartGame)
+            if ( GameManager.current.mazeGenerated)
             {
-                GameManager.current.StartGame();
+                handleElevator();
             }
+            else
+            {
+                Debug.Log("Maze is not generated yet. Please wait.");
+                //display a message to the player that no level is selected
+            }
+
+
         }
         
     }

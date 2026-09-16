@@ -18,6 +18,8 @@ MonoBehaviour:
   heldItem: {fileID: 0}
   itemType: 0
   consumableType: 0
+  toolType: 0
   clubHolder: {fileID: 0}
   itemValue: 0
+  price: 20
   maxStackSize: 1

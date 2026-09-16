@@ -125,7 +125,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: addd335ac2620854fa7d53e5718bc69b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPrefab
-  itemType: 2
   itemData: {fileID: 11400000, guid: 0d6ce3322293bc54ba6540094a19b106, type: 2}
   canPickup: 1
-  spawnChance: 0

@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class HealthStaminaSystem : MonoBehaviour
 {
-    public static HealthStaminaSystem current { get; private set; }
-
+    
     public bool canSprint = true;
     public bool canJump = true;
     public bool canLoseStamina = true;
@@ -22,15 +21,7 @@ public class HealthStaminaSystem : MonoBehaviour
 
     private void Awake()
     {
-        if (current != null && current != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            current = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        
     }
 
     void Start()

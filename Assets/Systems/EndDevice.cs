@@ -17,10 +17,6 @@ public class EndDevice : MonoBehaviour
     public int Quota = 3; // Number of items required to end the game
     [SerializeField] private Inventory playerInventory;
 
-    private void Start()
-    {
-        GameManager.current.assignScreenCanvas();
-    }
 
     // Call this when the player interacts with the device
     public void TryReceiveFromInventory()
@@ -48,6 +44,8 @@ public class EndDevice : MonoBehaviour
         receivedItems.Add(received);
         //GameManager.current.currentQuota++;
         GameManager.current.addMoney(itemValue);
+        GameManager.current.totalLootCollected++;
+        GameManager.current.totalMoneyEarned += itemValue;
 
 
         Debug.Log($"Device received: {received.itemName}");

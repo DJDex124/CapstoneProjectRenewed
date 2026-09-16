@@ -1,4 +1,5 @@
 
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public class PlayerInteractions : MonoBehaviour
     public float pickupRange = 3f;
     public LayerMask pickupMask;
     public LayerMask EndMask;
+    public LayerMask computerMask;
 
     public bool flCheck;
     public GameObject Flashlight;
@@ -25,8 +27,13 @@ public class PlayerInteractions : MonoBehaviour
     [SerializeField] private float throwForce = 6f;
 
     [SerializeField] private Inventory inventory;
+    private Camera mainCam;
+    private bool inScreen;
+    private ComputerPlayerInteraction activeComputer;
+
     void Start()
     {
+        mainCam = Camera.main;
         current = this;
         flCheck = false;
         
@@ -46,12 +53,13 @@ public class PlayerInteractions : MonoBehaviour
         handlePickup();
         handleDrop();
         handleEndDevice();
+        handleScreenInteraction();
         if (inventory.flashLightSelected)
         {
             FlashLightToggle();
         }
     }
-    public void handlePickup()
+    void handlePickup()
     {
         if(playerMovement == null)
         {
@@ -59,7 +67,7 @@ public class PlayerInteractions : MonoBehaviour
             return;
         }
         Vector3 rayOrigin = transform.position + Vector3.up * (playerMovement.controller.skinWidth + 0.05f);
-        Vector3 lookDir = Camera.main.transform.forward;
+        Vector3 lookDir = mainCam.transform.forward;
         RaycastHit hit;
         canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, pickupMask);
 
@@ -74,7 +82,43 @@ public class PlayerInteractions : MonoBehaviour
             }
         }
     }
-    
+    void handleScreenInteraction()
+    {
+        if (playerMovement == null)
+        {
+            Debug.LogError("Player reference is not assigned in the inspector.");
+            return;
+        }
+
+        if (!inScreen)
+        {
+            Vector3 rayOrigin = transform.position + Vector3.up * (playerMovement.controller.skinWidth + 0.05f);
+            Vector3 lookDir = Camera.main.transform.forward;
+            RaycastHit hit;
+            canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, computerMask);
+
+            if (canSee && Input.GetKeyDown(KeyCode.E))
+            {
+                ComputerPlayerInteraction computerInteraction = hit.collider.GetComponent<ComputerPlayerInteraction>();
+                if (computerInteraction != null)
+                {
+                    computerInteraction.enterScreen();
+                    activeComputer = computerInteraction;
+                    inScreen = true;
+                }
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && activeComputer != null)
+            {
+                activeComputer.exitScreen();
+                inScreen = false;
+                activeComputer = null;
+            }
+        }
+    }
+
 
     void handleDrop()
     {
@@ -91,7 +135,7 @@ public class PlayerInteractions : MonoBehaviour
             return;
         }
         Vector3 rayOrigin = transform.position + Vector3.up * (playerMovement.controller.skinWidth + 0.05f);
-        Vector3 lookDir = Camera.main.transform.forward;
+        Vector3 lookDir = mainCam.transform.forward;
         RaycastHit hit;
         canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, EndMask);
         if
@@ -131,7 +175,7 @@ public class PlayerInteractions : MonoBehaviour
         if (Camera.main == null)
             return;
 
-        Vector3 lookDir = Camera.main.transform.forward;
+        Vector3 lookDir = mainCam.transform.forward;
         Vector3 vector3 = transform.position + (Vector3.up * (playerMovement.controller.skinWidth + 0.05f));
         Vector3 rayOrigin = vector3;
         Gizmos.color = canSee ? Color.green : Color.red;
@@ -174,7 +218,7 @@ public class PlayerInteractions : MonoBehaviour
     }
     
 
-    public void FlashLightToggle()
+     void FlashLightToggle()
     {
         if (Flashlight == null)
         {
@@ -196,4 +240,5 @@ public class PlayerInteractions : MonoBehaviour
             }
         }
     }
+   
 }

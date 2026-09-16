@@ -16,28 +16,28 @@ public class GameManager : MonoBehaviour
     public bool canStartGame = true;
     public bool noLevelsLeft = false;
 
+    public bool isPlayerDead = false;
+
     [Header("Quota System")]
     public int maxQuota = 200;
     public float currentQuota;
 
-    [SerializeField]
-    private TextMeshProUGUI quotaText;
-    [SerializeField]
-    private Canvas ScreenCanvas;
-    [SerializeField]
-    private Canvas PauseMenuCanvas;
-
     [Header("levelSystem")]
     public List<LevelData> levels;
 
-    [SerializeField]
-    private LevelData currentLevel;
+    public LevelData currentLevel;
 
-    [Header("Currency System")]
-    [SerializeField]
-    private int totalMoney = 0;
+    [Header("Stats")]
+    public int totalScore = 0;
+    public int totalMoney = 0;
+    public int totalMoneySpent = 0;
+    public int totalMoneyEarned = 0;
+    public int totalLootCollected = 0;
+    public int totalEnemiesDefeated = 0;
+    public int totalDeaths = 0;
 
     
+
 
     public void StartGame()
     {
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void setData()
+    public void setData()
     {
         //Maze Data
         MazeGeneration.current.maxlootCellAmount = currentLevel.lootCellCount;
@@ -119,6 +119,26 @@ public class GameManager : MonoBehaviour
         maxQuota = currentLevel.lootSpawnCount;
         EndDevice.current.Quota = maxQuota;
     }
+    public IEnumerator manualLevelChange()
+    {
+        if (isChangingLevel) yield break;
+        isChangingLevel = true;
+
+        Debug.Log("Level Change Initiated");
+        LevelManagerCreative.current.resetLevel();
+        yield return new WaitForSeconds(1f);
+
+        setData();
+        
+        mazeGenerated = false;
+        Debug.Log("Starting Maze Generation for Level: " + currentLevel.name);
+        StartCoroutine(generateMaze());
+
+        yield return new WaitUntil(() => mazeGenerated);
+        SpawnLoot.current.findLootCells();
+        EnemySystem.current.findEnemyCells();
+        isChangingLevel = false;
+    }
 
     void Awake()
     {
@@ -131,131 +151,32 @@ public class GameManager : MonoBehaviour
             current = this;
             DontDestroyOnLoad(gameObject);
         }
-        if (ScreenCanvas == null)
-        {
-            ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>();
-            if (ScreenCanvas == null)
-            {
-                Debug.LogWarning("ScreenCanvas not found in the scene.");
-
-            }
-        }
-        if (PauseMenuCanvas == null)
-        {
-            PauseMenuCanvas = GameObject.Find("PauseMenuCanvas")?.GetComponent<Canvas>();
-            if (PauseMenuCanvas == null)
-            {
-                Debug.LogWarning("PauseMenuCanvas not found in the scene.");
-
-            }
-        }
-        if (PauseMenuCanvas != null)
-        {
-            PauseMenuCanvas.enabled = false;
-        }
 
     }
 
-    void Update()
-    {
-
-        handleScreenUI();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            togglePauseGame();
-        }
-
-    }
-
-
-
-    public void assignScreenCanvas()
-    {
-        if (ScreenCanvas == null)
-        {
-            ScreenCanvas = GameObject.Find("ScreenCanvas")?.GetComponent<Canvas>();
-            if (ScreenCanvas == null)
-            {
-                Debug.LogWarning("ScreenCanvas not found in the scene.");
-            }
-        }
-
-    }
-    public void handleScreenUI()
-    {
-
-        if (quotaText == null)
-        {
-
-            if (ScreenCanvas != null)
-            {
-                quotaText = ScreenCanvas.GetComponentInChildren<TextMeshProUGUI>();
-            }
-        }
-        if (quotaText != null)
-        {
-            quotaText.text = "Quota: " + currentQuota + "/" + maxQuota;
-        }
-        else
-        {
-            Debug.LogWarning("Quota Text component not found in the ScreenCanvas.");
-        }
-    }
-
-    public void togglePauseGame()
-    {
-
-
-        if (PauseMenuCanvas != null)
-        {
-            if (PauseMenuCanvas.enabled)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-
-            }
-        }
-
-    }
-    public void PauseGame()
-    {
-        PauseMenuCanvas.enabled = true;
-        Time.timeScale = 0f; // Pause the game
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        CameraControllerCC.current.paused = true;
-    }
-    public void ResumeGame()
-    {
-        PauseMenuCanvas.enabled = false;
-        Time.timeScale = 1f; // Resume the game
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        CameraControllerCC.current.paused = false;
-
-    }
+    
 
     public void Die()
     {
         Debug.Log("Player has died!");
         //add what happens when the player dies here (e.g., respawn, game over screen, etc.)
+
     }
 
 
-    void endGame()
+    public void endGame()
     {
+
         Debug.Log("Game Over!");
         //add what happens when the game ends here (e.g., show game over screen, return to main menu, etc.)
+        totalScore = totalMoneyEarned + totalEnemiesDefeated + totalLootCollected - totalDeaths % 2;
     }
 
     public void addMoney(int amount)
     {
         totalMoney += amount;
         Debug.Log("Total Money: " + totalMoney);
+        totalMoneySpent += amount;
 
     }
     public void removeMoney(int amount)
