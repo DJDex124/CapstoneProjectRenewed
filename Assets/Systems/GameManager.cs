@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour
 
     [Header("levelSystem")]
     public List<LevelData> levels;
-
     public LevelData currentLevel;
+    public float countDownDuration = 0f; // Duration for the countdown before maze collapse
 
     [Header("Stats")]
     public int totalScore = 0;
@@ -199,8 +199,21 @@ public class GameManager : MonoBehaviour
     {
         currentLevel = level;
         setData();
-        StartCoroutine(levelChange());
+        StartCoroutine(manualLevelChange());
     }
+    public IEnumerator mazeCollapseCountdown(float duration)
+    {
+        setCountDown();
+        yield return new WaitForSeconds(countDownDuration);
+        //impliment indication maze is collapsing
+        CameraControllerCC.current.triggerShake(4f, 2f);
+        Debug.Log("Maze is collapsing in " + duration + " seconds!");
+        yield return new WaitForSeconds(duration);
+        // start the collapse of the maze 
 
-    
+    }
+    void setCountDown()
+    {
+        countDownDuration = currentLevel.mazeWidthandDepth * 2f; 
+    }
 }

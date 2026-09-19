@@ -53,7 +53,7 @@ public class PlayerInteractions : MonoBehaviour
         handlePickup();
         handleDrop();
         handleEndDevice();
-        handleScreenInteraction();
+        //handleScreenInteraction();
         if (inventory.flashLightSelected)
         {
             FlashLightToggle();

@@ -28,7 +28,7 @@ public class ScreenUISystem : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI currentMoney;
     [SerializeField]
-    private GameObject itemSpawner;
+    private ItemShopSpawner itemSpawner;
 
     [Header("Player Reference")]
     [SerializeField]
@@ -63,7 +63,7 @@ public class ScreenUISystem : MonoBehaviour
         }
         if (itemSpawner == null)
         {
-            itemSpawner = GameObject.FindWithTag("EndDevice");
+            //itemSpawner = GameObject.FindWithTag("EndDevice");
         }
         if (deathScreeenCanvas == null)
         {
@@ -265,7 +265,7 @@ public class ScreenUISystem : MonoBehaviour
         {
             GameManager.current.addMoney(-item.price);
             //buy item logic 
-            itemSpawner.GetComponent<ItemShopSpawner>().SpawnItem(item);
+            itemSpawner.SpawnItem(item);
             Debug.Log("Bought item: " + item.itemName);
         }
         else

@@ -10,6 +10,12 @@ public class CameraControllerCC : MonoBehaviour
     public bool paused = false;
     public Ray LookRay => new Ray(transform.position, transform.forward);
 
+    [Header("Camera Shake Settings")]
+    private Vector3 originalPos;
+    private float shakeDuration = 0f;
+    private float shakeMagnitude = 0.3f;
+    private float dampingSpeed = 1.0f;
+
     void Awake()
     {
         current = this; 
@@ -20,6 +26,7 @@ public class CameraControllerCC : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        originalPos = transform.localPosition;
     }
 
     
@@ -36,5 +43,20 @@ public class CameraControllerCC : MonoBehaviour
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             transform.parent.Rotate(Vector3.up * mouseX);
         }
+        if (shakeDuration > 0)
+        {
+            transform.localPosition = originalPos + Random.insideUnitSphere * shakeMagnitude;
+            shakeDuration -= Time.deltaTime * dampingSpeed;
+        }
+        else
+        {
+            shakeDuration = 0f;
+            transform.localPosition = originalPos;
+        }
+    }
+    public void triggerShake(float duration, float magnitude)
+    {
+        shakeDuration = duration;
+        shakeMagnitude = magnitude;
     }
 }
