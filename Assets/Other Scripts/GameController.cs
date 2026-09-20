@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
@@ -97,7 +97,7 @@ public class GameController : MonoBehaviour
                 );
 
 
-                yield return null;
+                yield return new WaitForFixedUpdate();
 
             }
             isMoving = false;
