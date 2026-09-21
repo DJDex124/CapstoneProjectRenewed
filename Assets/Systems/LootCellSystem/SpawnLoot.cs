@@ -21,6 +21,7 @@ public class SpawnLoot : MonoBehaviour
     public List<GameObject> Loot;
     public int LootCount;
     public int MaxLootCount;
+    public List<GameObject> LootList;
    
 
     public int maxLootCellCount = 10;
@@ -28,6 +29,7 @@ public class SpawnLoot : MonoBehaviour
 
     public List<GameObject> lootCells;
     public List<GameObject> SpawnPoints;
+    public List<OldItemData> lootData= new List<OldItemData>();
     
     public void findLootCells()
     {
@@ -84,7 +86,7 @@ public class SpawnLoot : MonoBehaviour
                     SpawnPoints.Add(child.gameObject);
             }
         }
-        for (int i = 0; i < MaxLootCount; i++)
+        for (int i = 0; i < MaxLootCount; i++) //repeat until i = MaxLootCount
         { 
             Debug.Log("Spawning Loot: " + i);
             int randomIndex = Random.Range(0, SpawnPoints.Count);
@@ -92,7 +94,7 @@ public class SpawnLoot : MonoBehaviour
             SpawnPoints.RemoveAt(randomIndex);
 
             int randomLootIndex = Random.Range(0, Loot.Count);
-            GameObject lootPrefab = Loot[randomLootIndex];
+            GameObject lootPrefab = changeDatatoObject();
             Instantiate(lootPrefab, spawnPosition.transform.position, Quaternion.identity);
             LootCount++;
 
@@ -105,13 +107,39 @@ public class SpawnLoot : MonoBehaviour
             if (LootCount < MaxLootCount)
             {
                 int randomIndex = Random.Range(0, Loot.Count);
-                GameObject lootPrefab = Loot[randomIndex];
+                GameObject lootPrefab = changeDatatoObject();
                 Instantiate(lootPrefab, spawnPoint.transform.position, Quaternion.identity);
                 LootCount++;
             }
         }
     }
+    GameObject changeDatatoObject()
+    {
+        OldItemData loot = GetItems();
+        GameObject Loot = loot.pickupPrefab;
+        return Loot;
+    }
 
+
+    OldItemData GetItems()
+    {
+        int randomNumber = Random.Range(1, 101);
+        List <OldItemData> possibleItems = new List <OldItemData>();
+        foreach (OldItemData item in lootData)
+        { 
+           if (randomNumber <= item.dropChance)
+           {
+                possibleItems.Add(item);
+           }
+        }
+        if (possibleItems.Count > 0)
+        {
+            OldItemData selectedLoot = possibleItems[Random.Range(0, possibleItems.Count)];
+            return selectedLoot;
+        }
+        return null;
+
+    }
 }
     
 

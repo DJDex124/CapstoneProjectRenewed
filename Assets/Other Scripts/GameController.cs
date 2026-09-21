@@ -4,7 +4,7 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
-
+    public GameController current;
     
     public Canvas textCanvas;
     public TextMeshProUGUI startText;
@@ -19,8 +19,15 @@ public class GameController : MonoBehaviour
     public float lowerWaitTime = 0.6f;
 
     private bool isMoving = false;
-    private bool isUp = true;  
+    private bool isUp = true;
 
+    [SerializeField]
+    private Animator elevatorAnimator;
+
+    private void Awake()
+    {
+        current = this;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -47,7 +54,7 @@ public class GameController : MonoBehaviour
         
     }
     
-    private void handleElevator()
+    public void handleElevator()
     {
         if (!isMoving && isUp)
         {
@@ -79,6 +86,9 @@ public class GameController : MonoBehaviour
 
     private IEnumerator LowerEleWithDelay()
     {
+        
+        yield return new WaitForSeconds(2f);
+        elevatorAnimator.SetBool("isOpen", false);
         isMoving = true;
         isUp = false;
         yield return new WaitForSeconds(lowerWaitTime);
@@ -101,12 +111,14 @@ public class GameController : MonoBehaviour
 
             }
             isMoving = false;
+            elevatorAnimator.SetBool("isOpen", true);
         }
-        
-
     }
     private IEnumerator LiftEleWithDelay()
     {
+        
+        yield return new WaitForSeconds(2f);
+        elevatorAnimator.SetBool("isOpen", false);
         isMoving = true;
         isUp = true;
         yield return new WaitForSeconds(lowerWaitTime);
@@ -128,6 +140,7 @@ public class GameController : MonoBehaviour
                 yield return null;
             }
             isMoving = false;
+            elevatorAnimator.SetBool("isOpen", true);
         }
     }
 }

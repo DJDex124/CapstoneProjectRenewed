@@ -160,6 +160,7 @@ public class PlayerInteractions : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             inventory.UseSelectedItem();
+            Debug.Log("trying to use item");
         }
         
     }

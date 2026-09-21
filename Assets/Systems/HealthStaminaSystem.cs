@@ -106,6 +106,6 @@ public class HealthStaminaSystem : MonoBehaviour
     public void healPlayer(float amount)
     {
         currentHealth = Mathf.Clamp(currentHealth + amount, 0f, maxHealth);
-        Debug.Log("Health: " + currentHealth);
+        ;
     }
 }

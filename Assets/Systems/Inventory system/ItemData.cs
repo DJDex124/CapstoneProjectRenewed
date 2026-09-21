@@ -13,11 +13,10 @@ public class OldItemData : ScriptableObject
     public ToolType toolType;
     public GameObject clubHolder;
 
-    public int itemValue;  
+    public int dropChance;  
     public int price;   
     public int maxStackSize;
-
-    
+    public int value;
 
     public enum ItemType
     {

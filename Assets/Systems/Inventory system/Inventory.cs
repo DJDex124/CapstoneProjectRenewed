@@ -15,7 +15,7 @@ public class Inventory : MonoBehaviour
     public bool flashLightSelected = false;
     public bool crowbarSelected = false;
 
-    
+    public HealthStaminaSystem healthSystem;
 
 
     void Start()
@@ -181,7 +181,7 @@ public class Inventory : MonoBehaviour
 
     public void UseSelectedItem()
     {
-        HealthStaminaSystem healthSystem = GameObject.FindWithTag("Player").GetComponent<HealthStaminaSystem>();
+        
         OldItemSlot selectedSlot = itemSlots[currentIndex];
         if (selectedSlot.itemInSlot == null)
         {
@@ -189,17 +189,18 @@ public class Inventory : MonoBehaviour
             return;
         }
         if (selectedSlot.itemInSlot.consumableType == OldItemData.ConsumableType.Stamina
-            && healthSystem.currentStamina <= healthSystem.maxStamina)
+            && healthSystem.currentStamina < healthSystem.maxStamina)
         {
             StartCoroutine(healthSystem.disableStamina(15f));
         }
         else if (selectedSlot.itemInSlot.consumableType == OldItemData.ConsumableType.Health 
-                  && healthSystem.currentHealth <= healthSystem.maxHealth )
+                  && healthSystem.currentHealth < healthSystem.maxHealth )
         {
             healthSystem.healPlayer(100f);
         }
         else
         {
+            Debug.Log("no item used");
             return;
         }
         RemoveItem(selectedSlot.itemInSlot);
