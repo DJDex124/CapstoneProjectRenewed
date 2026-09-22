@@ -21,6 +21,6 @@ MonoBehaviour:
   toolType: 0
   clubHolder: {fileID: 0}
   dropChance: 0
-  price: 10
+  price: 5
   maxStackSize: 1
   value: 0

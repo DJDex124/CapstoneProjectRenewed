@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthStaminaSystem : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class HealthStaminaSystem : MonoBehaviour
     public bool canSprint = true;
     public bool canJump = true;
     public bool canLoseStamina = true;
-    [SerializeField] private UIManager uiManager;
+    
 
 
     [Header("Health")]
@@ -17,11 +18,20 @@ public class HealthStaminaSystem : MonoBehaviour
     [Header("Stamina")]
     public float maxStamina = 100f;
     public float currentStamina;
-
+    public Slider healthSlider;
+    public Slider staminaSlider;
 
     private void Awake()
     {
         
+    }
+    public void UpdateSliders()
+    {
+
+        if (healthSlider != null)
+            healthSlider.value = currentHealth;
+        if (staminaSlider != null)
+            staminaSlider.value = currentStamina;
     }
 
     void Start()
@@ -29,38 +39,24 @@ public class HealthStaminaSystem : MonoBehaviour
         currentHealth = maxHealth;
         currentStamina = maxStamina;
 
-        if (uiManager == null)
+        if (healthSlider != null)
         {
-            Debug.LogWarning("UIManager not found. Make sure it is loaded before GameManager.");
-            return;
-        }
-        if (uiManager.healthSlider != null)
-        {
-            uiManager.healthSlider.minValue = 0f;
-            uiManager.healthSlider.maxValue = maxHealth;
-            uiManager.healthSlider.value = currentHealth;
+            healthSlider.minValue = 0f;
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = currentHealth;
         }
 
-        if (uiManager.staminaSlider != null)
+        if (staminaSlider != null)
         {
-            uiManager.staminaSlider.minValue = 0f;
-            uiManager.staminaSlider.maxValue = maxStamina;
-            uiManager.staminaSlider.value = currentStamina;
+            staminaSlider.minValue = 0f;
+            staminaSlider.maxValue = maxStamina;
+            staminaSlider.value = currentStamina;
         }
-
-
-
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (uiManager == null)
-        {
-            Debug.LogWarning("UIManager not found. Make sure it is loaded before GameManager.");
-            return;
-        }
-        uiManager.UpdateSliders();
+        UpdateSliders();
 
         if (currentHealth <= 0)
             GameManager.current.Die();
@@ -81,6 +77,10 @@ public class HealthStaminaSystem : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
         Debug.Log("Health: " + currentHealth);
+        if (currentHealth <= 0)
+        {
+            GameManager.current.Die();
+        }
     }
     public void UseStamina(float amount)
     {

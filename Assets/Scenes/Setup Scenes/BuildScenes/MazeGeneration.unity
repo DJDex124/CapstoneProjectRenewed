@@ -153,7 +153,7 @@ MonoBehaviour:
   _mazeCellPrefab: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
   LootCell: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
   EnemyCell: {fileID: 7022070345779681316, guid: f281c34c5f9285041b0dc601f728a70c, type: 3}
-  TrapCell: {fileID: 7022070345779681316, guid: d6fdabf7cb630024489403ef075e224b, type: 3}
+  TrapCell: {fileID: 7022070345779681316, guid: 428cc09155c930646929a1c725613b19, type: 3}
   BasicCell: {fileID: 7022070345779681316, guid: 4567b9016ed0c7b4f89afc030727ddd7, type: 3}
   spawnCell: {fileID: 1423296806981749143, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
   cellsToSpawn: []

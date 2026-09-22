@@ -1,4 +1,5 @@
 
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,6 +40,13 @@ public class PlayerInteractions : MonoBehaviour
         
         if(inventory == null) 
         inventory = GetComponent<Inventory>();
+        StartCoroutine(WaitForEndOfFrameCoroutine());
+    }
+    IEnumerator WaitForEndOfFrameCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        GameManager.current.resetReferences();
+        GameManager.current.playeriIsDead = false;
     }
     void Update()
     {
@@ -53,7 +61,7 @@ public class PlayerInteractions : MonoBehaviour
         handlePickup();
         handleDrop();
         handleEndDevice();
-        //handleScreenInteraction();
+        
         if (inventory.flashLightSelected)
         {
             FlashLightToggle();
@@ -82,44 +90,7 @@ public class PlayerInteractions : MonoBehaviour
             }
         }
     }
-    void handleScreenInteraction()
-    {
-        if (playerMovement == null)
-        {
-            Debug.LogError("Player reference is not assigned in the inspector.");
-            return;
-        }
-
-        if (!inScreen)
-        {
-            Vector3 rayOrigin = transform.position + Vector3.up * (playerMovement.controller.skinWidth + 0.05f);
-            Vector3 lookDir = Camera.main.transform.forward;
-            RaycastHit hit;
-            canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, computerMask);
-
-            if (canSee && Input.GetKeyDown(KeyCode.E))
-            {
-                ComputerPlayerInteraction computerInteraction = hit.collider.GetComponent<ComputerPlayerInteraction>();
-                if (computerInteraction != null)
-                {
-                    computerInteraction.enterScreen();
-                    activeComputer = computerInteraction;
-                    inScreen = true;
-                }
-            }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.Escape) && activeComputer != null)
-            {
-                activeComputer.exitScreen();
-                inScreen = false;
-                activeComputer = null;
-            }
-        }
-    }
-
-
+    
     void handleDrop()
     {
         if (Input.GetKeyDown(KeyCode.Q))
@@ -220,14 +191,20 @@ public class PlayerInteractions : MonoBehaviour
     
 
      void FlashLightToggle()
-    {
+     {
         if (Flashlight == null)
         {
             Debug.LogError("Flashlight GameObject is not assigned in the inspector.");
             return;
         }
+        if (inventory == null)
+        {
+            Debug.LogError("Inventory reference is not assigned in the inspector.");
+            return;
+        }
+        
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && inventory.flashLightSelected)
         {
             if (flCheck == false)
             {
@@ -239,6 +216,11 @@ public class PlayerInteractions : MonoBehaviour
                 flCheck = false;
                 Flashlight.SetActive(false);
             }
+        }
+        if (inventory.flashLightSelected == false)
+        {
+            flCheck = false;
+            Flashlight.SetActive(false);
         }
     }
    

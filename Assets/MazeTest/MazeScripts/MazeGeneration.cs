@@ -42,6 +42,8 @@ public class MazeGeneration : MonoBehaviour
 
     public int _mazeDepth;
 
+    public int amountOfCellsToSpawn;
+
     public Vector2Int _spawnPosition;
     public Vector3 fixedCentrePosition;
 
@@ -60,8 +62,8 @@ public class MazeGeneration : MonoBehaviour
     
     public void addCells()
     {
-        
-        while (currentEnemyCellAmount < maxEnemyCellAmount || currentlootCellAmount < maxlootCellAmount || currentTrapCellAmount < maxTrapCellAmount)
+        amountOfCellsToSpawn = _mazeDepth * _mazeWidth -1 ;
+        while (amountOfCellsToSpawn > cellsToSpawn.Count)
         {
             if (currentlootCellAmount < maxlootCellAmount)
             {
@@ -69,17 +71,21 @@ public class MazeGeneration : MonoBehaviour
                 currentlootCellAmount++;
                 
             }
-            if (currentEnemyCellAmount < maxEnemyCellAmount)
+            else if (currentEnemyCellAmount < maxEnemyCellAmount)
             {
                 cellsToSpawn.Add(EnemyCell);
                 currentEnemyCellAmount++;
                 
             }
-            if (currentTrapCellAmount < maxTrapCellAmount)
+            else if (currentTrapCellAmount < maxTrapCellAmount)
             {
                 cellsToSpawn.Add(TrapCell);
                 currentTrapCellAmount++;
                 
+            }
+            else
+            {
+                cellsToSpawn.Add(BasicCell);
             }
         }
         
@@ -100,20 +106,6 @@ public class MazeGeneration : MonoBehaviour
         Vector3 naturalCenterPos = mazePos.position + new Vector3(centerX * _cellSize, 0, centerZ * _cellSize);
         Vector3 offset = fixedCentrePosition - naturalCenterPos;
 
-        //int halfSize = safeZone / 2;
-
-        // for (int x = centerX - halfSize; x < centerX + halfSize; x++)
-        //{
-        //for (int z = centerZ - halfSize; z < centerZ + halfSize; z++)
-        // {
-         // blockedCells.Add(new Vector2Int(x, z));
-         //}
-         //}
-        int totalSpawnable = (_mazeWidth * _mazeDepth);// - blockedCells.Count;
-        while (totalSpawnable > cellsToSpawn.Count)
-        {
-           cellsToSpawn.Add(BasicCell);
-        }
 
         cellsToSpawn.Shuffle();
 

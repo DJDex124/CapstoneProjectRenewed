@@ -3,18 +3,37 @@ using UnityEngine.ProBuilder.MeshOperations;
 
 public class HandItemHandler : MonoBehaviour
 {
-   
     public GameObject weapon;
     public GameObject Torch;
     [SerializeField] private Inventory inventory;
+    [SerializeField] private GameObject player;
+
+    private bool isTorchSelected;
+    private bool isSpearSelected;
 
     void Start()
     {
-        weapon = GameObject.FindGameObjectWithTag("Weapon");
-        weapon.SetActive(false);
-        Torch.SetActive(false);
-        if (inventory == null)
-            inventory = GetComponent<Inventory>();
+        
+        if (weapon != null)
+            weapon.SetActive(false);
+        else
+            Debug.LogWarning("HandItemHandler: no GameObject tagged 'Weapon' found.");
+
+        if (Torch != null)
+            Torch.SetActive(false);
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+            if (player == null) Debug.LogError("resetReferences: couldn't find Player!");
+        }
+
+        if (inventory == null && player != null)
+        {
+            inventory = GameObject.FindWithTag("Inventory").GetComponent<Inventory>();
+            if (inventory == null) Debug.LogError("resetReferences: Player has no Inventory component!");
+        }
+        isTorchSelected = false;
+        isSpearSelected = false;
     }
 
     void Update()
@@ -22,48 +41,25 @@ public class HandItemHandler : MonoBehaviour
         HandleTools();
     }
 
-    void HandleTools()
+    public void HandleTools()
     {
-        if (inventory == null)
-            return;
+        if (inventory == null) return;
 
-        if (inventory.flashLightSelected)
-
-         {
-                torchSelected();
-                Debug.Log("Torch selected");
-            }
-            else 
-            {
-                torchDeselected();
-                Debug.Log("Torch deselected");
-            }
-            if
-                (inventory.crowbarSelected)
-            {
-                spearSelected();
-            }
-            else
-            {
-                spearDeselected();
-            }
         
-    }
+        if (inventory.flashLightSelected != isTorchSelected)
+        {
+            isTorchSelected = inventory.flashLightSelected;
+            if (Torch != null) Torch.SetActive(isTorchSelected);
+            Debug.Log(isTorchSelected ? "Torch selected" : "Torch deselected");
+        }
 
-    public void spearSelected()
-    {
-        weapon.SetActive(true);
-    }
-    public void spearDeselected()
-    {  
-       weapon.SetActive(false);  
-    }
-    public void torchSelected()
-    {
-        Torch.SetActive(true);
-    }
-    public void torchDeselected()
-    {
-        Torch.SetActive(false);
+        
+        if (inventory.crowbarSelected != isSpearSelected)
+        {
+            isSpearSelected = inventory.crowbarSelected;
+            if (weapon != null) weapon.SetActive(isSpearSelected);
+            Debug.Log(isSpearSelected ? "Spear selected" : "Spear deselected");
+     
+        }
     }
 }

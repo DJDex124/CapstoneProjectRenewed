@@ -10,4 +10,6 @@ public class LevelData : ScriptableObject
 
     public int lootSpawnCount;
     public int enemySpawnCount;
+
+    public int levelPrice;
 }

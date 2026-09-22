@@ -86,10 +86,9 @@ public class GameController : MonoBehaviour
 
     private IEnumerator LowerEleWithDelay()
     {
-        
+        isMoving = true;
         yield return new WaitForSeconds(2f);
         elevatorAnimator.SetBool("isOpen", false);
-        isMoving = true;
         isUp = false;
         yield return new WaitForSeconds(lowerWaitTime);
         if (elevatorPrefab != null)
@@ -116,10 +115,9 @@ public class GameController : MonoBehaviour
     }
     private IEnumerator LiftEleWithDelay()
     {
-        
+        isMoving = true;
         yield return new WaitForSeconds(2f);
         elevatorAnimator.SetBool("isOpen", false);
-        isMoving = true;
         isUp = true;
         yield return new WaitForSeconds(lowerWaitTime);
         if (elevatorPrefab != null)

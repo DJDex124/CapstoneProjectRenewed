@@ -15,6 +15,7 @@ MonoBehaviour:
   mazeWidthandDepth: 4
   lootCellCount: 2
   enemyCellCount: 0
-  trapCellCount: 0
-  lootSpawnCount: 4
+  trapCellCount: 1
+  lootSpawnCount: 2
   enemySpawnCount: 0
+  levelPrice: 0

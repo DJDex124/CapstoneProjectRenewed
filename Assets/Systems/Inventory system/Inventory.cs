@@ -229,5 +229,15 @@ public class Inventory : MonoBehaviour
             crowbarSelected = false;
         }
     }
+    public void resetInventory()
+    {
+        foreach (var slot in itemSlots)
+        {
+            slot.itemInSlot = null;
+            slot.itemCount = 0;
+            slot.SpriteImage.enabled = false;
+            slot.itemCountText.enabled = false;
+        }
+    }
 
 }

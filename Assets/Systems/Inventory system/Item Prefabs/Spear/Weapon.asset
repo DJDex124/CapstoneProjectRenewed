@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
   itemName: 
   itemSprite: {fileID: 21300000, guid: 7dbf27cc45e6a4a499983ac406fdbed0, type: 3}
-  pickupPrefab: {fileID: 8045909526875608740, guid: 7a7753e775c0a3c4fa020d1a96ec782b, type: 3}
+  pickupPrefab: {fileID: 1001361856359997110, guid: 659ae94818512a442863dae86c774cff, type: 3}
   heldItem: {fileID: 0}
   itemType: 2
   consumableType: 0
   toolType: 3
   clubHolder: {fileID: 0}
-  itemValue: 0
-  maxStackSize: 0
+  dropChance: 0
+  price: 0
+  maxStackSize: 30
+  value: 0

@@ -35,6 +35,8 @@ public class ScreenUISystem : MonoBehaviour
     private GameObject player;
     [SerializeField]
     private HealthStaminaSystem playerStats;
+    [SerializeField]
+    private PlayerMovementCC playerMovement;
 
     [Header("Score")]
     [SerializeField]
@@ -46,7 +48,9 @@ public class ScreenUISystem : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI EnemiesDefeated;
 
+    private bool level1Generated = false;
 
+    public bool canPause = true;
 
 
     private void Awake()
@@ -74,7 +78,7 @@ public class ScreenUISystem : MonoBehaviour
             deathScreeenCanvas.enabled = false;
         }
         player = GameObject.FindWithTag("Player");
-        if (player != null)
+        if (player != null && playerStats == null)
         {
             playerStats = player.GetComponent<HealthStaminaSystem>();
         }
@@ -83,16 +87,24 @@ public class ScreenUISystem : MonoBehaviour
             Debug.LogWarning("Player GameObject not found. Make sure it is tagged as 'Player'.");
         }
         scoreCanvas.enabled = false;
+        if (player != null && playerMovement == null)
+        {
+            playerMovement = player.GetComponent<PlayerMovementCC>();
+        }
     }
 
     void Update()
     {
         handleScreenUI();
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && canPause)
         {
+            if (GameManager.current.playeriIsDead)
+            {
+                return; 
+            }
             togglePauseGame();
         }
-        handleDeathScreen();
+       
     }
     //choose levels function
 
@@ -108,9 +120,25 @@ public class ScreenUISystem : MonoBehaviour
         {
             Debug.LogWarning("Invalid level index: " + levelIndex);
         }
+        if (level1Generated == true && levelIndex == 0)
+        {
+            Debug.LogWarning("Level has already been generated. Please select a different level.");
+            return;
+        }
         if (GameManager.current.currentLevel != null)
         {
+            if (GameManager.current.currentLevel.levelPrice > GameManager.current.totalMoney)
+            {
+                Debug.LogWarning("Not enough money to select this level. Please select a different level.");
+                return;
+            }
             StartCoroutine(GameManager.current.manualLevelChange());
+            LevelData selectedLevel = levels[levelIndex];
+            GameManager.current.addMoney(-selectedLevel.levelPrice);
+            if (levelIndex == 0)
+            {
+                level1Generated = true;
+            }
         }
         else
         {
@@ -167,22 +195,18 @@ public class ScreenUISystem : MonoBehaviour
         }
     }
 
-    void handleDeathScreen()
+    public void DeathScreenOn()
     {
-        if ( playerStats.currentHealth <= 0)
-        {
-            deathScreeenCanvas.enabled = true;
-            Time.timeScale = 0f; // Pause the game
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            GameManager.current.endGame();
-            handleScoreScreen();
-
-        }
-        else
-        {
-            deathScreeenCanvas.enabled = false;
-        }
+        Debug.Log("Death Screen Displayed");
+        deathScreeenCanvas.enabled = true;
+        handleScoreScreen();
+        canPause = false;
+    }
+    public void DeathScreenOff()
+    {
+        Debug.Log("Death Screen Disabled");
+        deathScreeenCanvas.enabled = false;
+        canPause = true;
     }
 
     #region button functions
@@ -211,6 +235,7 @@ public class ScreenUISystem : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         CameraControllerCC.current.paused = true;
+        playerMovement.enabled = false;
     }
     public void ResumeGame()
     {
@@ -219,6 +244,7 @@ public class ScreenUISystem : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         CameraControllerCC.current.paused = false;
+        playerMovement.enabled = true;
 
     }
     public void startButton()
@@ -227,6 +253,7 @@ public class ScreenUISystem : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        GameManager.current.resetReferences();
     }
     public void quitButton()
     {
@@ -255,6 +282,15 @@ public class ScreenUISystem : MonoBehaviour
             
         }
     }
+    public void endGame()
+    {
+        GameManager.current.endGame();
+    }
+    public void respawn()
+    {
+        GameManager.current.respawn();
+
+    }
     public void clickSound()
     {
         //AudioManager.current.playSound("ButtonClick");
@@ -274,5 +310,6 @@ public class ScreenUISystem : MonoBehaviour
         }
 
     }
+
     #endregion
 }

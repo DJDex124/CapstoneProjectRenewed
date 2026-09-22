@@ -20,6 +20,7 @@ MonoBehaviour:
   consumableType: 0
   toolType: 1
   clubHolder: {fileID: 0}
-  itemValue: 0
-  price: 50
+  dropChance: 0
+  price: 10
   maxStackSize: 0
+  value: 0

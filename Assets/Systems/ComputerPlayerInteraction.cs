@@ -10,16 +10,24 @@ public class ComputerPlayerInteraction : MonoBehaviour
     [SerializeField] private Canvas promptCanvas;
     [SerializeField] private TextMeshProUGUI promptText;
     private bool isPlayerInRange = false;
+    [SerializeField] private ScreenUISystem UISystem;
+    private bool isInScreen = false;
 
     private void Update()
     {
+        if (GameManager.current.playeriIsDead)
+        {
+            return;
+        }
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
             enterScreen();
+            isInScreen = true;
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (Input.GetKeyDown(KeyCode.Escape) && isInScreen)
         {
             exitScreen();
+            isInScreen = false;
         }
     }
     public void enterScreen()
@@ -34,6 +42,7 @@ public class ComputerPlayerInteraction : MonoBehaviour
         playerController.enabled = false;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        UISystem.canPause = false;
     }
     public void exitScreen()
     {
@@ -47,6 +56,7 @@ public class ComputerPlayerInteraction : MonoBehaviour
         playerController.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        UISystem.canPause = true;
     }
     private void OnTriggerEnter(Collider other)
     {

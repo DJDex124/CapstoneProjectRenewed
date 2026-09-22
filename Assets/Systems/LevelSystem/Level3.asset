@@ -18,3 +18,4 @@ MonoBehaviour:
   trapCellCount: 10
   lootSpawnCount: 10
   enemySpawnCount: 8
+  levelPrice: 50

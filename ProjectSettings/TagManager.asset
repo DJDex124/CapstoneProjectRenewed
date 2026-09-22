@@ -14,6 +14,13 @@ TagManager:
   - EnemyCell
   - Start Screen
   - DeathScreen
+  - RespawnPoint
+  - Inventory
+  - HealthSystem
+  - ScreenUISystem
+  - CameraController
+  - VolumeA
+  - VolumeD
   layers:
   - Default
   - TransparentFX
