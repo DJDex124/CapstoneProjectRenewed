@@ -47,6 +47,7 @@ public class PlayerInteractions : MonoBehaviour
         yield return new WaitForEndOfFrame();
         GameManager.current.resetReferences();
         GameManager.current.playeriIsDead = false;
+        GameManager.current.mazeGenerated = false;
     }
     void Update()
     {

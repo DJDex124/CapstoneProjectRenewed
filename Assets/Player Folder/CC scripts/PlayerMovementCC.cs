@@ -212,20 +212,12 @@ public class PlayerMovementCC : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            Debug.Log("Hit object: " + hit.collider.name);
-            RoachEnemy enemyBug = hit.collider.GetComponentInParent<RoachEnemy>();
-            if (enemyBug != null && !enemyBug.isDead)
-            {
-                Debug.Log("Hit EnemyBug: " + hit.collider.name);
-                
-                enemyBug.TakeDamage(50);
-            }
 
-            EnemyScript enemyScript = hit.collider.GetComponentInParent<EnemyScript>();
+            MaggotEnemy enemyScript = hit.collider.GetComponentInParent<MaggotEnemy>();
             if (enemyScript != null)
             {
                 Debug.Log("Hit EnemyScript: " + hit.collider.name);
-                enemyScript.TakeDamage(attackDmg);
+                enemyScript.takeDamage(50);
             }
         }
     }

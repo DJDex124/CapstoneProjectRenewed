@@ -36,13 +36,13 @@ public class MazeDrawingMech : MonoBehaviour
 
     private void Update()
     {
-        //HandleMapToggle();
+        HandleMapToggle();
 
-        //if (mapOpen)
-        //{
-           // Draw();
-           // UpdateBrushPreview();
-      // }
+        if (mapOpen)
+        {
+            Draw();
+            UpdateBrushPreview();
+      }
     }
 
     void HandleMapToggle()

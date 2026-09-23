@@ -4,7 +4,7 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
-    public GameController current;
+    public static GameController current;
     
     public Canvas textCanvas;
     public TextMeshProUGUI startText;

@@ -21,6 +21,7 @@ TagManager:
   - CameraController
   - VolumeA
   - VolumeD
+  - bottomPosition
   layers:
   - Default
   - TransparentFX
