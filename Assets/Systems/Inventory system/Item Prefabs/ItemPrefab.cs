@@ -5,6 +5,7 @@ public class ItemPrefab : MonoBehaviour
 {
     public OldItemData itemData;
     public bool canPickup = false;
+    
 
     private AdvancedOutline outline;
     private void Start()

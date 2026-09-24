@@ -49,6 +49,8 @@ public class ScreenUISystem : MonoBehaviour
     private TextMeshProUGUI EnemiesDefeated;
 
     private bool level1Generated = false;
+    private bool level2Generated = false;
+    private bool level3Generated = false;
 
     public bool canPause = true;
 
@@ -125,6 +127,17 @@ public class ScreenUISystem : MonoBehaviour
             Debug.LogWarning("Level has already been generated. Please select a different level.");
             return;
         }
+        if (level2Generated == true && levelIndex == 1)
+        {
+            Debug.LogWarning("Level has already been generated. Please select a different level.");
+            return;
+        }
+        if (level3Generated == true && levelIndex == 3)
+        {
+            Debug.LogWarning("Level has already been generated. Please select a different level.");
+            return;
+        }
+
         if (GameManager.current.currentLevel != null)
         {
             if (GameManager.current.currentLevel.levelPrice > GameManager.current.totalMoney)
@@ -135,15 +148,31 @@ public class ScreenUISystem : MonoBehaviour
             StartCoroutine(GameManager.current.manualLevelChange());
             LevelData selectedLevel = levels[levelIndex];
             GameManager.current.addMoney(-selectedLevel.levelPrice);
-            if (levelIndex == 0)
-            {
-                level1Generated = true;
-            }
+            
         }
-        else
+        else 
         {
+            if (level3Generated == true )
+            {
+                Debug.LogWarning("Level has already been generated. Please select a different level.");
+                GameManager.current.endGame();
+                return;
+            }
             Debug.LogWarning("No level selected. Please select a level before starting the game.");
         }
+        if (levelIndex == 0)
+        {
+            level1Generated = true;
+        }
+        if (levelIndex == 1)
+        {
+            level2Generated = true;
+        }
+        if (levelIndex == 2)
+        {
+            level3Generated = true;
+        }
+
     }
 
 

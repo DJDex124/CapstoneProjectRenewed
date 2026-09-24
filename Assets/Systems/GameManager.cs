@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public bool mazeGenerated = false;
     public bool canStartGame = true;
     public bool noLevelsLeft = false;
+    bool level1Generated = false;
 
     public bool playeriIsDead = false;
 
@@ -53,6 +54,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PlayerMovementCC playerMovement;
 
+    public void spawnLevel1()
+    {
+        currentLevel = levels[0];
+        setData();
+        StartCoroutine(manualLevelChange());
+        level1Generated = true;
+    }
     public void ResetGame()
     {
         Debug.Log("Resetting Game...");
@@ -70,6 +78,7 @@ public class GameManager : MonoBehaviour
         canStartGame = true;
         noLevelsLeft = false;
         playeriIsDead = false;
+        level1Generated = false;
         if (currentLevel != null)
         {
             setData();
