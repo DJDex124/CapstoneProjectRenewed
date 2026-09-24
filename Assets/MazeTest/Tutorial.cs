@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Tutorial : MonoBehaviour
 {
+    
+
     [Header("Interaction")]
     public KeyCode interactKey = KeyCode.E;
 
@@ -34,14 +36,19 @@ public class Tutorial : MonoBehaviour
         }
     }
 
-    void PlayInteraction()
+    public void PlayInteraction()
     {
         isPlaying = true;
 
         tutCanvas.SetActive(true);
-        audioSource.Play();
+        SoundManager.current.PlayOneShotSFX("TutorialInfo", audioSource);
+
+       
     }
 
-    
+    private void OnTriggerEnter(Collider other)
+    {
+        playerNearby = false;
+    }
 
 }

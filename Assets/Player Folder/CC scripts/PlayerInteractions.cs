@@ -15,6 +15,7 @@ public class PlayerInteractions : MonoBehaviour
     public LayerMask pickupMask;
     public LayerMask EndMask;
     public LayerMask computerMask;
+    public LayerMask tutorialMask;
 
     public bool flCheck;
     public GameObject Flashlight;
@@ -149,7 +150,18 @@ public class PlayerInteractions : MonoBehaviour
               
             }
         }
+        canSee = Physics.Raycast(rayOrigin, lookDir, out hit, pickupRange, tutorialMask);
+        if (canSee && Input.GetKeyDown(KeyCode.E))
+        {
+            Tutorial Tut = hit.collider.GetComponent<Tutorial>();
+            if (Tut != null)
+            {
+                Tut.PlayInteraction();
+            }
+        }
     }
+
+    
      
     void handleConsumable()
     {
