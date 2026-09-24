@@ -1,4 +1,5 @@
 
+using ITISKIRUHERE;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -59,7 +60,7 @@ public class PlayerInteractions : MonoBehaviour
             return;
         }
         handleConsumable();
-        handlePickup();
+        handlePickupSpherCast();
         handleDrop();
         handleEndDevice();
         
@@ -91,7 +92,30 @@ public class PlayerInteractions : MonoBehaviour
             }
         }
     }
-    
+    void handlePickupSpherCast()
+    {
+        
+        if (playerMovement == null)
+        {
+            Debug.LogError("Player reference is not assigned in the inspector.");
+            return;
+        }
+        Vector3 rayOrigin = transform.position + Vector3.up * (playerMovement.controller.skinWidth + 0.05f);
+        Vector3 lookDir = mainCam.transform.forward;
+        RaycastHit hit;
+        canSee = Physics.SphereCast(rayOrigin, 0.5f, lookDir, out hit, pickupRange, pickupMask);
+
+        if (canSee && Input.GetKeyDown(KeyCode.E))
+        {
+            ItemPrefab itemPrefab = hit.collider.GetComponent<ItemPrefab>();
+            if (itemPrefab != null)
+            {
+                inventory.AddItem(itemPrefab.itemData);
+                Destroy(hit.collider.gameObject);
+
+            }
+        }
+    }
     void handleDrop()
     {
         if (Input.GetKeyDown(KeyCode.Q))
@@ -223,6 +247,6 @@ public class PlayerInteractions : MonoBehaviour
             flCheck = false;
             Flashlight.SetActive(false);
         }
-    }
-   
+     }
+    
 }

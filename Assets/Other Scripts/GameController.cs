@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.ProBuilder.MeshOperations;
 
 public class GameController : MonoBehaviour
 {
@@ -8,8 +9,8 @@ public class GameController : MonoBehaviour
     
     public Canvas textCanvas;
     public TextMeshProUGUI startText;
-   
 
+    
     public bool inRange = false;
     bool canStartGame = true;
 
@@ -20,6 +21,8 @@ public class GameController : MonoBehaviour
 
     private bool isMoving = false;
     private bool isUp = true;
+    [SerializeField]
+    private GameObject elevatorCollider;
 
     [SerializeField]
     private Animator elevatorAnimator;
@@ -32,6 +35,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         startText.enabled = false;
+        elevatorCollider.SetActive(false);
     }
 
     // Update is called once per frame
@@ -87,9 +91,15 @@ public class GameController : MonoBehaviour
     private IEnumerator LowerEleWithDelay()
     {
         isMoving = true;
-        yield return new WaitForSeconds(2f);
-        elevatorAnimator.SetBool("isOpen", false);
+        if (elevatorAnimator != null)
+        {
+            elevatorAnimator.SetBool("isOpen", false);
+        }
         isUp = false;
+        if (elevatorCollider != null)
+        {
+            elevatorCollider.SetActive(true);
+        }    
         yield return new WaitForSeconds(lowerWaitTime);
         if (elevatorPrefab != null)
         {
@@ -110,15 +120,20 @@ public class GameController : MonoBehaviour
 
             }
             isMoving = false;
-            elevatorAnimator.SetBool("isOpen", true);
+            if (elevatorAnimator != null)
+            {
+                elevatorAnimator.SetBool("isOpen", true);
+            }
         }
     }
     private IEnumerator LiftEleWithDelay()
     {
         isMoving = true;
-        yield return new WaitForSeconds(2f);
-        elevatorAnimator.SetBool("isOpen", false);
-        isUp = true;
+        if (elevatorAnimator != null)
+        {
+            elevatorAnimator.SetBool("isOpen", false);
+        }
+
         yield return new WaitForSeconds(lowerWaitTime);
         if (elevatorPrefab != null)
         {
@@ -138,7 +153,15 @@ public class GameController : MonoBehaviour
                 yield return null;
             }
             isMoving = false;
-            elevatorAnimator.SetBool("isOpen", true);
+            if (elevatorAnimator != null)
+            {
+                elevatorAnimator.SetBool("isOpen", true);
+            }
+            isUp = true;
+            if (elevatorCollider != null)
+            {
+                elevatorCollider.SetActive(false);
+            }
         }
     }
 }
