@@ -50,6 +50,7 @@ public class PlayerInteractions : MonoBehaviour
         GameManager.current.resetReferences();
         GameManager.current.playeriIsDead = false;
         GameManager.current.mazeGenerated = false;
+        GameManager.current.spawnLevelBase();
     }
     void Update()
     {

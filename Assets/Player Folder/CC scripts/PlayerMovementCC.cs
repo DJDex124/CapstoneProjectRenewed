@@ -213,7 +213,7 @@ public class PlayerMovementCC : MonoBehaviour
         foreach (RaycastHit hit in hits)
         {
 
-            MaggotEnemy enemyScript = hit.collider.GetComponentInParent<MaggotEnemy>();
+            MaggotEnemy enemyScript = hit.collider.GetComponent<MaggotEnemy>();
             if (enemyScript != null)
             {
                 Debug.Log("Hit EnemyScript: " + hit.collider.name);

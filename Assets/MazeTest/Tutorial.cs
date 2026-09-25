@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Tutorial : MonoBehaviour
@@ -21,34 +22,26 @@ public class Tutorial : MonoBehaviour
         tutCanvas.SetActive(false);
     }
 
-    void Update()
-    {
-        if (playerNearby && Input.GetKeyDown(interactKey) && !isPlaying)
-        {
-            PlayInteraction();
-        }
-
-        
-        if (isPlaying && !audioSource.isPlaying)
-        {
-            tutCanvas.SetActive(false);
-            isPlaying = false;
-        }
-    }
-
     public void PlayInteraction()
     {
+        if (isPlaying)
+        {
+            return;
+        }
         isPlaying = true;
-
         tutCanvas.SetActive(true);
         SoundManager.current.PlayOneShotSFX("TutorialInfo", audioSource);
+        StartCoroutine(WaitForAudioToFinish());
 
-       
     }
-
-    private void OnTriggerEnter(Collider other)
+    IEnumerator WaitForAudioToFinish()
     {
-        playerNearby = false;
+        while (audioSource.isPlaying)
+        {
+            yield return null;
+        }
+        isPlaying = false;
+        tutCanvas.SetActive(false);
     }
 
 }

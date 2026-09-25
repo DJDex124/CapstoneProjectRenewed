@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class LevelManagerCreative : MonoBehaviour
 {
     public static LevelManagerCreative current { get; private set; }
+    public bool sceneReady { get; private set; } = false;
 
     void Awake()
     {
@@ -17,21 +19,28 @@ public class LevelManagerCreative : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-    void Start()
-    {
-        //SceneManager.LoadScene("GameManager", LoadSceneMode.Additive);  
-        //SceneManager.LoadScene("UIManager", LoadSceneMode.Additive);
-        //SceneManager.LoadScene("InventorySystem", LoadSceneMode.Additive);
-        SceneManager.LoadScene("MazeGeneration", LoadSceneMode.Additive);
 
+    // No auto-load in Start() anymore — GameManager drives this explicitly.
 
-    }
-   
     public void resetLevel()
     {
-        
-        SceneManager.UnloadSceneAsync("MazeGeneration");
-        SceneManager.LoadScene("MazeGeneration", LoadSceneMode.Additive);
+        StartCoroutine(resetLevelRoutine());
+    }
 
+    private IEnumerator resetLevelRoutine()
+    {
+        sceneReady = false;
+
+        Scene existing = SceneManager.GetSceneByName("MazeGeneration");
+        if (existing.IsValid() && existing.isLoaded)
+        {
+            AsyncOperation unloadOp = SceneManager.UnloadSceneAsync("MazeGeneration");
+            yield return unloadOp; // wait until fully unloaded
+        }
+
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync("MazeGeneration", LoadSceneMode.Additive);
+        yield return loadOp; // wait until fully loaded
+
+        sceneReady = true;
     }
 }
