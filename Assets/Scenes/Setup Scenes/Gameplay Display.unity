@@ -551,6 +551,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 1, z: 1.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &46220221 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5232311176363663722, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+  m_PrefabInstance: {fileID: 3817426617733385169}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &48293072 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6507901977716847365, guid: 96978c029e1c0224986b6efaa2c1a72d, type: 3}
@@ -1893,7 +1898,7 @@ MonoBehaviour:
   currentLevel: {fileID: 0}
   countDownDuration: 0
   totalScore: 0
-  totalMoney: 15
+  totalMoney: 771
   totalMoneySpent: 0
   totalMoneyEarned: 0
   totalLootCollected: 0
@@ -1923,39 +1928,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &135814682
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: AdvancedOutlineFill (Instance)
-  m_Shader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _DashScale: 0
-    - _DashSpeed: 0
-    - _OutlineWidth: 2
-    - _ZTest: 4
-    m_Colors:
-    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &143353436
 GameObject:
   m_ObjectHideFlags: 0
@@ -4130,6 +4102,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!96 &358003926 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 4969135639046606735, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+  m_PrefabInstance: {fileID: 3817426617733385169}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &366572157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4191,6 +4168,35 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9e57f1906ee54b4dbc392aeee3a47ef, type: 3}
+--- !u!21 &369583194
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AdvancedOutlineMask (Instance)
+  m_Shader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _ZTest: 8
+    m_Colors: []
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &392629197
 GameObject:
   m_ObjectHideFlags: 0
@@ -6789,35 +6795,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685136717}
   m_CullTransparentMesh: 1
---- !u!21 &689386911
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: AdvancedOutlineMask (Instance)
-  m_Shader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _ZTest: 8
-    m_Colors: []
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1001 &689433829
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8144,39 +8121,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 779239647}
   m_CullTransparentMesh: 1
---- !u!21 &780580105
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: AdvancedOutlineFill (Instance)
-  m_Shader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _DashScale: 0
-    - _DashSpeed: 0
-    - _OutlineWidth: 2
-    - _ZTest: 4
-    m_Colors:
-    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &785975668
 GameObject:
   m_ObjectHideFlags: 0
@@ -10690,6 +10634,39 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 76a23ea14267fc742adb3bf26705d596, type: 3}
   m_PrefabInstance: {fileID: 1318044325}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &1049673754
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AdvancedOutlineFill (Instance)
+  m_Shader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _DashScale: 0
+    - _DashSpeed: 0
+    - _OutlineWidth: 2
+    - _ZTest: 4
+    m_Colors:
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &1058481281
 GameObject:
   m_ObjectHideFlags: 0
@@ -12765,6 +12742,35 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8fc9167f3a05d140bbaf3667262d407, type: 3}
+--- !u!21 &1310098736
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AdvancedOutlineMask (Instance)
+  m_Shader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _ZTest: 8
+    m_Colors: []
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1001 &1315239534
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16483,6 +16489,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 497024608}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1641338664 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7648482595920213089, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+  m_PrefabInstance: {fileID: 3817426617733385169}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1660591206
 GameObject:
   m_ObjectHideFlags: 0
@@ -20187,35 +20198,6 @@ Transform:
   - {fileID: 1977024283}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &2034315213
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: AdvancedOutlineMask (Instance)
-  m_Shader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Ints: []
-    m_Floats:
-    - _ZTest: 8
-    m_Colors: []
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1001 &2042971154
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20551,6 +20533,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112914738}
   m_CullTransparentMesh: 1
+--- !u!21 &2128696636
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AdvancedOutlineFill (Instance)
+  m_Shader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _DashScale: 0
+    - _DashSpeed: 0
+    - _OutlineWidth: 2
+    - _ZTest: 4
+    m_Colors:
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1001 &27648948786063966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20731,13 +20746,33 @@ PrefabInstance:
       value: HealthSystem
       objectReference: {fileID: 0}
     - target: {fileID: 6525171555002943399, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1641338664}
+    - target: {fileID: 6525171555002943399, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
       propertyPath: inventory
       value: 
       objectReference: {fileID: 419918113}
     - target: {fileID: 6525171555002943399, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+      propertyPath: swingTrail
+      value: 
+      objectReference: {fileID: 358003926}
+    - target: {fileID: 6525171555002943399, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+      propertyPath: attackPoint
+      value: 
+      objectReference: {fileID: 46220221}
+    - target: {fileID: 6525171555002943399, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
       propertyPath: tutorialMask.m_Bits
       value: 32768
       objectReference: {fileID: 0}
+    - target: {fileID: 6746918867841473699, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 6621655134301794676}
+    - target: {fileID: 6746918867841473699, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
+      propertyPath: inventory
+      value: 
+      objectReference: {fileID: 419918113}
     - target: {fileID: 6979725705849715525, guid: 1f08254bb276a4c469ae8121565c5350, type: 3}
       propertyPath: m_Name
       value: Player
@@ -20850,11 +20885,11 @@ PrefabInstance:
     - target: {fileID: 4840384440329677697, guid: e506dde264a18f949af4cdd53c1bc1f5, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2034315213}
+      objectReference: {fileID: 369583194}
     - target: {fileID: 4840384440329677697, guid: e506dde264a18f949af4cdd53c1bc1f5, type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
-      objectReference: {fileID: 135814682}
+      objectReference: {fileID: 1049673754}
     - target: {fileID: 5091997120906794970, guid: e506dde264a18f949af4cdd53c1bc1f5, type: 3}
       propertyPath: m_Mesh
       value: 

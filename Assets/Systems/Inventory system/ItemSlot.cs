@@ -80,7 +80,6 @@ public class OldItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (itemInSlot != null && itemInSlot.itemType == OldItemData.ItemType.Tool)
         {
             toolInSlot = true;
-            Debug.Log("Item is in slot");
         }
         else
         {

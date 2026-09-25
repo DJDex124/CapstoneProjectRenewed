@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+
 public class PlayerInteractions : MonoBehaviour
 {
     public GameObject Player;
@@ -39,8 +40,11 @@ public class PlayerInteractions : MonoBehaviour
         mainCam = Camera.main;
         current = this;
         flCheck = false;
-        
-        if(inventory == null) 
+
+        if (swingTrail != null)
+            swingTrail.emitting = false;
+
+        if (inventory == null) 
         inventory = GetComponent<Inventory>();
         StartCoroutine(WaitForEndOfFrameCoroutine());
     }
@@ -65,7 +69,9 @@ public class PlayerInteractions : MonoBehaviour
         handlePickupSpherCast();
         handleDrop();
         handleEndDevice();
-        
+        attack();
+
+
         if (inventory.flashLightSelected)
         {
             FlashLightToggle();
@@ -190,6 +196,13 @@ public class PlayerInteractions : MonoBehaviour
         Vector3 rayOrigin = vector3;
         Gizmos.color = canSee ? Color.green : Color.red;
         Gizmos.DrawLine(rayOrigin, rayOrigin + lookDir * pickupRange);
+        
+        if (attackPoint != null)
+        {
+            Gizmos.color = Color.blue;
+        }
+        Gizmos.DrawLine(attackPoint.position, attackPoint.position + attackPoint.forward * attackRange);
+        Gizmos.DrawWireSphere(attackPoint.position + attackPoint.forward * attackRange, attackRadius);
     }
     
 
@@ -261,5 +274,66 @@ public class PlayerInteractions : MonoBehaviour
             Flashlight.SetActive(false);
         }
      }
+
+    [Header("Attack Settings")]
+    public float attackRange = 2f;
+    public float attackRadius = 0.5f;
+    public float attackDmg = 25f;
+    public float attackCldwn = 0.5f;
+    public Transform attackPoint;
+    public LayerMask enemyMask;
+
+    private float nextAttackTime = 0f;
+
+    public Animator animator;
     
+    public TrailRenderer swingTrail;
+    public void PerformAttackHit()
+    {
+
+        RaycastHit[] hits = Physics.SphereCastAll(
+            attackPoint.position,
+            attackRadius,
+            attackPoint.forward,
+            attackRange,
+            enemyMask,
+            QueryTriggerInteraction.Ignore
+        );
+
+        Debug.Log("Hits: " + hits.Length);
+
+        foreach (RaycastHit hit in hits)
+        {
+
+            MaggotEnemy enemyScript = hit.collider.GetComponent<MaggotEnemy>();
+            if (enemyScript != null)
+            {
+                Debug.Log("Hit EnemyScript: " + hit.collider.name);
+                enemyScript.takeDamage(50);
+            }
+        }
+    }
+    void attack()
+    {
+        if (Time.time < nextAttackTime)
+            return;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            nextAttackTime = Time.time + attackCldwn;
+
+            animator.SetTrigger("Attack");
+
+
+        }
+    }
+    public void EnableTrail()
+    {
+        swingTrail.emitting = true;
+    }
+
+    public void DisableTrail()
+    {
+        swingTrail.emitting = false;
+    }
 }

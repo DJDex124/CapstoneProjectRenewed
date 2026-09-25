@@ -50,7 +50,7 @@ public class HandItemHandler : MonoBehaviour
         {
             isTorchSelected = inventory.flashLightSelected;
             if (Torch != null) Torch.SetActive(isTorchSelected);
-            Debug.Log(isTorchSelected ? "Torch selected" : "Torch deselected");
+           
         }
 
         
@@ -58,7 +58,7 @@ public class HandItemHandler : MonoBehaviour
         {
             isSpearSelected = inventory.crowbarSelected;
             if (weapon != null) weapon.SetActive(isSpearSelected);
-            Debug.Log(isSpearSelected ? "Spear selected" : "Spear deselected");
+            
      
         }
     }
