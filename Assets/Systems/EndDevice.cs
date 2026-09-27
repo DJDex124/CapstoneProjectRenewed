@@ -1,6 +1,8 @@
+using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 
@@ -18,7 +20,7 @@ public class EndDevice : MonoBehaviour
     public int Quota = 3; // Number of items required to end the game
     [SerializeField] private Inventory playerInventory;
 
-    public bool isGrinding;
+    private bool isGrinding;
 
     [Header("Grinder Visual")]
     [SerializeField] private Transform itemSpawnPoint;
@@ -30,7 +32,16 @@ public class EndDevice : MonoBehaviour
     [SerializeField] private ParticleSystem sparks;
     [SerializeField] private float sparksDuration = 0.8f;
 
-    // Call this when the player interacts with the device
+    [Header("Floating Value")]
+    [SerializeField] private NumberVisual numberVisual;
+    [SerializeField] private Transform valueSpawnPoint;
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource grinderAudioSource;
+
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+
     public void TryReceiveFromInventory()
     {
         if (isGrinding)
@@ -67,14 +78,20 @@ public class EndDevice : MonoBehaviour
         playerInventory.RemoveItem(received);
         receivedItems.Add(received);
 
-        isGrinding = true;
-        StartCoroutine(GrindItem(received));
-
-        int itemValue = received.value + Random.Range(1, 10); 
-        //GameManager.current.currentQuota++;
+        
+        
+        int itemValue = received.value + Random.Range(1, 10);
         GameManager.current.addMoney(itemValue);
         GameManager.current.totalLootCollected++;
         GameManager.current.totalMoneyEarned += itemValue;
+
+        isGrinding = true;
+
+        StartCoroutine(GrindItem(received, itemValue));
+
+       
+        //GameManager.current.currentQuota++;
+        
 
 
         Debug.Log($"Device received: {received.itemName}");
@@ -84,7 +101,7 @@ public class EndDevice : MonoBehaviour
         }
     }
 
-    private IEnumerator GrindItem(OldItemData itemData)
+    private IEnumerator GrindItem(OldItemData itemData, int itemValue)
     {
         
         if (itemData.pickupPrefab == null)
@@ -162,36 +179,74 @@ public class EndDevice : MonoBehaviour
 
         Debug.Log("Item has reached the grinder. Starting sparks.");
 
+        if (animator != null)
+        {
+            animator.SetBool("Grinding", true);
+        }
 
         if (sparks != null)
         {
             sparks.Play();
         }
 
+        if (SoundManager.current != null && grinderAudioSource != null)
+        {
+            SoundManager.current.PlayLoop("Grinder", grinderAudioSource);
+        }
+
 
         yield return new WaitForSeconds(sparksDuration);
+
+        if (animator != null)
+        {
+            animator.SetBool("Grinding", false);
+        }
 
         if (sparks != null)
         {
             sparks.Stop();
         }
 
-        Destroy(grindingItem);
-
-        isGrinding = false;
-    }
-
-
-    void endGame()
-    {
-        if (receivedItems.Count >= Quota)
+        if (SoundManager.current != null && grinderAudioSource != null)
         {
-            Debug.Log("Game Ended! All required items received.");
-            UnityEngine.SceneManagement.SceneManager.LoadScene("EndScreen");
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            SoundManager.current.StopLoop(grinderAudioSource);
         }
 
+        Destroy(grindingItem);
+
+        
+        if (numberVisual != null && valueSpawnPoint != null)
+        {
+           
+            NumberVisual valueText = Instantiate(numberVisual, valueSpawnPoint.position, valueSpawnPoint.rotation);
+
+            valueText.ShowValue(itemValue);
+
+            if (SoundManager.current != null && grinderAudioSource != null)
+            {
+                SoundManager.current.PlayOneShotSFX("Cash", grinderAudioSource);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("floating number not workin");
+        }
+
+
+            isGrinding = false;
     }
+
+
+    //void endGame()
+    //{
+        //if (receivedItems.Count >= Quota)
+        //{
+            //Debug.Log("Game Ended! All required items received.");
+            //UnityEngine.SceneManagement.SceneManager.LoadScene("EndScreen");
+            //Cursor.lockState = CursorLockMode.None;
+            //Cursor.visible = true;
+        //}
+
+    //}
     
 }
