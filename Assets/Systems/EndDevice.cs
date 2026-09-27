@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,13 +18,36 @@ public class EndDevice : MonoBehaviour
     public int Quota = 3; // Number of items required to end the game
     [SerializeField] private Inventory playerInventory;
 
+    public bool isGrinding;
+
+    [Header("Grinder Visual")]
+    [SerializeField] private Transform itemSpawnPoint;
+    [SerializeField] private Transform grindPoint;
+
+    [SerializeField] private float lowerDuration = 2f;
+
+    [Header("Sparks")]
+    [SerializeField] private ParticleSystem sparks;
+    [SerializeField] private float sparksDuration = 0.8f;
 
     // Call this when the player interacts with the device
     public void TryReceiveFromInventory()
     {
+        if (isGrinding)
+        {
+            Debug.Log("Grinder is currently processing an item.");
+            return;
+        }
+
         if (playerInventory == null)
         {
             Debug.LogError("No inventory found!");
+            return;
+        }
+        if (playerInventory.itemSlots == null ||
+        playerInventory.itemSlots.Length == 0)
+        {
+            Debug.LogError("Inventory has no item slots.");
             return;
         }
         OldItemSlot selectedSlot = playerInventory.itemSlots[playerInventory.currentIndex];
@@ -42,6 +66,10 @@ public class EndDevice : MonoBehaviour
         OldItemData received = selectedSlot.itemInSlot;
         playerInventory.RemoveItem(received);
         receivedItems.Add(received);
+
+        isGrinding = true;
+        StartCoroutine(GrindItem(received));
+
         int itemValue = received.value + Random.Range(1, 10); 
         //GameManager.current.currentQuota++;
         GameManager.current.addMoney(itemValue);
@@ -55,6 +83,104 @@ public class EndDevice : MonoBehaviour
             GameManager.current.canStartGame = true;
         }
     }
+
+    private IEnumerator GrindItem(OldItemData itemData)
+    {
+        
+        if (itemData.pickupPrefab == null)
+        {
+            Debug.LogWarning(
+                $"No pickupPrefab assigned to {itemData.itemName}"
+            );
+
+            isGrinding = false;
+            yield break;
+        }
+
+        if (itemSpawnPoint == null)
+        {
+            Debug.LogError(
+                "Grinder Item Spawn Point has not been assigned!"
+            );
+
+            isGrinding = false;
+            yield break;
+        }
+
+        if (grindPoint == null)
+        {
+            Debug.LogError(
+                "Grinder Grind Point has not been assigned!"
+            );
+
+            isGrinding = false;
+            yield break;
+        }
+
+        GameObject grindingItem = Instantiate
+        (
+            itemData.pickupPrefab,
+            itemSpawnPoint.position,
+            itemSpawnPoint.rotation
+        );
+        Rigidbody rb = grindingItem.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
+
+        Collider[] colliders = grindingItem.GetComponentsInChildren<Collider>();
+
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+
+        Vector3 startPosition = itemSpawnPoint.position;
+        Vector3 endPosition = grindPoint.position;
+
+        float elapsed = 0f;
+
+        while (elapsed < lowerDuration)
+        {
+            elapsed += Time.deltaTime;
+
+            float t = elapsed / lowerDuration;
+
+            
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            grindingItem.transform.position =
+                Vector3.Lerp(startPosition, endPosition, t);
+
+            yield return null;
+        }
+
+        grindingItem.transform.position = endPosition;
+
+
+        Debug.Log("Item has reached the grinder. Starting sparks.");
+
+
+        if (sparks != null)
+        {
+            sparks.Play();
+        }
+
+
+        yield return new WaitForSeconds(sparksDuration);
+
+        if (sparks != null)
+        {
+            sparks.Stop();
+        }
+
+        Destroy(grindingItem);
+
+        isGrinding = false;
+    }
+
 
     void endGame()
     {

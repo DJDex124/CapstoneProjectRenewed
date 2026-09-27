@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Rock
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
   itemName: 
-  itemSprite: {fileID: 0}
-  pickupPrefab: {fileID: 5365650881138855633, guid: 85ece38518436564099dea32a3f4ffb4, type: 3}
-  heldItem: {fileID: 0}
+  itemSprite: {fileID: 21300000, guid: e3d88c3b215bd2e429010e56f3031d8f, type: 3}
+  pickupPrefab: {fileID: 7925153779709603536, guid: 5a5b704d9b5aa19458c27881b928a941, type: 3}
+  heldItem: {fileID: 7925153779709603536, guid: 5a5b704d9b5aa19458c27881b928a941, type: 3}
   itemType: 4
   consumableType: 0
   toolType: 0
