@@ -70,12 +70,7 @@ public class PlayerInteractions : MonoBehaviour
         handleDrop();
         handleEndDevice();
         attack();
-
-
-        if (inventory.flashLightSelected)
-        {
-            FlashLightToggle();
-        }
+        FlashLightToggle();
     }
     void handlePickup()
     {

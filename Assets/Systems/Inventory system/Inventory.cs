@@ -137,7 +137,7 @@ public class Inventory : MonoBehaviour
 
         OldItemSlot selectedSlot = itemSlots[currentIndex];
 
-        if (selectedSlot.itemInSlot != null && selectedSlot.itemInSlot.itemType == OldItemData.ItemType.Item && selectedSlot.itemCount > 0)
+        if (selectedSlot.itemInSlot != null && selectedSlot.itemCount > 0)
         {
             GameObject prefab = selectedSlot.itemInSlot.pickupPrefab;
 

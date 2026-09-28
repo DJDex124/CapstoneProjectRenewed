@@ -236,17 +236,4 @@ public class EndDevice : MonoBehaviour
             isGrinding = false;
     }
 
-
-    //void endGame()
-    //{
-        //if (receivedItems.Count >= Quota)
-        //{
-            //Debug.Log("Game Ended! All required items received.");
-            //UnityEngine.SceneManagement.SceneManager.LoadScene("EndScreen");
-            //Cursor.lockState = CursorLockMode.None;
-            //Cursor.visible = true;
-        //}
-
-    //}
-    
 }

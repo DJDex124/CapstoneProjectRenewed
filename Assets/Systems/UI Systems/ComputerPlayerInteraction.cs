@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ComputerPlayerInteraction : MonoBehaviour
 {
-    [SerializeField] private CinemachineCamera playerCam;
+    [SerializeField] private CinemachineCamera screenCam;
     [SerializeField] private PlayerMovementCC playerMovement;
     [SerializeField] private CameraControllerCC playerController;
     [SerializeField] private Canvas promptCanvas;
@@ -32,31 +32,33 @@ public class ComputerPlayerInteraction : MonoBehaviour
     }
     public void enterScreen()
     {
-        if (playerCam == null || playerMovement == null || playerController == null)
+        if (screenCam == null || playerMovement == null || playerController == null)
         {
             Debug.LogError("One or more references are not assigned in the inspector.");
             return;
         }
-        playerCam.Priority = 0;
+        screenCam.Priority = 20;
         playerMovement.enabled = false;
         playerController.enabled = false;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         UISystem.canPause = false;
+        promptText.enabled = false;
     }
     public void exitScreen()
     {
-        if (playerCam == null || playerMovement == null || playerController == null)
+        if (screenCam == null || playerMovement == null || playerController == null)
         {
             Debug.LogError("One or more references are not assigned in the inspector.");
             return;
         }
-        playerCam.Priority = 10;
+        screenCam.Priority = 0;
         playerMovement.enabled = true;
         playerController.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         UISystem.canPause = true;
+        promptText.enabled = true;
     }
     private void OnTriggerEnter(Collider other)
     {
