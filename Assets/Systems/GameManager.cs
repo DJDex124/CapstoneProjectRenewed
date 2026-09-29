@@ -322,11 +322,12 @@ public class GameManager : MonoBehaviour
         {
             cameraController.enabled = true;
         }
-        resetVolume();
+        
         screenUISystem.DeathScreenOff();
         playerMovement.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        resetVolume();
     }
     public void RespawnPlayer()
     {
