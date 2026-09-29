@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
