@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7caca105983bb6b41ba848b54291f0ff, type: 3}
   m_Name: Vase Clay
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
-  itemName: 
+  itemName: Clay Vase
   itemSprite: {fileID: 0}
   pickupPrefab: {fileID: 0}
   heldItem: {fileID: 0}
