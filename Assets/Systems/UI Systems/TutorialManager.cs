@@ -3,11 +3,13 @@ using TMPro.EditorUtilities;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField] private GameObject tutorialPanel;
+    [SerializeField] private GameObject tutorialCanvas;
     [SerializeField] private GameObject inventory;
 
     [Header("Input References")]
@@ -39,6 +41,7 @@ public class TutorialManager : MonoBehaviour
         WASD.alpha = 0f;
         MOUSE.alpha = 0f;
         INTERACT.alpha = 0f;
+        
 
         inventory.SetActive(false);
         playerInteractions.enabled = false;
@@ -99,6 +102,7 @@ public class TutorialManager : MonoBehaviour
             yield return null;
         }
         StartCoroutine(fadeObject(INTERACT, 1f, 0f));
+        tutorialCanvas.SetActive(false); 
     }
 
     public IEnumerator screenAnimation()
@@ -119,6 +123,7 @@ public class TutorialManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         resetCameras();
+        
     }
     IEnumerator fadeObject(CanvasGroup fadeTarget, float fadeDuration, float targetAlpha)
     {  

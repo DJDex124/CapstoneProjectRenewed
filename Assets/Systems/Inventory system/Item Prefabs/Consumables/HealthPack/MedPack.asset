@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7caca105983bb6b41ba848b54291f0ff, type: 3}
   m_Name: MedPack
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
-  itemName: 
+  itemName: HealthPack
   itemSprite: {fileID: 21300000, guid: 44e90449ede17ca40978acaff0cfc2ff, type: 3}
   pickupPrefab: {fileID: 7150323923742183528, guid: 88ac255f29f5fc541b54284d932a71be, type: 3}
   heldItem: {fileID: 7150323923742183528, guid: 88ac255f29f5fc541b54284d932a71be, type: 3}

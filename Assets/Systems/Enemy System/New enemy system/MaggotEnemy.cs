@@ -204,9 +204,11 @@ public class MaggotEnemy : MonoBehaviour
     public void takeDamage(float damage)
     {
         currentHealth -= damage;
+        if (isDead)
+            return;
         if (currentHealth <= 0)
         {
-            Die();
+            StartCoroutine(Die());
         }
     }
     IEnumerator attackCoolDown()
@@ -219,7 +221,6 @@ public class MaggotEnemy : MonoBehaviour
 
     IEnumerator Die()
     {
-        StopAllCoroutines();
         isDead = true;
         navMesh.enabled = false;
         yield return new WaitForSeconds(2f);
