@@ -17,7 +17,7 @@ MonoBehaviour:
   pickupPrefab: {fileID: 7150323923742183528, guid: 88ac255f29f5fc541b54284d932a71be, type: 3}
   heldItem: {fileID: 7150323923742183528, guid: 88ac255f29f5fc541b54284d932a71be, type: 3}
   itemType: 0
-  consumableType: 0
+  consumableType: 1
   toolType: 0
   clubHolder: {fileID: 0}
   dropChance: 0

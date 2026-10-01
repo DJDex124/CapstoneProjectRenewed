@@ -47,6 +47,7 @@ public class PlayerInteractions : MonoBehaviour
         if (inventory == null) 
         inventory = GetComponent<Inventory>();
         StartCoroutine(WaitForEndOfFrameCoroutine());
+        GameManager.current.ResetGame();
     }
     IEnumerator WaitForEndOfFrameCoroutine()
     {

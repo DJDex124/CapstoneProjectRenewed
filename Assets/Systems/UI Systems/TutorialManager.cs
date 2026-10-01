@@ -1,10 +1,6 @@
 using System.Collections;
-using TMPro.EditorUtilities;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -51,6 +47,7 @@ public class TutorialManager : MonoBehaviour
 
         resetCameras();
     }
+    
     public void controlPanel()
     {
         if (tutorialPanel == null)
@@ -140,7 +137,10 @@ public class TutorialManager : MonoBehaviour
     void Update()
     {
         detectInteraction();
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            exitTutorial();
+        }
     }
     private void detectInteraction()
     {
@@ -192,5 +192,14 @@ public class TutorialManager : MonoBehaviour
         }
         resetCameras();
         cam.Priority = 15;
+    }
+    public void exitTutorial()
+    {
+        StopCoroutine(tutorialPlay());
+        tutorialCanvas.SetActive(false);
+        inventory.SetActive(true);
+        playerInteractions.enabled = true;
+        cameraController.enabled = true;
+        playerMovement.enabled = true;
     }
 }

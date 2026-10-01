@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
             setData();
         }
         resetReferences();
+
     }
     
 
@@ -249,6 +250,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Level Change Initiated");
         LevelManagerCreative.current.resetLevel();
+        EnemySystem.current.removeEnemies();
         yield return new WaitForSeconds(1f);
 
         setData();

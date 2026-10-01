@@ -48,9 +48,8 @@ public class ScreenUISystem : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI EnemiesDefeated;
 
-    private bool level1Generated = false;
-    private bool level2Generated = false;
-    private bool level3Generated = false;
+    [SerializeField]
+    private bool[] levelGenerated;
 
     public bool canPause = true;
 
@@ -94,6 +93,7 @@ public class ScreenUISystem : MonoBehaviour
         {
             playerMovement = player.GetComponent<PlayerMovementCC>();
         }
+        levelGenerated = new bool[levels.Length];
     }
 
     void Update()
@@ -113,71 +113,35 @@ public class ScreenUISystem : MonoBehaviour
 
     public void chooseLevel(int levelIndex)
     {
-        if (levelIndex >= 0 && levelIndex < levels.Length)
+        if (levelIndex < 0 || levelIndex >= levels.Length)
         {
-            LevelData selectedLevel = levels[levelIndex];
-            GameManager.current.currentLevel = selectedLevel;
-            currentLevel.text = "Current Level: " + selectedLevel.name;
-        }
-        else
-        {
-            Debug.LogWarning("Invalid level index: " + levelIndex);
-        }
-        if (level1Generated == true && levelIndex == 0)
-        {
-            Debug.LogWarning("Level has already been generated. Please select a different level.");
+            Debug.LogWarning($"Invalid level index: {levelIndex}");
             return;
         }
-        if (level2Generated == true && levelIndex == 1)
-        {
-            Debug.LogWarning("Level has already been generated. Please select a different level.");
-            return;
-        }
-        if (level3Generated == true && levelIndex == 3)
+
+        if (levelGenerated[levelIndex])
         {
             Debug.LogWarning("Level has already been generated. Please select a different level.");
             return;
         }
 
-        if (GameManager.current.currentLevel != null)
+        LevelData selectedLevel = levels[levelIndex];
+        GameManager gm = GameManager.current;
+
+        if (selectedLevel.levelPrice > gm.totalMoney)
         {
-            if (GameManager.current.currentLevel.levelPrice > GameManager.current.totalMoney)
-            {
-                Debug.LogWarning("Not enough money to select this level. Please select a different level.");
-                return;
-            }
-            StartCoroutine(GameManager.current.manualLevelChange());
-            LevelData selectedLevel = levels[levelIndex];
-            GameManager.current.addMoney(-selectedLevel.levelPrice);
-            
-        }
-        else 
-        {
-            if (level3Generated == true )
-            {
-                Debug.LogWarning("Level has already been generated. Please select a different level.");
-                GameManager.current.endGame();
-                return;
-            }
-            Debug.LogWarning("No level selected. Please select a level before starting the game.");
-        }
-        if (levelIndex == 0)
-        {
-            level1Generated = true;
-        }
-        if (levelIndex == 1)
-        {
-            level2Generated = true;
-        }
-        if (levelIndex == 2)
-        {
-            level3Generated = true;
+            Debug.LogWarning("Not enough money to select this level. Please select a different level.");
+            return;
         }
 
+        // All checks passed, now commit the change
+        gm.currentLevel = selectedLevel;
+        currentLevel.text = $"Current Level: {selectedLevel.name}";
+        gm.addMoney(-selectedLevel.levelPrice);
+        levelGenerated[levelIndex] = true;
+
+        StartCoroutine(gm.manualLevelChange());
     }
-
-
-
     public void handleScreenUI()
     {
 

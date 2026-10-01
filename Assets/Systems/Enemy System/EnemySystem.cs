@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySystem : MonoBehaviour
@@ -27,18 +28,19 @@ public class EnemySystem : MonoBehaviour
 
     public List<GameObject> enemyCells;
     public List<GameObject> SpawnPoints;
-   
-        
+    [SerializeField] private List<MaggotEnemy> currentEnemies;
+
+    
     public void findEnemyCells()
     {
-        EnemyCount = 0; 
+        EnemyCount = 0;
         EnemyCellCount = 0;
         SpawnPoints.Clear();
         enemyCells.Clear();
         GameObject[] enemyCellsArray = GameObject.FindGameObjectsWithTag("EnemyCell");
         foreach (GameObject cell in enemyCellsArray)
         {
-            if ( EnemyCellCount <= maxEnemyCellCount)
+            if (EnemyCellCount <= maxEnemyCellCount)
             {
                 enemyCells.Add(cell);
                 EnemyCellCount++;
@@ -70,7 +72,7 @@ public class EnemySystem : MonoBehaviour
         }
     }
 
-    void spawnEnemy()           
+    void spawnEnemy()
     {
         foreach (GameObject spawnPoint in SpawnPoints)
         {
@@ -80,8 +82,22 @@ public class EnemySystem : MonoBehaviour
                 GameObject lootPrefab = Enemy[randomIndex];
                 Instantiate(lootPrefab, spawnPoint.transform.position, Quaternion.identity);
                 EnemyCount++;
+
             }
         }
+
     }
 
+    public void removeEnemies()
+    {
+        GameObject[] spawnedEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+
+        foreach (GameObject enemy in spawnedEnemies)
+        {
+            Destroy(enemy);
+        }
+        currentEnemies.Clear();
+    }
 }
+   

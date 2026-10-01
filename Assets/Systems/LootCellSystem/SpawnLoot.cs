@@ -16,14 +16,9 @@ public class SpawnLoot : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-
-
-    public List<GameObject> Loot;
+    
     public int LootCount;
     public int MaxLootCount;
-    public List<GameObject> LootList;
-   
-
     public int maxLootCellCount = 10;
     public int lootCellCount = 0;
 
@@ -51,30 +46,6 @@ public class SpawnLoot : MonoBehaviour
         spawnRandomLoot();
     }
 
-    void findLootSpawn()
-    {
-        // use this if I want to make sure that loot spawns in each loot cell and not randomly everywhere
-        // downside is that if there are more loot cells than loot to spawn, some loot cells will be empty
-        foreach (GameObject cell in lootCells)
-        {
-            List<GameObject> potentialSpawns = new List<GameObject>();
-
-            foreach (Transform child in cell.transform)
-            {
-                if (child.CompareTag("SpawnPoint"))
-                    potentialSpawns.Add(child.gameObject);
-            }
-            if (potentialSpawns.Count > 0)
-            {
-                int randomIndex = Random.Range(0, potentialSpawns.Count);
-                GameObject spawnPosition = potentialSpawns[randomIndex];
-
-                potentialSpawns.RemoveAt(randomIndex);
-                SpawnPoints.Add(spawnPosition);
-            }
-        }
-    }
-   
     void spawnRandomLoot()
     {
         // use this if I want spawns to be randomly everywhere and if I want more loot to spawn than loot cells
@@ -93,26 +64,14 @@ public class SpawnLoot : MonoBehaviour
             GameObject spawnPosition = SpawnPoints[randomIndex];
             SpawnPoints.RemoveAt(randomIndex);
 
-            int randomLootIndex = Random.Range(0, Loot.Count);
+            int randomLootIndex = Random.Range(0, lootData.Count);
             GameObject lootPrefab = changeDatatoObject();
             Instantiate(lootPrefab, spawnPosition.transform.position, Quaternion.identity);
             LootCount++;
 
         }
     }
-    void spawnLoot()
-    {
-        foreach (GameObject spawnPoint in SpawnPoints)
-        {
-            if (LootCount < MaxLootCount)
-            {
-                int randomIndex = Random.Range(0, Loot.Count);
-                GameObject lootPrefab = changeDatatoObject();
-                Instantiate(lootPrefab, spawnPoint.transform.position, Quaternion.identity);
-                LootCount++;
-            }
-        }
-    }
+    
     GameObject changeDatatoObject()
     {
         OldItemData loot = GetItems();
