@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   mazeWidthandDepth: 10
   lootCellCount: 10
-  enemyCellCount: 10
+  enemyCellCount: 6
   trapCellCount: 10
-  lootSpawnCount: 10
-  enemySpawnCount: 8
+  parkourCellCount: 4
+  lootSpawnCount: 20
+  enemySpawnCount: 6
   levelPrice: 20

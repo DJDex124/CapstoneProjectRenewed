@@ -23,6 +23,7 @@ public class MazeGeneration : MonoBehaviour
     public MazeCell TrapCell;
     public MazeCell BasicCell;
     public MazeCell spawnCell;
+    public MazeCell ParkourCell;
     public List <MazeCell> cellsToSpawn;
 
     public Transform playerSpawn;
@@ -35,6 +36,9 @@ public class MazeGeneration : MonoBehaviour
 
     public int maxTrapCellAmount = 10;
     public int currentTrapCellAmount;
+    
+    public int maxParkourCellAmount = 10;
+    public int currentParkourCellAmount;
 
     public float _cellSize = 4f;
 
@@ -82,6 +86,11 @@ public class MazeGeneration : MonoBehaviour
                 cellsToSpawn.Add(TrapCell);
                 currentTrapCellAmount++;
                 
+            }
+            else if (currentParkourCellAmount < maxParkourCellAmount)
+            {
+                cellsToSpawn.Add(ParkourCell);
+                currentParkourCellAmount++;
             }
             else
             {

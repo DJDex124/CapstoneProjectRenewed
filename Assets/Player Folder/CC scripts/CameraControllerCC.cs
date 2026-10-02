@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class CameraControllerCC : MonoBehaviour
@@ -15,6 +16,8 @@ public class CameraControllerCC : MonoBehaviour
     private float shakeDuration = 0f;
     private float shakeMagnitude = 0.3f;
     private float dampingSpeed = 1.0f;
+
+    [SerializeField] private CinemachineImpulseSource impulseSource;
 
     void Awake()
     {
@@ -53,10 +56,16 @@ public class CameraControllerCC : MonoBehaviour
             shakeDuration = 0f;
             transform.localPosition = originalPos;
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            triggerShake(0.5f, 1f);
+            Debug.Log("Camera shake triggered!");
+        }
     }
     public void triggerShake(float duration, float magnitude)
     {
-        shakeDuration = duration;
-        shakeMagnitude = magnitude;
+        impulseSource.ImpulseDefinition.ImpulseDuration = duration;
+        impulseSource.GenerateImpulse(magnitude);
+
     }
 }

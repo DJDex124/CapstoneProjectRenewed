@@ -222,22 +222,29 @@ public class GameManager : MonoBehaviour
 
     public void setData()
     {
-        //Maze Data
-        MazeGeneration.current.maxlootCellAmount = currentLevel.lootCellCount;
-        MazeGeneration.current._mazeDepth = currentLevel.mazeWidthandDepth;
-        MazeGeneration.current._mazeWidth = currentLevel.mazeWidthandDepth;
+        MazeGeneration MG = MazeGeneration.current;
+        // Maze Data
+        MG.maxlootCellAmount = currentLevel.lootCellCount;
+        MG._mazeDepth = currentLevel.mazeWidthandDepth;
+        MG._mazeWidth = currentLevel.mazeWidthandDepth;
 
-        MazeGeneration.current.maxEnemyCellAmount = currentLevel.enemyCellCount;
-        MazeGeneration.current.maxTrapCellAmount = currentLevel.trapCellCount;
+        // Trap data
+        MG.maxEnemyCellAmount = currentLevel.enemyCellCount;
+        MG.maxTrapCellAmount = currentLevel.trapCellCount;
 
         // loot data
-        SpawnLoot.current.MaxLootCount = currentLevel.lootSpawnCount;
-        SpawnLoot.current.maxLootCellCount = currentLevel.lootCellCount;
+        SpawnLoot SL = SpawnLoot.current;
+        SL.MaxLootCount = currentLevel.lootSpawnCount;
+        SL.maxLootCellCount = currentLevel.lootCellCount;
 
         // enemy data
-        EnemySystem.current.MaxEnemyCount = currentLevel.enemySpawnCount;
-        EnemySystem.current.maxEnemyCellCount = currentLevel.enemyCellCount;
+        EnemySystem ES = EnemySystem.current;
+        ES.MaxEnemyCount = currentLevel.enemySpawnCount;
+        ES.maxEnemyCellCount = currentLevel.enemyCellCount;
 
+        // Parkour data
+        MG.maxParkourCellAmount = currentLevel.parkourCellCount;
+        
 
         // quota update
         maxQuota = currentLevel.lootSpawnCount;

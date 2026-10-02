@@ -16,6 +16,7 @@ MonoBehaviour:
   lootCellCount: 2
   enemyCellCount: 1
   trapCellCount: 2
+  parkourCellCount: 1
   lootSpawnCount: 4
   enemySpawnCount: 1
   levelPrice: 5

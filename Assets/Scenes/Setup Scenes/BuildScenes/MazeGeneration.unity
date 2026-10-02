@@ -152,10 +152,11 @@ MonoBehaviour:
   navMeshSurface: {fileID: 63317742}
   _mazeCellPrefab: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
   LootCell: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
-  EnemyCell: {fileID: 7022070345779681316, guid: f281c34c5f9285041b0dc601f728a70c, type: 3}
+  EnemyCell: {fileID: 7022070345779681316, guid: 542027bfb52aa624d8a699912cbfae2f, type: 3}
   TrapCell: {fileID: 7022070345779681316, guid: 428cc09155c930646929a1c725613b19, type: 3}
   BasicCell: {fileID: 7022070345779681316, guid: 4567b9016ed0c7b4f89afc030727ddd7, type: 3}
   spawnCell: {fileID: 1423296806981749143, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
+  ParkourCell: {fileID: 7022070345779681316, guid: 23992de2cf064594795284e37091aa31, type: 3}
   cellsToSpawn: []
   playerSpawn: {fileID: 3325062037787847128, guid: ba54b1b3568176e459b5563e233b742c, type: 3}
   maxlootCellAmount: 0
@@ -164,9 +165,12 @@ MonoBehaviour:
   currentEnemyCellAmount: 0
   maxTrapCellAmount: 0
   currentTrapCellAmount: 0
+  maxParkourCellAmount: 10
+  currentParkourCellAmount: 0
   _cellSize: 12
   _mazeWidth: 10
   _mazeDepth: 10
+  amountOfCellsToSpawn: 0
   _spawnPosition: {x: 0, y: 0}
   fixedCentrePosition: {x: 0, y: 0, z: 0}
   mazePos: {fileID: 1949526067}
