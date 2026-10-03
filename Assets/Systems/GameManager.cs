@@ -399,10 +399,11 @@ public class GameManager : MonoBehaviour
         setCountDown();
         yield return new WaitForSeconds(countDownDuration);
         //impliment indication maze is collapsing
-        cameraController.triggerShake(10f, 10f);
+        playerMovement.cameraShake();
         Debug.Log("Maze is collapsing in " + duration + " seconds!");
         yield return new WaitForSeconds(duration);
         // start the collapse of the maze 
+        playerMovement.caveCollapse();
 
     }
     void setCountDown()

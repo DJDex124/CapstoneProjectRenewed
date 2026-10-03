@@ -144,9 +144,18 @@ public class PlayerMovementCC : MonoBehaviour
         bool isRunning = Input.GetKey(KeyCode.LeftShift) && isMoving;
         animatorCam.SetBool("IsRunning", isRunning);
     }
-    
+    public void cameraShake()
+    {
+        // animation and sound
+        animatorCam.SetTrigger("cameraShake");
 
-    
+    }
+    public void caveCollapse()
+    {
+        animatorCam.SetTrigger("CaveCollapse");
+    }
+
+
     void SlowHeal()
     {
         if (healthStaminaSystem == null)
