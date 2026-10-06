@@ -116,7 +116,7 @@ public class SoundManager : MonoBehaviour
         target.outputAudioMixerGroup = sfxMixer;
         target.volume = S.maxVolume * sfxVolume;
         target.clip = S.clip;
-        target.loop = true;
+        
         target.Play();
     }
     public void playRandomMusic(AudioSource target)

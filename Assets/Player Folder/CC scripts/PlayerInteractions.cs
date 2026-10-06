@@ -35,7 +35,7 @@ public class PlayerInteractions : MonoBehaviour
     private bool inScreen;
     private ComputerPlayerInteraction activeComputer;
 
-    public GameManager gm;
+    [SerializeField]private GameManager gm;
     
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -68,7 +68,7 @@ public class PlayerInteractions : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            SoundManager.current.PlayMusic("Music", MusicSource);
+            SoundManager.current.playRandomMusic(MusicSource);
         }
         handleGlowstickDrop();
         if (inventory == null)
@@ -273,7 +273,7 @@ public class PlayerInteractions : MonoBehaviour
             {
                 flCheck = false;
                 Flashlight.SetActive(false);
-                SoundManager.current.PlayOneShotSFX("ButtonClick", playerMovement._audioSource);
+                SoundManager.current.PlayOneShotSFX("Click", audioSource);
             }
         }
         if (inventory.flashLightSelected == false)

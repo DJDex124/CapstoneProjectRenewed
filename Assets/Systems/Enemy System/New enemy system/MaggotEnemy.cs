@@ -223,6 +223,7 @@ public class MaggotEnemy : MonoBehaviour
     {
         isDead = true;
         navMesh.enabled = false;
+        currentState = enemyState.Dead;
         yield return new WaitForSeconds(2f);
         Destroy(gameObject);
     }
