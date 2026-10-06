@@ -23,8 +23,13 @@ public class PlayerMovementCC : MonoBehaviour
     public Animator animatorCam;
 
     public Transform handSpot;
+
+    [Header("Audio Settings")]
     public bool makingSound = false;
-    [SerializeField] private AudioSource _audioSource;
+    public AudioSource _audioSource;
+    private float stepInterval = 0.5f;
+    private float stepTimer= 0f;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -55,7 +60,11 @@ public class PlayerMovementCC : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
 
-        if (isMoving && !isCrouching)
+        if (stepTimer > 0f)
+        {
+            stepTimer -= Time.deltaTime;
+        }
+        if (isGrounded && isMoving && !isCrouching)
         {
             makingSound = true;
         }
@@ -63,15 +72,13 @@ public class PlayerMovementCC : MonoBehaviour
         {
             makingSound = false;
         }
-        if (makingSound)
+        if ( makingSound && stepTimer <= 0f)
         {
-            SoundManager.current.PlayLoop("FootSteps", _audioSource);
-            
+            SoundManager.current.PlayOneShotSFX("FootSteps", _audioSource);
+            stepTimer = stepInterval;
         }
-        else
-        {
-            SoundManager.current.StopLoop(_audioSource);
-        }
+        
+
     }
 
     void groundcheck()
@@ -113,7 +120,7 @@ public class PlayerMovementCC : MonoBehaviour
             {
                 healthStaminaSystem.currentStamina -= 20f * Time.deltaTime;
             }
-            
+            stepInterval = 0.3f;
         }
         else if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
@@ -129,6 +136,7 @@ public class PlayerMovementCC : MonoBehaviour
             healthStaminaSystem.canJump = true;
             speed = 5f;
             healthStaminaSystem.RegenerateStamina(10f * Time.deltaTime);
+            stepInterval = 0.5f;
         }
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {

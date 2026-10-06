@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -99,7 +100,70 @@ public class SoundManager : MonoBehaviour
         if (target != null && target.isPlaying)
             target.Stop();
     }
+    public void PlayMusic(string name, AudioSource target)
+    {
+        if (!musicDict.TryGetValue(name, out Sound S))
+        {
+            Debug.LogWarning($"Music '{name}' not found.");
+            return;
+        }
+        if (target == null) return;
 
+        // Already playing this exact clip? Do nothing.
+        if (target.isPlaying && target.clip == S.clip)
+            return;
+
+        target.outputAudioMixerGroup = sfxMixer;
+        target.volume = S.maxVolume * sfxVolume;
+        target.clip = S.clip;
+        target.loop = true;
+        target.Play();
+    }
+    public void playRandomMusic(AudioSource target)
+    {
+        if (musicLibrary.Length == 0)
+        {
+            Debug.LogWarning("Music library is empty.");
+            return;
+        }
+        int randomIndex = Random.Range(0, musicLibrary.Length);
+        Sound randomMusic = musicLibrary[randomIndex];
+        PlayMusic(randomMusic.name, target);
+    }
+    public IEnumerator fadeMusicOut(AudioSource target)
+    {
+        if (target == null) yield break;
+        float startVolume = target.volume;
+        while (target.volume > 0)
+        {
+            target.volume -= startVolume * Time.deltaTime / 2; // Fade out over 2 seconds
+            yield return null;
+        }
+        target.Stop();
+        
+    }
+    public IEnumerator fadeMusicIn(AudioSource target, float targetVolume)
+    {
+        if (target == null) yield break;
+        target.volume = 0;
+        target.Play();
+        while (target.volume < targetVolume)
+        {
+            target.volume += targetVolume * Time.deltaTime / 2; // Fade in over 2 seconds
+            yield return null;
+        }
+    }
+
+    public void pauseMusic(AudioSource target)
+    {
+        if (target != null && target.isPlaying)
+            target.Pause();
+    }
+    public void resumeMusic(AudioSource target)
+    {
+        if (target != null && !target.isPlaying)
+            target.UnPause();
+    }
 
     private void OnDestroy()
     {

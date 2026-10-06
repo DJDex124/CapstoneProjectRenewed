@@ -4,10 +4,11 @@ public class MazeCollapseTrigger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
+        GameManager gm = GameManager.current;
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player entered the maze collapse trigger.");
-            GameManager.current.StartCoroutine(GameManager.current.mazeCollapseCountdown(60f));
+            StartCoroutine(gm.mazeCollapseCountdown(60f));
         }
     }
 }

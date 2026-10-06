@@ -53,6 +53,7 @@ public class ScreenUISystem : MonoBehaviour
 
     public bool canPause = true;
 
+    [SerializeField] private AudioSource musicSource;
     //Hexadecimal colour code - 253020
 
     private void Awake()
@@ -162,6 +163,7 @@ public class ScreenUISystem : MonoBehaviour
             if (PauseMenuCanvas.enabled)
             {
                 ResumeGame();
+
             }
             else
             {
@@ -230,6 +232,7 @@ public class ScreenUISystem : MonoBehaviour
         Cursor.visible = true;
         CameraControllerCC.current.paused = true;
         playerMovement.enabled = false;
+        musicSource.Pause();
     }
     public void ResumeGame()
     {
@@ -239,6 +242,7 @@ public class ScreenUISystem : MonoBehaviour
         Cursor.visible = false;
         CameraControllerCC.current.paused = false;
         playerMovement.enabled = true;
+        musicSource.UnPause();
 
     }
     public void startButton()
@@ -287,7 +291,8 @@ public class ScreenUISystem : MonoBehaviour
     }
     public void clickSound()
     {
-        //AudioManager.current.playSound("ButtonClick");
+        SoundManager.current.PlayOneShotSFX("Click", playerMovement._audioSource);
+       
     }
     public void handleBuy(OldItemData item)
     {

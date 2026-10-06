@@ -22,7 +22,7 @@ public class PlayerInteractions : MonoBehaviour
     public GameObject Flashlight;
 
     [SerializeField] private PlayerMovementCC playerMovement;
-    public static PlayerInteractions current;
+    
 
     [Header("Glowsticks")]
     [SerializeField] private GameObject glowstickPrefab;
@@ -35,10 +35,17 @@ public class PlayerInteractions : MonoBehaviour
     private bool inScreen;
     private ComputerPlayerInteraction activeComputer;
 
+    public GameManager gm;
+    
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource MusicSource;
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        gm = GameManager.current;
         mainCam = Camera.main;
-        current = this;
+        
         flCheck = false;
 
         if (swingTrail != null)
@@ -47,19 +54,22 @@ public class PlayerInteractions : MonoBehaviour
         if (inventory == null) 
         inventory = GetComponent<Inventory>();
         StartCoroutine(WaitForEndOfFrameCoroutine());
-        GameManager.current.ResetGame();
+        gm.ResetGame();
     }
     IEnumerator WaitForEndOfFrameCoroutine()
     {
         yield return new WaitForEndOfFrame();
-        GameManager.current.resetReferences();
-        GameManager.current.playeriIsDead = false;
-        GameManager.current.mazeGenerated = false;
-        GameManager.current.spawnLevelBase();
+        gm.resetReferences();
+        gm.playeriIsDead = false;
+        gm.mazeGenerated = false;
+        gm.spawnLevelBase();
     }
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            SoundManager.current.PlayMusic("Music", MusicSource);
+        }
         handleGlowstickDrop();
         if (inventory == null)
         {
@@ -257,11 +267,13 @@ public class PlayerInteractions : MonoBehaviour
             {
                 flCheck = true;
                 Flashlight.SetActive(true);
+                SoundManager.current.PlayOneShotSFX("Click", audioSource);
             }
             else if (flCheck == true)
             {
                 flCheck = false;
                 Flashlight.SetActive(false);
+                SoundManager.current.PlayOneShotSFX("ButtonClick", playerMovement._audioSource);
             }
         }
         if (inventory.flashLightSelected == false)
