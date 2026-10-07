@@ -134,8 +134,6 @@ public class ScreenUISystem : MonoBehaviour
             Debug.LogWarning("Not enough money to select this level. Please select a different level.");
             return;
         }
-
-        // All checks passed, now commit the change
         gm.currentLevel = selectedLevel;
         currentLevel.text = $"Current Level: {selectedLevel.name}";
         gm.addMoney(-selectedLevel.levelPrice);

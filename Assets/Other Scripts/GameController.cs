@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.ProBuilder.MeshOperations;
+using Unity.VisualScripting;
 
 public class GameController : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private Animator elevatorAnimator;
 
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] private PlaySound musicSource;
     private void Awake()
     {
         current = this;
@@ -34,8 +37,10 @@ public class GameController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
         startText.enabled = false;
         elevatorCollider.SetActive(false);
+        audioSource = GetComponentInParent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -55,7 +60,14 @@ public class GameController : MonoBehaviour
 
 
         }
-        
+        if (isMoving)
+        {
+            SoundManager.current.PlayLoop("Chain", audioSource);
+        }
+        else if (!isMoving && audioSource.isPlaying)
+        {
+            SoundManager.current.StopLoop(audioSource);
+        }
     }
     
     public void handleElevator()
@@ -63,10 +75,18 @@ public class GameController : MonoBehaviour
         if (!isMoving && isUp)
         {
             StartCoroutine(LowerEleWithDelay());
+            if (musicSource != null)
+            {
+                StartCoroutine(SoundManager.current.fadeMusicOut(musicSource.audioSource));
+            }
         }
         else if (!isMoving && !isUp)
         {
             StartCoroutine(LiftEleWithDelay());
+            if (musicSource != null)
+            {
+                StartCoroutine(musicSource.musicPattern());
+            }
         }
     }
 

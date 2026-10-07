@@ -39,7 +39,7 @@ public class PlayerInteractions : MonoBehaviour
     
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioSource MusicSource;
+    
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -66,10 +66,6 @@ public class PlayerInteractions : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            SoundManager.current.playRandomMusic(MusicSource);
-        }
         handleGlowstickDrop();
         if (inventory == null)
         {

@@ -22,14 +22,14 @@ public class ItemPrefab : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            outline.enabled = true;
+            //outline.enabled = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            outline.enabled = false;
+            //outline.enabled = false;
         }
     }
 }

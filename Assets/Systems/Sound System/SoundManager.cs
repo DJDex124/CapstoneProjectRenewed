@@ -100,7 +100,7 @@ public class SoundManager : MonoBehaviour
         if (target != null && target.isPlaying)
             target.Stop();
     }
-    public void PlayMusic(string name, AudioSource target)
+    public void selectMusic(string name, AudioSource target)
     {
         if (!musicDict.TryGetValue(name, out Sound S))
         {
@@ -115,21 +115,10 @@ public class SoundManager : MonoBehaviour
 
         target.outputAudioMixerGroup = sfxMixer;
         target.volume = S.maxVolume * sfxVolume;
-        target.clip = S.clip;
+        target.clip = S.clip; 
         
-        target.Play();
     }
-    public void playRandomMusic(AudioSource target)
-    {
-        if (musicLibrary.Length == 0)
-        {
-            Debug.LogWarning("Music library is empty.");
-            return;
-        }
-        int randomIndex = Random.Range(0, musicLibrary.Length);
-        Sound randomMusic = musicLibrary[randomIndex];
-        PlayMusic(randomMusic.name, target);
-    }
+    
     public IEnumerator fadeMusicOut(AudioSource target)
     {
         if (target == null) yield break;
