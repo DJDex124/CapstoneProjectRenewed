@@ -36,11 +36,11 @@ public class SpikeTrap : MonoBehaviour
         {
             player = other.gameObject;
             Debug.Log("Player has entered the spike trap.");
-            GameManager.current.Die();
+            
             HealthStaminaSystem healthSystem = player.GetComponent<HealthStaminaSystem>();
             if (healthSystem != null)
             {
-                healthSystem.TakeDamage(100); // Assuming 100 is the damage value
+                healthSystem.TakeDamage(100); 
             }
         }
     }

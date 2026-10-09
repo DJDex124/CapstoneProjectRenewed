@@ -1,4 +1,5 @@
 using TMPro;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,6 +24,15 @@ public class ScreenUISystem : MonoBehaviour
     private LevelData[] levels;
     [SerializeField]
     private TextMeshProUGUI currentLevel;
+    [SerializeField]
+    private bool[] levelGenerated;
+    [SerializeField]
+    private GameObject Panel1;
+    [SerializeField]
+    private GameObject Panel2;
+    [SerializeField]
+    private GameObject Panel3;
+
 
     [Header("Screen System")]
     [SerializeField]
@@ -48,8 +58,7 @@ public class ScreenUISystem : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI EnemiesDefeated;
 
-    [SerializeField]
-    private bool[] levelGenerated;
+    
 
     public bool canPause = true;
 
@@ -203,7 +212,24 @@ public class ScreenUISystem : MonoBehaviour
         canPause = true;
     }
 
-    #region button functions
+    void canSelectLevel()
+    {
+        for (int i = 0; i < levelGenerated.Length; i++)
+        {
+            if (GameManager.current.totalMoney >= levels[i].levelPrice)
+            {
+                // Enable the level selection button for this level
+                // Assuming you have a method to enable the button, e.g., EnableLevelButton(i);
+            }
+            else
+            {
+                // Disable the level selection button for this level
+                // Assuming you have a method to disable the button, e.g., DisableLevelButton(i);
+            }
+        }
+    }
+
+                #region button functions
     public void back()
     {
         screenCanvas.enabled = true;

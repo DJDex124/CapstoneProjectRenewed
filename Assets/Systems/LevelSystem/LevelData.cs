@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "LevelData", menuName = "Scriptable Objects/LevelData")]
 public class LevelData : ScriptableObject
 {
+    public string levelName;
     public int mazeWidthandDepth;
     public int lootCellCount;
     public int enemyCellCount;

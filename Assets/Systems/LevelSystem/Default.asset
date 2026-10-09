@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef80df0f74113246a92bcb3d0cfccff, type: 3}
   m_Name: Default
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  levelName: Base
   mazeWidthandDepth: 4
   lootCellCount: 2
   enemyCellCount: 0
   trapCellCount: 1
+  parkourCellCount: 0
   lootSpawnCount: 2
   enemySpawnCount: 0
   levelPrice: 0
