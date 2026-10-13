@@ -2,230 +2,270 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class MaggotEnemy : MonoBehaviour
 {
+    private enum State { Idle, Patrol, Chase, Attack, Dead }
+
     #region References
     [Header("References")]
-    [SerializeField] private Transform player;
-    private Transform lastPlayerLocation;
-    [SerializeField] private GameObject targetPlayer;
     [SerializeField] private NavMeshAgent navMesh;
-    public bool isDead;
-    [SerializeField] private float health = 100f;
-    private Vector3 directionToPlayer;
-    private float distanceToPlayer;
+    [SerializeField] private Animator animator;
+    private Transform player;
 
     [Header("Layers")]
-    [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask playerMask;
-    [SerializeField] private LayerMask ObjectMask;
 
-    [Header("patrol Settings")]
-    [SerializeField] private float targetRadius;
-    private Vector3 targetPoint;
-    private bool targetPointSet;
-    [SerializeField] bool canPatrol;
-    private bool patrolDelayRunning;
-    private bool stuckCheckRunning;
-    private bool StuckCheck = false;
-    [SerializeField] bool isPatrolling = false;
+    [Header("Patrol Settings")]
+    [SerializeField] private float patrolRadius = 10f;
+    [SerializeField] private float patrolWaitTime = 2f;
+    [SerializeField] private float arriveDistance = 1f;
+    [SerializeField] private float patrolSpeed = 2f;
+
+    [Header("Chase Settings")]
+    [SerializeField] private float chaseSpeed = 4f;
 
     [Header("Attack Settings")]
-    [SerializeField] private float attackRange;
-    [SerializeField] private float damage;
-    [SerializeField] private float attackCooldown;
-    private bool canAttack = true;
+    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float damage = 20f;
+    [SerializeField] private float attackCooldown = 1.5f;
 
-    [Header("Health settings")]
+    [Header("Health Settings")]
+    [SerializeField] private float maxHealth = 100f;
     private float currentHealth;
-    private float maxHealth = 100f;
+    public bool isDead;
 
     [Header("Detection Settings")]
-    [SerializeField] private float hearingRange;
+    [SerializeField] private float hearingRange = 15f;
 
-    private bool isPlayerInRange;
-    private bool canHearPlayer;
-    [SerializeField] enemyState currentState;
-    [SerializeField] Animator animator;
-    
+    [Header("Debug")]
+    [SerializeField] private State currentState = State.Idle;
     #endregion
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    
+    private Vector3 patrolTarget;
+    private bool hasPatrolTarget;
+    private float patrolWaitUntil;
+
+    private Vector3 lastKnownPosition;
+    private bool hasLastKnown;
+
+    private float nextAttackTime;
+
+    private bool canHearPlayer;
+    private bool isPlayerInRange;
+
+    private State animState = (State)(-1);
+
+    private void Awake()
     {
+        if (navMesh == null) navMesh = GetComponent<NavMeshAgent>();
+        if (animator == null) animator = GetComponentInChildren<Animator>();
         currentHealth = maxHealth;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
-        detectPlayer();
-        updateBehaviorState();
-    }
-    private void updateBehaviorState()
-    {
-        if (isDead)
-        {
-            currentState = enemyState.Dead;
-            return;
-        }
+        if (isDead) return;
 
-        if (!canHearPlayer && !isPlayerInRange && lastPlayerLocation == null)
-        {
-            animator.SetTrigger("Idle");
-            performPatrol();
-            currentState = enemyState.Patrol;
-        }
-        else if (lastPlayerLocation != null && !isPlayerInRange)
-        {
-            animator.SetTrigger("Running");
-            performChase();
-        }
-        else if (lastPlayerLocation  == null  || !isPlayerInRange)
-        {
-            findAttackPoint();
-        }
-        else if (canHearPlayer && isPlayerInRange && canAttack)
-        {
-            animator.SetTrigger("Attacking");
-            Debug.Log("attacking");
-            dealDamage();
-        }
+        DetectPlayer();
+        UpdateBehaviour();
     }
-    private void detectPlayer()
+
+    #region Detection
+    private void DetectPlayer()
     {
         canHearPlayer = Physics.CheckSphere(transform.position, hearingRange, playerMask);
         isPlayerInRange = Physics.CheckSphere(transform.position, attackRange, playerMask);
 
-        if (canHearPlayer)
+        
+        if (canHearPlayer && player == null)
         {
-            targetPlayer = GameObject.FindGameObjectWithTag("Player");
-            player = targetPlayer.transform;
+            GameObject found = GameObject.FindGameObjectWithTag("Player");
+            if (found != null) player = found.transform;
         }
-    }
-    private void findPatrolPoint()
-    {
-        float randomX = Random.Range(-targetRadius, targetRadius);
-        float randomZ = Random.Range(-targetRadius, targetRadius);
 
-        Vector3 potentialpoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
-        if (Physics.Raycast(potentialpoint, -transform.up, 2f, groundMask))
+        if (canHearPlayer && player != null)
         {
-            targetPoint = potentialpoint;
-            targetPointSet = true;
+            lastKnownPosition = player.position;
+            hasLastKnown = true;
         }
-        Debug.Log("Patrol point set to: " + targetPoint);
     }
-    private void performPatrol()
+    #endregion
+
+    #region State logic
+    private void UpdateBehaviour()
     {
         if (!navMesh.isOnNavMesh) return;
 
-        if (!targetPointSet && canPatrol)
+        if (isPlayerInRange && player != null)
         {
-            findPatrolPoint();
-
+            SetState(State.Attack);
+            PerformAttack();
         }
-        if (targetPointSet)
+        else if (canHearPlayer && player != null)
         {
-            navMesh.SetDestination(targetPoint);
-            isPatrolling = true;
+            SetState(State.Chase);
+            navMesh.isStopped = false;
+            navMesh.speed = chaseSpeed;
+            navMesh.SetDestination(player.position);
+        }
+        else if (hasLastKnown)
+        {
+           
+            SetState(State.Chase);
+            navMesh.isStopped = false;
+            navMesh.speed = chaseSpeed;
+            navMesh.SetDestination(lastKnownPosition);
 
-            if (!stuckCheckRunning)
-            { 
-                StartCoroutine(stuckCheck()); 
+            if (HasArrived())
+            {
+                hasLastKnown = false;
+                patrolWaitUntil = Time.time + patrolWaitTime;
             }
+        }
+        else
+        {
+            PerformPatrol();
+        }
+    }
 
-        }
-        if (Vector3.Distance(transform.position, targetPoint) < 1f)
-        {
-            targetPointSet = false;
-            isPatrolling = false;
-        }
-        if (StuckCheck)
-        {
-            targetPointSet = false;
-        }
+    private void PerformAttack()
+    {
+        navMesh.isStopped = true;
+
         
-        Debug.Log("Patrolling");
-
-        if (!patrolDelayRunning && !targetPointSet)
+        Vector3 dir = player.position - transform.position;
+        dir.y = 0f;
+        if (dir.sqrMagnitude > 0.001f)
         {
-            StartCoroutine(patrolDelay());
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation, Quaternion.LookRotation(dir), 10f * Time.deltaTime);
+        }
+
+        if (Time.time >= nextAttackTime)
+        {
+            nextAttackTime = Time.time + attackCooldown;
+            animator.SetTrigger("Attacking");
+            DealDamage();
         }
     }
-    private void performChase()
+
+    private void PerformPatrol()
     {
-        if (!navMesh.isOnNavMesh || player == null) return;
+        navMesh.speed = patrolSpeed;
 
-        navMesh.SetDestination(lastPlayerLocation.transform.position);
-        Debug.Log("Chasing");
-        if (Vector3.Distance(transform.position, targetPoint) < 1f)
+       
+        if (Time.time < patrolWaitUntil)
         {
-            lastPlayerLocation = null;
+            navMesh.isStopped = true;
+            SetState(State.Idle);
+            return;
         }
 
+        navMesh.isStopped = false;
 
+        if (!hasPatrolTarget)
+        {
+            hasPatrolTarget = FindPatrolPoint(out patrolTarget);
+            if (hasPatrolTarget) navMesh.SetDestination(patrolTarget);
+            return; 
+        }
+
+        SetState(State.Patrol);
+
+        
+        if (HasArrived() || navMesh.pathStatus == NavMeshPathStatus.PathInvalid)
+        {
+            hasPatrolTarget = false;
+            patrolWaitUntil = Time.time + patrolWaitTime;
+        }
     }
-    private void findAttackPoint()
+
+    private bool HasArrived()
     {
-        if (canHearPlayer)
+        return !navMesh.pathPending && navMesh.remainingDistance <= arriveDistance;
+    }
+
+    private bool FindPatrolPoint(out Vector3 point)
+    {
+        Vector3 random = transform.position + new Vector3(
+            Random.Range(-patrolRadius, patrolRadius),
+            0f,
+            Random.Range(-patrolRadius, patrolRadius));
+
+        if (NavMesh.SamplePosition(random, out NavMeshHit hit, 2f, NavMesh.AllAreas))
         {
-            lastPlayerLocation = player.transform;
+            point = hit.position;
+            return true;
         }
 
+        point = transform.position;
+        return false;
     }
+    #endregion
+
+    #region Animation
     
-    private void dealDamage()
+    private void SetState(State newState)
     {
-        
+        currentState = newState;
+        if (animState == newState) return;
+        animState = newState;
+
+        switch (newState)
+        {
+            case State.Idle:
+                animator.SetTrigger("Idle");
+                break;
+            case State.Patrol:
+            case State.Chase:
+                animator.SetTrigger("Running");
+                break;
+                
+        }
+    }
+    #endregion
+
+    #region Combat
+    private void DealDamage()
+    {
         HealthStaminaSystem playerHealth = player.GetComponentInChildren<HealthStaminaSystem>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(20f);
+            playerHealth.TakeDamage(damage);
         }
-        Debug.Log("dealing damage");
-        StartCoroutine(attackCoolDown());
     }
-    private IEnumerator patrolDelay()
+
+    public void takeDamage(float amount)
     {
-        patrolDelayRunning = true;
-        canPatrol = false;
-        yield return new WaitForSeconds(2f); // Wait for 2 seconds before patrolling again
-        canPatrol = true;
-        patrolDelayRunning = false;
-    }
-    private IEnumerator stuckCheck()
-    {
-        stuckCheckRunning = true;
-        StuckCheck = false;
-        yield return new WaitForSeconds(2f);
-        StuckCheck = true;
-        stuckCheckRunning = false;
-    }
-    public void takeDamage(float damage)
-    {
-        currentHealth -= damage;
-        if (isDead)
-            return;
-        if (currentHealth <= 0)
+        if (isDead) return;
+
+        currentHealth -= amount;
+        if (currentHealth <= 0f)
         {
             StartCoroutine(Die());
         }
     }
-    IEnumerator attackCoolDown()
-    {
-        canAttack = false;
-        yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
-    }
-    
 
-    IEnumerator Die()
+    private IEnumerator Die()
     {
         isDead = true;
+        currentState = State.Dead;
+        navMesh.isStopped = true;
         navMesh.enabled = false;
-        currentState = enemyState.Dead;
         yield return new WaitForSeconds(2f);
         Destroy(gameObject);
     }
-    
+    #endregion
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, hearingRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, patrolRadius);
+    }
 }

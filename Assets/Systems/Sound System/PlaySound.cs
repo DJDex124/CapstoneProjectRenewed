@@ -77,7 +77,7 @@ public class PlaySound : MonoBehaviour
         randomSound = null;
         randomSound = getRandomSound();
         SM.selectMusic(randomSound, audioSource);
-        StartCoroutine(SM.fadeMusicIn(audioSource, 1f));
+        StartCoroutine(SM.fadeMusicIn(audioSource, SM.musicLibrary[0].maxVolume));
         yield return new WaitForSeconds(audioSource.clip.length - 1f);
         StartCoroutine(SM.fadeMusicOut(audioSource));
     }

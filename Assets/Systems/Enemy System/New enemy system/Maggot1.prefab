@@ -190,29 +190,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12e6a7cfcc1aee40b4df88ec5c72698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MaggotEnemy
-  player: {fileID: 0}
-  targetPlayer: {fileID: 0}
   navMesh: {fileID: 2719095218559170962}
-  isDead: 0
-  health: 100
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 128
+  animator: {fileID: 997341435788641488}
   playerMask:
     serializedVersion: 2
     m_Bits: 64
-  ObjectMask:
-    serializedVersion: 2
-    m_Bits: 2432
-  targetRadius: 10
-  canPatrol: 0
-  isPatrolling: 0
+  patrolRadius: 10
+  patrolWaitTime: 2
+  arriveDistance: 1
+  patrolSpeed: 1.5
+  chaseSpeed: 2
   attackRange: 4
   damage: 10
   attackCooldown: 2
+  maxHealth: 100
+  isDead: 0
   hearingRange: 8
   currentState: 0
-  animator: {fileID: 997341435788641488}
 --- !u!195 &2719095218559170962
 NavMeshAgent:
   m_ObjectHideFlags: 0

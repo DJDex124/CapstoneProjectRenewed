@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine.AI;
 using UnityEngine;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 
 public class MazeGeneration : MonoBehaviour
 {
@@ -62,8 +63,19 @@ public class MazeGeneration : MonoBehaviour
 
     public bool createExit = false;
 
+    public void triggerRockFall(int chance, int stage)
+    {
+        foreach (MazeCell cell in _mazeCells)
+        {
+            int dropChance = Random.Range(1, 100);
+            if (dropChance <= chance)
+            {
+                cell.dropRocks(stage);
+            }
+        }
+    }
 
-    
+
     public void addCells()
     {
         amountOfCellsToSpawn = _mazeDepth * _mazeWidth -1 ;

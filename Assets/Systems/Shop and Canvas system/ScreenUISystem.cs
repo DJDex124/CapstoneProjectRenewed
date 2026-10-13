@@ -27,11 +27,11 @@ public class ScreenUISystem : MonoBehaviour
     [SerializeField]
     private bool[] levelGenerated;
     [SerializeField]
-    private GameObject Panel1;
+    private GameObject Lock1;
     [SerializeField]
-    private GameObject Panel2;
+    private GameObject Lock2;
     [SerializeField]
-    private GameObject Panel3;
+    private GameObject Lock3;
 
 
     [Header("Screen System")]

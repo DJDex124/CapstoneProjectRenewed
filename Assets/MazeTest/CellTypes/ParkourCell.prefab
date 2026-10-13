@@ -1462,6 +1462,7 @@ MonoBehaviour:
   _frontWall: {fileID: 722517297453167335}
   _backWall: {fileID: 515197049358329010}
   _unvisitedBlock: {fileID: 7570941401861642253}
+  _rockPrefab: {fileID: 6595851478803422626, guid: eaf6cda84f8230344a722ee207efaf2b, type: 3}
   spawnPoints: []
   cellType: 0
   spawned: 0

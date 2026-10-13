@@ -785,6 +785,7 @@ MonoBehaviour:
   _frontWall: {fileID: 722517297453167335}
   _backWall: {fileID: 515197049358329010}
   _unvisitedBlock: {fileID: 7570941401861642253}
+  _rockPrefab: {fileID: 6595851478803422626, guid: eaf6cda84f8230344a722ee207efaf2b, type: 3}
   spawnPoints: []
   cellType: 3
   spawned: 0
@@ -1278,6 +1279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0dc9cc919ee1c43a7273da9c881494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikeTrap
+  player: {fileID: 0}
 --- !u!4 &1080403201906737419 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 59d878f3159bf884aae233b3db5fa6d0, type: 3}

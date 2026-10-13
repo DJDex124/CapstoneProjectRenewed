@@ -21,3 +21,4 @@ MonoBehaviour:
   lootSpawnCount: 4
   enemySpawnCount: 1
   levelPrice: 5
+  collapseTime: 60

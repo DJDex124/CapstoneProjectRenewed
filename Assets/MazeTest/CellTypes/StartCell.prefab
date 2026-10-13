@@ -1108,6 +1108,7 @@ MonoBehaviour:
   _frontWall: {fileID: 4700938044971273861}
   _backWall: {fileID: 1332644703565926085}
   _unvisitedBlock: {fileID: 7829754579067421871}
+  _rockPrefab: {fileID: 6595851478803422626, guid: eaf6cda84f8230344a722ee207efaf2b, type: 3}
   spawnPoints: []
   cellType: 0
   spawned: 0
@@ -1130,7 +1131,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.15148012, z: 1.1625757}
+  m_Size: {x: 50, y: 0.15148012, z: 50}
   m_Center: {x: 0, y: 0.074665345, z: -0.009872278}
 --- !u!114 &9073413874273616215
 MonoBehaviour:

@@ -18,7 +18,9 @@ public class GameManager : MonoBehaviour
     public bool noLevelsLeft = false;
     bool baseLevelGenerated = false;
 
+    bool mazeCollapsed = false;
     public bool playeriIsDead = false;
+    public bool playerInMaze = false;
 
     [Header("Quota System")]
     public int maxQuota = 200;
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
     public List<LevelData> levels;
     public LevelData currentLevel;
     public float countDownDuration = 0f; // Duration for the countdown before maze collapse
+    public List<LevelUIDisplay> levelUIDisplays;
 
     [Header("Stats")]
     public int totalScore = 0;
@@ -81,6 +84,7 @@ public class GameManager : MonoBehaviour
         noLevelsLeft = false;
         playeriIsDead = false;
         baseLevelGenerated = false;
+        mazeCollapsed = false;
         if (currentLevel != null)
         {
             setData();
@@ -161,6 +165,7 @@ public class GameManager : MonoBehaviour
     }
     public void StartGame()
     {
+        StopAllCoroutines();
         StartCoroutine(levelChange());
     }
     public IEnumerator levelChange()
@@ -195,6 +200,7 @@ public class GameManager : MonoBehaviour
     {
         yield return StartCoroutine(MazeGeneration.current.StartMazeGeneration());
         mazeGenerated = true;
+        mazeCollapsed = false;
     }
     void changeLevelData()
     {
@@ -394,17 +400,53 @@ public class GameManager : MonoBehaviour
         setData();
         StartCoroutine(manualLevelChange());
     }
-    public IEnumerator mazeCollapseCountdown(float duration)
+    public IEnumerator mazeCollapseStage1(float duration)
     {
         setCountDown();
-        yield return new WaitForSeconds(countDownDuration);
-        //impliment indication maze is collapsing
-        playerMovement.cameraShake();
-        Debug.Log("Maze is collapsing in " + duration + " seconds!");
         yield return new WaitForSeconds(duration);
-        // start the collapse of the maze 
+        playerMovement.cameraShake();
+        if (playerMovement._audioSource != null)
+            SoundManager.current.PlayOneShotSFX("Rumble", playerMovement._audioSource);
+        MazeGeneration.current.triggerRockFall(20, 1);
+        Debug.Log("Maze is collapsing in " + duration + " seconds!");
+        StartCoroutine(mazeCollapseStage2(60f));
+    }
+    private IEnumerator mazeCollapseStage2(float duration)
+    {
         playerMovement.caveCollapse();
-
+        if (playerMovement._audioSource != null)
+            SoundManager.current.PlayOneShotSFX("Rumble", playerMovement._audioSource);
+        yield return new WaitForSeconds(1f);
+        MazeGeneration.current.triggerRockFall(50, 3);
+        yield return new WaitForSeconds(duration);
+        Debug.Log("Maze has collapsed!");
+        StartCoroutine(mazeCollapseStage3());
+    }
+    private IEnumerator mazeCollapseStage3()
+    {
+        
+        int randomRange = Random.Range(3, 6);
+        for (int i = 0; i < randomRange; i++)
+        {
+            playerMovement.caveCollapse();
+            if (playerMovement._audioSource != null)
+                SoundManager.current.PlayOneShotSFX("Rumble", playerMovement._audioSource);
+            yield return new WaitForSeconds(0.5f);
+            MazeGeneration.current.triggerRockFall(100, 5);
+            yield return new WaitForSeconds(1f);
+        }
+        yield return new WaitForSeconds(10);
+        playerMovement.caveCollapse();
+        if (playerMovement._audioSource != null)
+            SoundManager.current.PlayOneShotSFX("Rumble", playerMovement._audioSource);
+        yield return new WaitForSeconds(0.5f);
+        MazeGeneration.current.triggerRockFall(100, 5);
+        // final collapse logic here
+        mazeCollapsed = true;
+        if (playerInMaze)
+        {
+            Die();
+        }
     }
     void setCountDown()
     {

@@ -18,6 +18,8 @@ public class MazeCell : MonoBehaviour
     [SerializeField]
     private GameObject _unvisitedBlock;
 
+    [SerializeField]
+    private GameObject _rockPrefab;
 
     [Header("Cell Settings")]
     public List<GameObject> spawnPoints;
@@ -72,7 +74,21 @@ public class MazeCell : MonoBehaviour
         _backWall.SetActive(false);
     }
 
-
+    public void dropRocks(int amount)
+    {
+        int rockCount = Random.Range(1, amount); 
+        for (int i = 0; i < rockCount; i++)
+        {
+            int randomSizeIndex = Random.Range(1, 80); 
+            Vector3 randomPosition = new Vector3(
+                Random.Range(-0.5f, 0.5f), 
+                16f, // Y position (height)
+                Random.Range(-0.5f, 0.5f) 
+            );
+            GameObject rock = Instantiate(_rockPrefab, transform.position + randomPosition, Quaternion.identity);
+            rock.transform.localScale = new Vector3(randomSizeIndex + 50, randomSizeIndex + 50, randomSizeIndex + 50);
+        }
+    }
 }
 
 public enum CellType

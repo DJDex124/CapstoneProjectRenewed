@@ -78,6 +78,10 @@ public class PlayerInteractions : MonoBehaviour
         handleEndDevice();
         attack();
         FlashLightToggle();
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            //MazeGeneration.current.triggerRockFall(50, 2);
+        }
     }
     void handlePickup()
     {

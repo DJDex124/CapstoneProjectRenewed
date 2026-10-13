@@ -14,4 +14,5 @@ public class LevelData : ScriptableObject
     public int enemySpawnCount;
 
     public int levelPrice;
+    public int collapseTime;
 }

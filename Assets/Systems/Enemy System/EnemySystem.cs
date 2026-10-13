@@ -47,46 +47,18 @@ public class EnemySystem : MonoBehaviour
             }
         }
         findEnemySpawn();
-        spawnEnemy();
+        
     }
 
     void findEnemySpawn()
     {
         foreach (GameObject cell in enemyCells)
         {
-            List<GameObject> potentialSpawns = new List<GameObject>();
-
-            foreach (Transform child in cell.transform)
-            {
-                if (child.CompareTag("SpawnPoint"))
-                    potentialSpawns.Add(child.gameObject);
-            }
-            if (potentialSpawns.Count > 0)
-            {
-                int randomIndex = Random.Range(0, potentialSpawns.Count);
-                GameObject spawnPosition = potentialSpawns[randomIndex];
-
-                potentialSpawns.RemoveAt(randomIndex);
-                SpawnPoints.Add(spawnPosition);
-            }
+            Instantiate(Enemy[Random.Range(0, Enemy.Count)], cell.transform.position, Quaternion.identity);
         }
     }
 
-    void spawnEnemy()
-    {
-        foreach (GameObject spawnPoint in SpawnPoints)
-        {
-            if (EnemyCount < MaxEnemyCount)
-            {
-                int randomIndex = Random.Range(0, Enemy.Count);
-                GameObject lootPrefab = Enemy[randomIndex];
-                Instantiate(lootPrefab, spawnPoint.transform.position, Quaternion.identity);
-                EnemyCount++;
-
-            }
-        }
-
-    }
+    
 
     public void removeEnemies()
     {
