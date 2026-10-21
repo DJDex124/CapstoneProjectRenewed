@@ -148,13 +148,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cc6d610e486f9341becc71742e4d168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  navMeshSurface: {fileID: 0}
   _mazeCellPrefab: {fileID: 7022070345779681316, guid: 4a26359a5b159fb4986294960ce0c5f4, type: 3}
+  LootCell: {fileID: 0}
+  EnemyCell: {fileID: 0}
+  TrapCell: {fileID: 0}
+  BasicCell: {fileID: 0}
+  spawnCell: {fileID: 0}
+  ParkourCell: {fileID: 0}
+  cellsToSpawn: []
+  playerSpawn: {fileID: 0}
+  maxlootCellAmount: 10
+  currentlootCellAmount: 0
+  maxEnemyCellAmount: 15
+  currentEnemyCellAmount: 0
+  maxTrapCellAmount: 10
+  currentTrapCellAmount: 0
+  maxParkourCellAmount: 10
+  currentParkourCellAmount: 0
   _cellSize: 14
   _mazeWidth: 15
   _mazeDepth: 15
+  amountOfCellsToSpawn: 0
   _spawnPosition: {x: 0, y: 0}
+  fixedCentrePosition: {x: 0, y: 0, z: 0}
   mazePos: {fileID: 1094415446}
   _mazeCells: []
+  safeZone: 1
+  createExit: 0
 --- !u!4 &312443503
 Transform:
   m_ObjectHideFlags: 0
@@ -753,10 +774,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1fab77ef92976e4791687b9dcaed18e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootManager
-  LootSpawner: {fileID: 0}
-  _lootPrefab:
-  - {fileID: 5048619002020271559, guid: 318901d7a37aad444add7e2efbc90f3a, type: 3}
-  _mazeGeneration: {fileID: 312443502}
 --- !u!4 &1127406708
 Transform:
   m_ObjectHideFlags: 0
@@ -1090,6 +1107,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2291179796958553104
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6046.784
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6404.248
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1808380584176089880, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068256107929579695, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
+      propertyPath: m_Name
+      value: Cavern Prefab
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cacec2407e0ab6141aa6a73c89da2469, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1103,3 +1177,4 @@ SceneRoots:
   - {fileID: 1094415446}
   - {fileID: 1127406708}
   - {fileID: 2089201115}
+  - {fileID: 2291179796958553104}

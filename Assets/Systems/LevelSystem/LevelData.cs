@@ -15,4 +15,5 @@ public class LevelData : ScriptableObject
 
     public int levelPrice;
     public int collapseTime;
+    public int mazeCount;
 }

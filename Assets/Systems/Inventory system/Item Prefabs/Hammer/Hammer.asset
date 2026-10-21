@@ -15,4 +15,12 @@ MonoBehaviour:
   itemName: Hammer
   itemSprite: {fileID: 0}
   pickupPrefab: {fileID: 919132149155446097, guid: adf99d9b0c1fe8141af8cc3bf3cf19a5, type: 3}
+  heldItem: {fileID: 0}
   itemType: 2
+  consumableType: 0
+  toolType: 0
+  clubHolder: {fileID: 0}
+  dropChance: 0
+  price: 20
+  maxStackSize: 1
+  value: 0

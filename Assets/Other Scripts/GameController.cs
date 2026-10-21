@@ -72,8 +72,13 @@ public class GameController : MonoBehaviour
     
     public void handleElevator()
     {
+        
         if (!isMoving && isUp)
         {
+            if (GameManager.current.mazeCollapsed)
+            {
+                return;
+            }
             StartCoroutine(LowerEleWithDelay());
             if (musicSource != null)
             {
@@ -110,6 +115,7 @@ public class GameController : MonoBehaviour
 
     private IEnumerator LowerEleWithDelay()
     {
+        
         isMoving = true;
         if (elevatorAnimator != null)
         {

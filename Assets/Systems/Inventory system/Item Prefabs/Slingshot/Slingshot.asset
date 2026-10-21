@@ -15,4 +15,12 @@ MonoBehaviour:
   itemName: 
   itemSprite: {fileID: 0}
   pickupPrefab: {fileID: 919132149155446097, guid: 44a700d6a1957d044a420f38c93a85db, type: 3}
+  heldItem: {fileID: 0}
   itemType: 2
+  consumableType: 0
+  toolType: 0
+  clubHolder: {fileID: 0}
+  dropChance: 0
+  price: 10
+  maxStackSize: 0
+  value: 0
