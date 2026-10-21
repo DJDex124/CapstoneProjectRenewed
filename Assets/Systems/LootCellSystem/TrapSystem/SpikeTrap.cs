@@ -37,7 +37,7 @@ public class SpikeTrap : MonoBehaviour
             player = other.gameObject;
             Debug.Log("Player has entered the spike trap.");
             
-            HealthStaminaSystem healthSystem = player.GetComponentInChildren<HealthStaminaSystem>();
+            HealthStaminaSystem healthSystem = player.GetComponent<HealthStaminaSystem>();
             if (healthSystem != null)
             {
                 healthSystem.TakeDamage(100); 

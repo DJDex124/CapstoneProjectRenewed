@@ -326,7 +326,7 @@ public class PlayerInteractions : MonoBehaviour
         if (Time.time < nextAttackTime)
             return;
 
-        if (Input.GetMouseButtonDown(0) && inventory.crowbarSelected)
+        if (Input.GetMouseButtonDown(0))
         {
             nextAttackTime = Time.time + attackCldwn;
 

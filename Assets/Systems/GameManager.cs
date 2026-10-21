@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public bool noLevelsLeft = false;
     bool baseLevelGenerated = false;
 
-    public bool mazeCollapsed = false;
+    bool mazeCollapsed = false;
     public bool playeriIsDead = false;
     public bool playerInMaze = false;
 
