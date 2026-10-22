@@ -1,16 +1,17 @@
-using System.Linq;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class MazeCollapseTrigger : MonoBehaviour
 {
-    
+    bool istriggered = false;
     private void OnTriggerEnter(Collider other)
     {
         GameManager gm = GameManager.current;
         if (other.CompareTag("Player"))
         {
+            if (istriggered)
+            {
+                return;
+            }
             gm.playerInMaze = true;
             Debug.Log("Player entered the maze collapse trigger.");
             int time = gm.currentLevel.collapseTime;
@@ -21,7 +22,7 @@ public class MazeCollapseTrigger : MonoBehaviour
             }
             gm.levelUIDisplays[0].unlock();
             gm.levelUIDisplays.RemoveAt(0);
-
+            istriggered = true;
         }
     }
     private void OnTriggerExit(Collider other)
