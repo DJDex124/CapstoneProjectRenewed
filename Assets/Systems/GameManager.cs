@@ -317,7 +317,7 @@ public class GameManager : MonoBehaviour
         {
             cameraController.enabled = false;
         }
-        StartCoroutine(blendVolume());
+        StartCoroutine(blendVolume(0,1));
         screenUISystem.DeathScreenOn();
         playerMovement.enabled = false;
         Cursor.lockState = CursorLockMode.None;
@@ -337,12 +337,12 @@ public class GameManager : MonoBehaviour
         {
             cameraController.enabled = true;
         }
-        
+        playerInMaze = false;
         screenUISystem.DeathScreenOff();
         playerMovement.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        resetVolume();
+        StartCoroutine(blendVolume(1,0));
     }
     public void RespawnPlayer()
     {
@@ -458,11 +458,9 @@ public class GameManager : MonoBehaviour
     private Volume aliveProfile;
     [SerializeField]
     private Volume deadProfile;
-    IEnumerator blendVolume()
+    IEnumerator blendVolume(float AtargetWeight, float DtargetWeight)
     {
         float blendDuration = 1f; // Duration of the blend
-        float AtargetWeight = 0f; // Target weight for the alive profile
-        float DtargetWeight = 1f; // Target weight for the dead profile
         float timeElapsed = 0f;
         while (timeElapsed < blendDuration)
         {

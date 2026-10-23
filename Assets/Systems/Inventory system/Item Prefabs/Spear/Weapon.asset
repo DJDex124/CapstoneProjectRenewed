@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7caca105983bb6b41ba848b54291f0ff, type: 3}
   m_Name: Weapon
   m_EditorClassIdentifier: Assembly-CSharp::OldItemData
-  itemName: 
+  itemName: Weapon
   itemSprite: {fileID: 21300000, guid: 7dbf27cc45e6a4a499983ac406fdbed0, type: 3}
   pickupPrefab: {fileID: 1001361856359997110, guid: 659ae94818512a442863dae86c774cff, type: 3}
   heldItem: {fileID: 0}

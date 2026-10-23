@@ -85,9 +85,6 @@ PrefabInstance:
       addedObject: {fileID: 7603083387973089593}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dc6209f12b7209c46b840a61b2a1b9c5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1438736918902264833}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dc6209f12b7209c46b840a61b2a1b9c5, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3670708688306111309}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dc6209f12b7209c46b840a61b2a1b9c5, type: 3}
       insertIndex: -1
@@ -122,35 +119,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.013056586, y: 0.0130565865, z: 0.046664402}
   m_Center: {x: 0, y: -0.006712441, z: 0.0024339966}
---- !u!114 &1438736918902264833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 662716348577434157}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bc005968ab7a6547879f75e85698284, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ITISKIRUHERE.AdvancedOutline
-  _outlineMaskShader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
-  _outlineFillShader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
-  _outlineMode: 1
-  _outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  _outlineWidth: 7
-  _pulseWidth: 0
-  _pulseSpeed: 2
-  _pulseMinWidth: 1.5
-  _pulseMaxWidth: 5
-  _rainbowColor: 0
-  _rainbowSpeed: 0.5
-  _dashedPattern: 0
-  _dashScale: 0.03
-  _dashSpeed: 15
-  _precomputeOutline: 0
-  _bakeKeys: []
-  _bakeValues: []
 --- !u!135 &3670708688306111309
 SphereCollider:
   m_ObjectHideFlags: 0
